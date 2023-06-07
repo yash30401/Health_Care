@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1032461311002",
+    "project_id": "health-care-3e3d2",
+    "storage_bucket": "health-care-3e3d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1032461311002:android:0b9fbe1ead3aff284905a3",
+        "android_client_info": {
+          "package_name": "com.healthcare.yash.preeti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1032461311002-vovo4g4skq846j6i6hvgb8pueko0i1kf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEAMZbxCbhutaAyYIfb5_gGbo4GQDBu1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1032461311002-vovo4g4skq846j6i6hvgb8pueko0i1kf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

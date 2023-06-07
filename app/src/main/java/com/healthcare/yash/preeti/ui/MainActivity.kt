@@ -1,4 +1,4 @@
-package com.healthcare.yash.preeti
+package com.healthcare.yash.preeti.ui
 
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
