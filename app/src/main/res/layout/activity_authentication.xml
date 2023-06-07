@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Phone No:"
-            android:inputType="textPhonetic" />
+            android:inputType="phone" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
