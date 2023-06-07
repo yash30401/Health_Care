@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Health Care</string>
+    <string name="health_care_titltText">Health Care</string>
+    <string name="signin_text">Signin</string>
+    <string name="register_btn">Register</string>
 </resources>
