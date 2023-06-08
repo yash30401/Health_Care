@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/authentication2">
+
+    <fragment
+        android:id="@+id/otpFragment"
+        android:name="com.healthcare.yash.preeti.ui.fragments.OtpFragment"
+        android:label="fragment_otp"
+        tools:layout="@layout/fragment_otp" >
+        <action
+            android:id="@+id/action_otpFragment_to_authentication2"
+            app:destination="@id/authentication2" />
+    </fragment>
+    <fragment
+        android:id="@+id/authentication2"
+        android:name="com.healthcare.yash.preeti.ui.fragments.Authentication"
+        android:label="fragment_authentication"
+        tools:layout="@layout/fragment_authentication" >
+        <action
+            android:id="@+id/action_authentication2_to_otpFragment"
+            app:destination="@id/otpFragment" />
+    </fragment>
+</navigation>

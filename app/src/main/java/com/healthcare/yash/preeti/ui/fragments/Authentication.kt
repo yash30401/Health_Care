@@ -1,9 +1,19 @@
-package com.healthcare.yash.preeti.ui
+package com.healthcare.yash.preeti.ui.fragments
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.telephony.PhoneNumberFormattingTextWatcher
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -12,20 +22,19 @@ import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ActivityAuthenticationBinding
+import com.healthcare.yash.preeti.databinding.FragmentAuthenticationBinding
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class Authentication : AppCompatActivity() {
+class Authentication : Fragment() {
 
-    private var _binding: ActivityAuthenticationBinding? = null
+    private var _binding: FragmentAuthenticationBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModels<AuthViewModel>()
 
@@ -35,16 +44,39 @@ class Authentication : AppCompatActivity() {
     private lateinit var storedVerificationId: String
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        _binding = ActivityAuthenticationBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        return inflater.inflate(R.layout.fragment_authentication, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentAuthenticationBinding.bind(view)
+
 
         binding.btnRegister.setOnClickListener {
-            sendVerificationCodeToPhoneNumber()
+            val phoneNumber = validatePhoneNumber(binding.etPhoneNo.editText?.text.toString())
+            if (phoneNumber == true) {
+                sendVerificationCodeToPhoneNumber()
+            } else {
+                Toast.makeText(context, "Please check your phone number!", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
 
+
     }
+
+
+    // Function to validate Indian phone numbers
+    fun validatePhoneNumber(number: String): Boolean {
+        val regex = Regex("^\\+91[1-9]\\d{9}$")
+        return regex.matches(number)
+    }
+
 
     private fun sendVerificationCodeToPhoneNumber() {
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -72,9 +104,10 @@ class Authentication : AppCompatActivity() {
                 token: PhoneAuthProvider.ForceResendingToken,
             ) {
                 Log.d("AUTHVERIFICATION", "onCodeSent:$verificationId")
-
                 storedVerificationId = verificationId
                 resendToken = token
+
+                findNavController().navigate(R.id.action_authentication2_to_otpFragment)
             }
         }
 
@@ -82,7 +115,7 @@ class Authentication : AppCompatActivity() {
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(this)
+            .setActivity(requireActivity())
             .setCallbacks(callbacks)
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
@@ -92,4 +125,5 @@ class Authentication : AppCompatActivity() {
         super.onDestroy()
         _binding = null
     }
+
 }
