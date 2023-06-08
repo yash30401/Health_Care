@@ -76,6 +76,8 @@ dependencies {
     // messaging
     implementation 'com.google.firebase:firebase-messaging'
 
+    implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta04'
+
     //Hilt
     implementation "com.google.dagger:hilt-android:2.44"
     kapt "com.google.dagger:hilt-compiler:2.44"
