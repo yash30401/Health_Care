@@ -91,10 +91,13 @@ class Authentication : Fragment() {
 
                 if (e is FirebaseAuthInvalidCredentialsException) {
                     Log.w("AUTHVERIFICATION", "onVerificationFailed", e)
+                    Toast.makeText(context, "Invalid Credentials!", Toast.LENGTH_SHORT).show()
                 } else if (e is FirebaseTooManyRequestsException) {
                     Log.w("AUTHVERIFICATION", "onVerificationFailed", e)
+                    Toast.makeText(context, "Too many requests", Toast.LENGTH_SHORT).show()
                 } else if (e is FirebaseAuthMissingActivityForRecaptchaException) {
                     Log.w("AUTHVERIFICATION", "onVerificationFailed", e)
+                    Toast.makeText(context, "reCaptcha Problem", Toast.LENGTH_SHORT).show()
                 }
 
             }
