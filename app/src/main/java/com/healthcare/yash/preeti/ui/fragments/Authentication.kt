@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
@@ -17,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentAuthenticationBinding
@@ -30,7 +33,6 @@ class Authentication : Fragment() {
 
     private var _binding: FragmentAuthenticationBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModels<AuthViewModel>()
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
@@ -57,6 +59,7 @@ class Authentication : Fragment() {
             if (phoneNumber == true) {
                 sendVerificationCodeToPhoneNumber()
             } else {
+                binding.progressBar.visibility = View.GONE
                 Toast.makeText(context, "Please check your phone number!", Toast.LENGTH_SHORT)
                     .show()
             }
@@ -83,6 +86,7 @@ class Authentication : Fragment() {
             override fun onVerificationFailed(e: FirebaseException) {
 
                 Log.w("AUTHVERIFICATION", "onVerificationFailed", e)
+                binding.progressBar.visibility = View.GONE
 
                 if (e is FirebaseAuthInvalidCredentialsException) {
                     Log.w("AUTHVERIFICATION", "onVerificationFailed", e)
@@ -106,12 +110,14 @@ class Authentication : Fragment() {
                 resendToken = token
 
                 val action = AuthenticationDirections.actionAuthentication2ToOtpFragment(verificationId)
-                findNavController().navigate(R.id.action_authentication2_to_otpFragment)
+                findNavController().navigate(action)
             }
         }
 
+
+
         val phoneNumber = binding.etPhoneNo.editText?.text.toString()
-        val options = PhoneAuthOptions.newBuilder(firebaseAuth)
+        val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(60L, TimeUnit.SECONDS)
             .setActivity(requireActivity())

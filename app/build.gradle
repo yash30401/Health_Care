@@ -73,7 +73,7 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     implementation 'com.google.firebase:firebase-analytics-ktx'
     // Add the dependency for the Firebase Authentication library
-    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-auth-ktx'
     // messaging
     implementation 'com.google.firebase:firebase-messaging'
 

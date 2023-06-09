@@ -24,6 +24,16 @@
         app:otp_text_size="24dp"
         app:width="40dp" />
 
+    <ProgressBar
+        android:id="@+id/otp_progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="@+id/otp_view"
+        app:layout_constraintStart_toStartOf="@+id/otp_view"
+        app:layout_constraintTop_toBottomOf="@+id/otp_view" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
