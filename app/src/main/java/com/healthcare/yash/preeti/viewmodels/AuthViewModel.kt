@@ -17,27 +17,29 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val repository:AuthRepository):ViewModel() {
+class AuthViewModel @Inject constructor(private val repository: AuthRepository) : ViewModel() {
 
     private val _loginFlow = MutableStateFlow<NetworkResult<FirebaseUser>?>(null)
-    val loginFlow:StateFlow<NetworkResult<FirebaseUser>?> = _loginFlow
+    val loginFlow: StateFlow<NetworkResult<FirebaseUser>?> = _loginFlow
 
-    val currentUser:FirebaseUser?
+    //Getting Current User
+    val currentUser: FirebaseUser?
         get() = repository.currentUser
 
+    //If current user not null then passing NetworkResult.Success()
     init {
-        if(repository.currentUser !=null){
-            _loginFlow.value =NetworkResult.Success(repository.currentUser)
+        if (repository.currentUser != null) {
+            _loginFlow.value = NetworkResult.Success(repository.currentUser)
         }
     }
 
     fun signinWithPhoneNumber(credential: PhoneAuthCredential) = viewModelScope.launch {
-        _loginFlow.value =NetworkResult.Loading()
+        _loginFlow.value = NetworkResult.Loading()
         val result = repository.signinWithPhoneNo(credential)
-        _loginFlow.value =  result
+        _loginFlow.value = result
     }
 
-    fun logout(){
+    fun logout() {
         repository.logout()
         _loginFlow.value = null
     }

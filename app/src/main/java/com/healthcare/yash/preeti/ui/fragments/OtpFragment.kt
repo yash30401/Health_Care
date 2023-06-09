@@ -76,7 +76,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
         viewModel?.loginFlow?.value.let {
             when (it) {
                 is NetworkResult.Success -> {
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         findNavController().navigate(R.id.action_otpFragment_to_mainFragment)
                     }
                 }

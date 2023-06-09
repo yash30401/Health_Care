@@ -42,7 +42,8 @@ class Authentication : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if(firebaseAuth.currentUser !=null){
+        //If Current user exists then transfer him to Main Fragment
+        if (firebaseAuth.currentUser != null) {
             findNavController().navigate(R.id.action_authentication2_to_mainFragment)
         }
     }
@@ -62,7 +63,9 @@ class Authentication : Fragment() {
 
         binding.btnRegister.setOnClickListener {
             binding.progressBar.visibility = View.VISIBLE
+            //Validation Phone Number
             val phoneNumber = validatePhoneNumber(binding.etPhoneNo.editText?.text.toString())
+
             if (phoneNumber == true) {
                 sendVerificationCodeToPhoneNumber()
             } else {
@@ -116,13 +119,14 @@ class Authentication : Fragment() {
                 storedVerificationId = verificationId
                 resendToken = token
 
-                val action = AuthenticationDirections.actionAuthentication2ToOtpFragment(verificationId)
+                val action =
+                    AuthenticationDirections.actionAuthentication2ToOtpFragment(verificationId)
                 findNavController().navigate(action)
             }
         }
 
 
-
+        //Verifying Phone number and then sent the code to the user's phone
         val phoneNumber = binding.etPhoneNo.editText?.text.toString()
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)

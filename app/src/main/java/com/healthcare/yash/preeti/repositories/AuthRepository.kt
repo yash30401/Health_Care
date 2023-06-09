@@ -13,12 +13,18 @@ class AuthRepository @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
 ) {
 
-    val currentUser:FirebaseUser?=firebaseAuth.currentUser
+    //Getting current User
+    val currentUser: FirebaseUser? = firebaseAuth.currentUser
+
+    /*
+    signinWithPhoneNumber Using Credentials
+    * Using Await extension function
+    */
     suspend fun signinWithPhoneNo(credential: PhoneAuthCredential): NetworkResult<FirebaseUser> {
         return try {
             val result = firebaseAuth.signInWithCredential(credential).await()
             NetworkResult.Success(result.user!!)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             NetworkResult.Error(e.message)
         }
     }
