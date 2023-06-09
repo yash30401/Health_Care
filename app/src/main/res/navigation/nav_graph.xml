@@ -13,7 +13,10 @@
         <action
             android:id="@+id/action_otpFragment_to_authentication2"
             app:destination="@id/authentication2" />
-    </fragment>
+        <argument
+            android:name="verificationId"
+            app:argType="string" />
+            </fragment>
     <fragment
         android:id="@+id/authentication2"
         android:name="com.healthcare.yash.preeti.ui.fragments.Authentication"

@@ -88,6 +88,9 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
+    //Otpview Library
+    implementation 'com.github.aabhasr1:OtpView:v1.1.2-ktx'
+
 
 }
 

@@ -1,16 +1,11 @@
 package com.healthcare.yash.preeti.ui.fragments
 
 import android.os.Bundle
-import android.telephony.PhoneNumberFormattingTextWatcher
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -24,7 +19,6 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 
 import com.healthcare.yash.preeti.R
-import com.healthcare.yash.preeti.databinding.ActivityAuthenticationBinding
 import com.healthcare.yash.preeti.databinding.FragmentAuthenticationBinding
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,6 +52,7 @@ class Authentication : Fragment() {
 
 
         binding.btnRegister.setOnClickListener {
+            binding.progressBar.visibility = View.VISIBLE
             val phoneNumber = validatePhoneNumber(binding.etPhoneNo.editText?.text.toString())
             if (phoneNumber == true) {
                 sendVerificationCodeToPhoneNumber()
@@ -110,6 +105,7 @@ class Authentication : Fragment() {
                 storedVerificationId = verificationId
                 resendToken = token
 
+                val action = AuthenticationDirections.actionAuthentication2ToOtpFragment(verificationId)
                 findNavController().navigate(R.id.action_authentication2_to_otpFragment)
             }
         }
