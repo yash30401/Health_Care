@@ -40,6 +40,13 @@ class Authentication : Fragment() {
     private lateinit var storedVerificationId: String
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if(firebaseAuth.currentUser !=null){
+            findNavController().navigate(R.id.action_authentication2_to_mainFragment)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

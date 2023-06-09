@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.progressindicator.CircularProgressIndicator
@@ -55,9 +56,8 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
             override fun onOTPComplete(otp: String) {
                 val credentitals = PhoneAuthProvider.getCredential(verificationID, otp)
                 binding.otpProgressBar.visibility = View.VISIBLE
-                GlobalScope.launch(Dispatchers.IO) {
+                lifecycleScope.launch(Dispatchers.IO) {
                     signinWithPhoneNumber(credentitals)
-
                 }
 
             }
@@ -67,7 +67,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
 
     private suspend fun signinWithPhoneNumber(credentitals: PhoneAuthCredential) {
         viewModel?.signinWithPhoneNumber(credentitals)
-        delay(1000)
+        delay(3000)
 
         withContext(Dispatchers.Main) {
             binding.otpProgressBar.visibility = View.GONE
@@ -76,7 +76,9 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
         viewModel?.loginFlow?.value.let {
             when (it) {
                 is NetworkResult.Success -> {
-                    findNavController().navigate(R.id.action_otpFragment_to_mainFragment)
+                    withContext(Dispatchers.Main){
+                        findNavController().navigate(R.id.action_otpFragment_to_mainFragment)
+                    }
                 }
 
                 is NetworkResult.Error -> {
