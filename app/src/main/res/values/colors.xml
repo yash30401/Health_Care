@@ -3,4 +3,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="healthCareTitle_color">#212A3E</color>
+    <color name="toolbar_color">#40128B</color>
 </resources>
