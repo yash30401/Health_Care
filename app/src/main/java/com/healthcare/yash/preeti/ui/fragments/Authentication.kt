@@ -42,10 +42,12 @@ class Authentication : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         //If Current user exists then transfer him to Main Fragment
         if (firebaseAuth.currentUser != null) {
             findNavController().navigate(R.id.action_authentication2_to_mainFragment)
         }
+
     }
 
     override fun onCreateView(

@@ -30,7 +30,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainFragment : Fragment() {
 
-    private var _binding:FragmentMainBinding?=null
+    private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var drawerLayout: DrawerLayout
@@ -54,8 +54,9 @@ class MainFragment : Fragment() {
         navigationView = rootView.findViewById(R.id.nav_view)
 
         val toggle = ActionBarDrawerToggle(
-            activity, drawerLayout, toolbar,0,R.string.app_name
+            activity, drawerLayout, toolbar, 0, R.string.app_name
         )
+
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -66,7 +67,9 @@ class MainFragment : Fragment() {
 
                     true
                 }
+
                 R.id.logout -> {
+                    //Logout User
                     viewModel.logout()
                     findNavController().navigate(R.id.action_mainFragment_to_authentication2)
                     true
@@ -83,7 +86,6 @@ class MainFragment : Fragment() {
         _binding = FragmentMainBinding.bind(view)
 
 
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -92,10 +94,10 @@ class MainFragment : Fragment() {
                 drawerLayout.openDrawer(GravityCompat.START)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 
 
     override fun onDestroy() {
