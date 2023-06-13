@@ -78,8 +78,8 @@ class Authentication : Fragment() {
 
     // Function to validate Indian phone numbers
     fun validatePhoneNumber(number: String): Boolean {
-        val regex = Regex("^\\+91[1-9]\\d{9}$")
-        return regex.matches(number)
+//        val regex = Regex("^\\+91[1-9]\\d{9}$")
+        return true
     }
 
 
@@ -123,7 +123,7 @@ class Authentication : Fragment() {
 
 
 
-        val phoneNumber = binding.etMobileNo.text.toString()
+        val phoneNumber = "${binding.etCountryCode.selectedCountryCodeWithPlus}${binding.etMobileNo.text.toString()}"
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(60L, TimeUnit.SECONDS)
@@ -131,6 +131,7 @@ class Authentication : Fragment() {
             .setCallbacks(callbacks)
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
+        Toast.makeText(context, phoneNumber, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {

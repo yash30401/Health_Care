@@ -19,29 +19,31 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivImage"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvAppName"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:textAlignment="center"
+                android:text="Health Care"
+                android:textSize="25sp"
+                android:fontFamily="@font/poppins_medium"
+                app:layout_constraintBottom_toTopOf="@+id/tvMobile"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_fb" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvMobile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginTop="@dimen/dimen_20"
+                android:layout_marginTop="@dimen/dimen_10"
                 android:text="Phone Number"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ivImage" />
+                app:layout_constraintTop_toBottomOf="@+id/tvAppName" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/etMobileNo"
@@ -128,9 +130,9 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginHorizontal="@dimen/dimen_6"
                     android:text="Or Sign In with "
-                    android:textStyle="bold"
+                    android:textColor="@color/black"
                     android:textSize="14sp"
-                    android:textColor="@color/black"/>
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="match_parent"
