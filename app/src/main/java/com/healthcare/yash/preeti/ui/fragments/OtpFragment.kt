@@ -31,7 +31,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 @AndroidEntryPoint
 class OtpFragment : Fragment(R.layout.fragment_otp) {
 
@@ -41,28 +40,29 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
 
     private val viewModel by viewModels<AuthViewModel>()
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentOtpBinding.bind(view)
+        onClicks()
+    }
+
+    private fun onClicks() {
 
         val verificationID = args.verificationId
 
-        binding.otpView.otpListener = object : OTPListener {
+       /* binding.otpView.otpListener = object : OTPListener {
             override fun onInteractionListener() {
 
             }
-
             override fun onOTPComplete(otp: String) {
                 val credentitals = PhoneAuthProvider.getCredential(verificationID, otp)
-                binding.otpProgressBar.visibility = View.VISIBLE
+                binding.progressBar.visibility = View.VISIBLE
                 lifecycleScope.launch(Dispatchers.IO) {
                     signinWithPhoneNumber(credentitals)
                 }
-
             }
+        }*/
 
-        }
     }
 
     private suspend fun signinWithPhoneNumber(credentitals: PhoneAuthCredential) {
@@ -71,7 +71,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
         delay(3000)
 
         withContext(Dispatchers.Main) {
-            binding.otpProgressBar.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
         }
 
         //And then getting the NetworkReuslt

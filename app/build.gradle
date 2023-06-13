@@ -94,6 +94,9 @@ dependencies {
     // country code picker
     implementation 'com.hbb20:ccp:2.7.0'
 
+    // otp pin view
+    implementation 'io.github.chaosleung:pinview:1.4.4'
+
 
 }
 

@@ -1,39 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none"
     tools:context=".ui.fragments.OtpFragment">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/dimen_30"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <in.aabhasjindal.otptextview.OtpTextView
-        android:id="@+id/otp_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:textColor="@color/black"
-        app:bar_enabled="true"
-        app:bar_height="2dp"
-        app:height="40dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:length="6"
-        app:otp_text_size="24dp"
-        app:width="40dp" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clVerificationCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-    <ProgressBar
-        android:id="@+id/otp_progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:visibility="gone"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        app:layout_constraintEnd_toEndOf="@+id/otp_view"
-        app:layout_constraintStart_toStartOf="@+id/otp_view"
-        app:layout_constraintTop_toBottomOf="@+id/otp_view" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvVerificationCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Enter Your Verification Code"
+                    android:textColor="@color/primary"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clSMS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/clVerificationCode"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="@dimen/dimen_20">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvSMS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sms_sent_to"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/clSMS"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvPhoneNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_9176_65"
+                    app:layout_constraintTop_toTopOf="@+id/tvSMS"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvSMS"
+                    app:layout_constraintStart_toEndOf="@+id/tvSMS"
+                    android:layout_marginStart="6dp"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/tvEditMobileNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_edit"
+                    app:tint="@color/primary"
+                    app:layout_constraintTop_toTopOf="@+id/tvPhoneNo"
+                    app:layout_constraintBottom_toBottomOf="@+id/tvPhoneNo"
+                    app:layout_constraintStart_toEndOf="@+id/tvPhoneNo"
+                    android:layout_marginStart="6dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.chaos.view.PinView
+                android:id="@+id/etOtpPin"
+                style="@style/PinWidget.PinView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:cursorVisible="true"
+                android:hint="Hint."
+                android:inputType="phone"
+                android:autofillHints="smsOTPCode"
+                android:importantForAutofill="yes"
+                android:itemBackground="@drawable/bg_curve_white_6"
+                android:layout_marginTop="@dimen/dimen_20"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:cursorColor="@color/black"
+                app:cursorWidth="2dp"
+                app:hideLineWhenFilled="false"
+                app:itemCount="6"
+                app:itemHeight="40dp"
+                app:itemWidth="40dp"
+                app:itemRadius="4dp"
+                app:itemSpacing="10dp"
+                app:lineColor="@color/grey"
+                app:lineWidth="2dp"
+                app:viewType="rectangle"
+                app:layout_constraintTop_toBottomOf="@+id/clSMS"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clResend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/etOtpPin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="@dimen/dimen_20">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvResend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/resend_otp_in"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/clResend" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvTimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_00_30_"
+                    android:layout_marginStart="6dp"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toTopOf="@+id/tvResend"
+                    app:layout_constraintStart_toEndOf="@+id/tvResend" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnVerifyOtp"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dimen_30"
+                android:layout_marginTop="@dimen/dimen_20"
+                android:paddingHorizontal="30dp"
+                android:background="@drawable/bg_btn_verify_login"
+                android:text="@string/verify"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/clResend" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

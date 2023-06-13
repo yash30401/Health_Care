@@ -5,4 +5,13 @@
     <string name="register_btn">Register</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--OTP Verification-->
+
+    <string name="sms_sent_to">SMS Sent to</string>
+    <string name="_9176_65">+9176******65</string>
+    <string name="resend_otp_in">Resend OTP in : </string>
+    <string name="_00_30_">00:30</string>
+    <string name="verify">Verify OTP</string>
+
 </resources>

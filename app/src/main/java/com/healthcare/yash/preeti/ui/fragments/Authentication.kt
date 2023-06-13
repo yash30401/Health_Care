@@ -51,7 +51,6 @@ class Authentication : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_authentication, container, false)
     }
 
@@ -59,6 +58,11 @@ class Authentication : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAuthenticationBinding.bind(view)
 
+        onClicks()
+
+    }
+
+    private fun onClicks() {
 
         binding.btnRequestOtp.setOnClickListener {
             binding.progressBar.visibility = View.VISIBLE
@@ -72,16 +76,13 @@ class Authentication : Fragment() {
             }
         }
 
-
     }
-
 
     // Function to validate Indian phone numbers
     fun validatePhoneNumber(number: String): Boolean {
 //        val regex = Regex("^\\+91[1-9]\\d{9}$")
         return true
     }
-
 
     private fun sendVerificationCodeToPhoneNumber() {
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -120,8 +121,6 @@ class Authentication : Fragment() {
                 findNavController().navigate(action)
             }
         }
-
-
 
         val phoneNumber = "${binding.etCountryCode.selectedCountryCodeWithPlus}${binding.etMobileNo.text.toString()}"
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
