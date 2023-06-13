@@ -23,8 +23,11 @@ import com.google.firebase.ktx.Firebase
 
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentAuthenticationBinding
+import com.healthcare.yash.preeti.other.Constants.TAG
+import com.healthcare.yash.preeti.other.PhoneNumberValidation
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -40,9 +43,11 @@ class Authentication : Fragment() {
     private lateinit var storedVerificationId: String
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
+    private lateinit var phoneNoValidation: PhoneNumberValidation
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if(firebaseAuth.currentUser !=null){
+        if (firebaseAuth.currentUser != null) {
             findNavController().navigate(R.id.action_authentication2_to_mainFragment)
         }
     }
@@ -61,27 +66,56 @@ class Authentication : Fragment() {
 
 
         binding.btnRequestOtp.setOnClickListener {
-            binding.progressBar.visibility = View.VISIBLE
-            val phoneNumber = validatePhoneNumber(binding.etMobileNo.text.toString())
-            if (phoneNumber == true) {
-                sendVerificationCodeToPhoneNumber()
-            } else {
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(context, "Please check your phone number!", Toast.LENGTH_SHORT)
-                    .show()
+            validatePhoneNumber(
+                binding.etMobileNo.text.toString(),
+                binding.etCountryCode.selectedCountryCode
+            )
+            when (phoneNoValidation) {
+                PhoneNumberValidation.SUCCESS -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    sendVerificationCodeToPhoneNumber()
+                }
+
+                PhoneNumberValidation.EMPTY -> {
+                    Toast.makeText(context, "Please Enter Your Mobile Number.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                PhoneNumberValidation.WRONGFORMAT -> {
+                    Toast.makeText(context, "Please Check Your Mobile Number", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
 
 
     }
 
-
     // Function to validate Indian phone numbers
-    fun validatePhoneNumber(number: String): Boolean {
-//        val regex = Regex("^\\+91[1-9]\\d{9}$")
-        return true
+    fun validatePhoneNumber(number: String, countryCode: String): PhoneNumberValidation {
+        val validPhoneNumber = isValidPhoneNumber(number, countryCode)
+        Toast.makeText(context,validPhoneNumber.toString(),Toast.LENGTH_LONG).show()
+        if (number.isEmpty()) {
+            phoneNoValidation = PhoneNumberValidation.EMPTY
+        } else if (validPhoneNumber == false) {
+            phoneNoValidation = PhoneNumberValidation.WRONGFORMAT
+        }else if(validPhoneNumber == true){
+            phoneNoValidation = PhoneNumberValidation.SUCCESS
+        }
+        return phoneNoValidation
     }
 
+    private fun isValidPhoneNumber(number: String, countryCode: String): Boolean {
+        val phoneNumberUtil = PhoneNumberUtil.createInstance(context)
+//        Toast.makeText(context, countryCode, Toast.LENGTH_SHORT).show()
+        return try {
+            val parsedNumber = phoneNumberUtil.parse(number, countryCode)
+            phoneNumberUtil.isValidNumber(parsedNumber)
+        } catch (e: Exception) {
+            Log.d(TAG, "Phone Number Ex:- ${e.message.toString()}")
+            false
+        }
+    }
 
     private fun sendVerificationCodeToPhoneNumber() {
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -116,14 +150,15 @@ class Authentication : Fragment() {
                 storedVerificationId = verificationId
                 resendToken = token
 
-                val action = AuthenticationDirections.actionAuthentication2ToOtpFragment(verificationId)
+                val action =
+                    AuthenticationDirections.actionAuthentication2ToOtpFragment(verificationId)
                 findNavController().navigate(action)
             }
         }
 
 
-
-        val phoneNumber = "${binding.etCountryCode.selectedCountryCodeWithPlus}${binding.etMobileNo.text.toString()}"
+        val phoneNumber =
+            "${binding.etCountryCode.selectedCountryCodeWithPlus}${binding.etMobileNo.text.toString()}"
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(60L, TimeUnit.SECONDS)
@@ -131,7 +166,7 @@ class Authentication : Fragment() {
             .setCallbacks(callbacks)
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
-        Toast.makeText(context, phoneNumber, Toast.LENGTH_SHORT).show()
+        Log.d(TAG, "Phone no:- ${phoneNumber}")
     }
 
     override fun onDestroy() {

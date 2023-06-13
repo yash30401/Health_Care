@@ -94,6 +94,10 @@ dependencies {
     // country code picker
     implementation 'com.hbb20:ccp:2.7.0'
 
+    //PhoneNumber Validation By Google
+    implementation 'io.michaelrocks:libphonenumber-android:8.13.13'
+
+
 
 }
 
