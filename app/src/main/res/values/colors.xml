@@ -3,4 +3,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="healthCareTitle_color">#212A3E</color>
+
+    <color name="primary">#87a5a6</color>
+    <color name="grey">#EDE3DA</color>
+    <color name="hint">#C6C6C8</color>
+    <color name="dark_grey">#FF7F5D</color>
+
 </resources>
