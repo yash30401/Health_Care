@@ -1,192 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:scrollbars="none"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragments.Authentication">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="@string/health_care_titltText"
+        android:textColor="@color/healthCareTitle_color"
+        android:textSize="27sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.05" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/poppins"
+        android:includeFontPadding="false"
+        android:text="@string/signin_text"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline4" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_phoneNo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/dimen_30"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:ems="10"
+            android:hint="Phone No:"
+            android:inputType="phone" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/ivImage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_fb" />
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="@string/register_btn"
+        app:layout_constraintEnd_toEndOf="@+id/et_phoneNo"
+        app:layout_constraintStart_toStartOf="@+id/et_phoneNo"
+        app:layout_constraintTop_toBottomOf="@+id/et_phoneNo" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tvMobile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="@dimen/dimen_20"
-                android:text="Phone Number"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ivImage" />
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/poppins_medium"
+        android:text="OR"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="@+id/btn_register"
+        app:layout_constraintStart_toStartOf="@+id/btn_register"
+        app:layout_constraintTop_toBottomOf="@+id/btn_register" />
 
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/etMobileNo"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="@dimen/dimen_25"
-                android:layout_toEndOf="@+id/tvView"
-                android:background="@drawable/bg_login_edittext"
-                android:hint="00000 00000"
-                android:inputType="phone"
-                android:maxLength="10"
-                android:paddingHorizontal="@dimen/dimen_6"
-                android:paddingStart="80dp"
-                android:textSize="14sp"
-                app:layout_constraintTop_toBottomOf="@+id/tvMobile" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/textView3"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-            <com.hbb20.CountryCodePicker
-                android:id="@+id/etCountryCode"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:background="@null"
-                android:gravity="center_vertical"
-                android:paddingStart="@dimen/dimen_20"
-                android:paddingEnd="@dimen/dimen_6"
-                app:ccp_clickable="true"
-                app:ccp_showArrow="false"
-                app:ccp_showFlag="false"
-                app:ccp_showFullName="false"
-                app:ccp_showNameCode="false"
-                app:ccp_textGravity="CENTER"
-                app:ccp_textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@id/etMobileNo"
-                app:layout_constraintStart_toStartOf="@id/etMobileNo"
-                app:layout_constraintTop_toTopOf="@id/etMobileNo" />
-
-            <View
-                android:id="@+id/tvView"
-                android:layout_width="@dimen/dimen_1"
-                android:layout_height="0dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentBottom="true"
-                android:layout_toEndOf="@+id/etCountryCode"
-                android:background="@color/black"
-                app:layout_constraintBottom_toBottomOf="@id/etCountryCode"
-                app:layout_constraintStart_toEndOf="@id/etCountryCode"
-                app:layout_constraintTop_toTopOf="@id/etCountryCode" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnRequestOtp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_40"
-                android:background="@drawable/bg_btn_verify_login"
-                android:paddingHorizontal="30dp"
-                android:text="Request OTP"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/etMobileNo" />
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/LlOr"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_50"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnRequestOtp">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:background="@color/black" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginHorizontal="@dimen/dimen_6"
-                    android:text="Or Sign In with "
-                    android:textStyle="bold"
-                    android:textSize="14sp"
-                    android:textColor="@color/black"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:background="@color/black" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnGoogleSignIn"
-                style="@style/ThemeOverlay.Material3.Button.ElevatedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_50"
-                android:background="@drawable/bg_white_25"
-                android:drawableStart="@drawable/ic_googles"
-                android:paddingHorizontal="30dp"
-                android:text="Google"
-                android:textColor="@color/black"
-                app:cornerRadius="20dp"
-                app:elevation="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/LlOr" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnFacebookSignIn"
-                style="@style/ThemeOverlay.Material3.Button.ElevatedButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_20"
-                android:background="@drawable/bg_white_25"
-                android:drawableStart="@drawable/ic_fb"
-                android:paddingHorizontal="30dp"
-                android:text="Facebook"
-                android:textColor="@color/black"
-                app:cornerRadius="20dp"
-                app:elevation="5dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btnGoogleSignIn" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

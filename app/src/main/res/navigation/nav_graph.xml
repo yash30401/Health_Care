@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/otpFragment"
         android:name="com.healthcare.yash.preeti.ui.fragments.OtpFragment"
-        android:label="fragment_otp"
-        tools:layout="@layout/fragment_otp" >
+        android:label="Otp"
+        tools:layout="@layout/fragment_otp">
         <action
             android:id="@+id/action_otpFragment_to_authentication2"
             app:destination="@id/authentication2" />
@@ -23,8 +23,8 @@
     <fragment
         android:id="@+id/authentication2"
         android:name="com.healthcare.yash.preeti.ui.fragments.Authentication"
-        android:label="fragment_authentication"
-        tools:layout="@layout/fragment_authentication" >
+        android:label="Signin"
+        tools:layout="@layout/fragment_authentication">
         <action
             android:id="@+id/action_authentication2_to_otpFragment"
             app:destination="@id/otpFragment" />
@@ -34,7 +34,11 @@
     </fragment>
     <fragment
         android:id="@+id/mainFragment"
-        android:name="com.healthcare.yash.preeti.MainFragment"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        android:name="com.healthcare.yash.preeti.ui.fragments.MainFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_mainFragment_to_authentication2"
+            app:destination="@id/authentication2" />
+    </fragment>
 </navigation>

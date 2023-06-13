@@ -60,9 +60,9 @@ class Authentication : Fragment() {
         _binding = FragmentAuthenticationBinding.bind(view)
 
 
-        binding.btnRequestOtp.setOnClickListener {
+        binding.btnRegister.setOnClickListener {
             binding.progressBar.visibility = View.VISIBLE
-            val phoneNumber = validatePhoneNumber(binding.etMobileNo.text.toString())
+            val phoneNumber = validatePhoneNumber(binding.etPhoneNo.editText?.text.toString())
             if (phoneNumber == true) {
                 sendVerificationCodeToPhoneNumber()
             } else {
@@ -123,7 +123,7 @@ class Authentication : Fragment() {
 
 
 
-        val phoneNumber = binding.etMobileNo.text.toString()
+        val phoneNumber = binding.etPhoneNo.editText?.text.toString()
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(60L, TimeUnit.SECONDS)

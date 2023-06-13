@@ -66,6 +66,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
     }
 
     private suspend fun signinWithPhoneNumber(credentitals: PhoneAuthCredential) {
+        //Signin with phone Number
         viewModel?.signinWithPhoneNumber(credentitals)
         delay(3000)
 
@@ -73,10 +74,11 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
             binding.otpProgressBar.visibility = View.GONE
         }
 
+        //And then getting the NetworkReuslt
         viewModel?.loginFlow?.value.let {
             when (it) {
                 is NetworkResult.Success -> {
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         findNavController().navigate(R.id.action_otpFragment_to_mainFragment)
                     }
                 }
