@@ -23,6 +23,7 @@ import com.google.firebase.ktx.Firebase
 
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentAuthenticationBinding
+import com.healthcare.yash.preeti.other.PhoneNumberValidation
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
@@ -40,9 +41,11 @@ class Authentication : Fragment() {
     private lateinit var storedVerificationId: String
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
+    private lateinit var phoneNoValidation: PhoneNumberValidation
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if(firebaseAuth.currentUser !=null){
+        if (firebaseAuth.currentUser != null) {
             findNavController().navigate(R.id.action_authentication2_to_mainFragment)
         }
     }
@@ -61,14 +64,23 @@ class Authentication : Fragment() {
 
 
         binding.btnRequestOtp.setOnClickListener {
-            binding.progressBar.visibility = View.VISIBLE
             val phoneNumber = validatePhoneNumber(binding.etMobileNo.text.toString())
-            if (phoneNumber == true) {
-                sendVerificationCodeToPhoneNumber()
-            } else {
-                binding.progressBar.visibility = View.GONE
-                Toast.makeText(context, "Please check your phone number!", Toast.LENGTH_SHORT)
-                    .show()
+
+            when (phoneNoValidation) {
+                PhoneNumberValidation.SUCCESS -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    sendVerificationCodeToPhoneNumber()
+                }
+
+                PhoneNumberValidation.EMPTY -> {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(context, "Please Enter Your Mobile Number", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                PhoneNumberValidation.WRONGFORMAT -> {
+                    binding.progressBar.visibility = View.GONE
+                }
             }
         }
 
@@ -77,9 +89,13 @@ class Authentication : Fragment() {
 
 
     // Function to validate Indian phone numbers
-    fun validatePhoneNumber(number: String): Boolean {
-//        val regex = Regex("^\\+91[1-9]\\d{9}$")
-        return true
+    fun validatePhoneNumber(number: String): PhoneNumberValidation {
+        if (number.isEmpty()) {
+            phoneNoValidation = PhoneNumberValidation.EMPTY
+        } else {
+            phoneNoValidation = PhoneNumberValidation.SUCCESS
+        }
+        return phoneNoValidation
     }
 
 
@@ -116,14 +132,15 @@ class Authentication : Fragment() {
                 storedVerificationId = verificationId
                 resendToken = token
 
-                val action = AuthenticationDirections.actionAuthentication2ToOtpFragment(verificationId)
+                val action =
+                    AuthenticationDirections.actionAuthentication2ToOtpFragment(verificationId)
                 findNavController().navigate(action)
             }
         }
 
 
-
-        val phoneNumber = "${binding.etCountryCode.selectedCountryCodeWithPlus}${binding.etMobileNo.text.toString()}"
+        val phoneNumber =
+            "${binding.etCountryCode.selectedCountryCodeWithPlus}${binding.etMobileNo.text.toString()}"
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(60L, TimeUnit.SECONDS)
@@ -131,7 +148,6 @@ class Authentication : Fragment() {
             .setCallbacks(callbacks)
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
-        Toast.makeText(context, phoneNumber, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {

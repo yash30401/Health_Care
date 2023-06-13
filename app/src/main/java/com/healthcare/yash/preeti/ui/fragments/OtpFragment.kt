@@ -1,11 +1,15 @@
 package com.healthcare.yash.preeti.ui.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -20,6 +24,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentOtpBinding
 import com.healthcare.yash.preeti.networking.NetworkResult
+import com.healthcare.yash.preeti.other.Constants.TAG
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import `in`.aabhasjindal.otptextview.OTPListener
@@ -50,18 +55,18 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
 
         val verificationID = args.verificationId
 
-       /* binding.otpView.otpListener = object : OTPListener {
-            override fun onInteractionListener() {
 
+        binding.btnVerifyOtp.setOnClickListener {
+            val credentitals =
+                PhoneAuthProvider.getCredential(
+                    verificationID,
+                    binding.etOtpPin.editableText.toString()
+                )
+            binding.progressBar.visibility = View.VISIBLE
+            lifecycleScope.launch(Dispatchers.IO) {
+                signinWithPhoneNumber(credentitals)
             }
-            override fun onOTPComplete(otp: String) {
-                val credentitals = PhoneAuthProvider.getCredential(verificationID, otp)
-                binding.progressBar.visibility = View.VISIBLE
-                lifecycleScope.launch(Dispatchers.IO) {
-                    signinWithPhoneNumber(credentitals)
-                }
-            }
-        }*/
+        }
 
     }
 
