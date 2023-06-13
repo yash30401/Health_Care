@@ -91,6 +91,9 @@ dependencies {
     //Otpview Library
     implementation 'com.github.aabhasr1:OtpView:v1.1.2-ktx'
 
+    // country code picker
+    implementation 'com.hbb20:ccp:2.7.0'
+
 
 }
 
