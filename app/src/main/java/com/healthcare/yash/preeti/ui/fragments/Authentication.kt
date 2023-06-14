@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
@@ -23,8 +21,8 @@ import com.google.firebase.ktx.Firebase
 
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentAuthenticationBinding
+import com.healthcare.yash.preeti.other.Constants.AUTHVERIFICATIONTAG
 import com.healthcare.yash.preeti.other.PhoneNumberValidation
-import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -100,25 +98,28 @@ class Authentication : Fragment() {
 
 
     private fun sendVerificationCodeToPhoneNumber() {
+        val phoneNumber =
+            "${binding.etCountryCode.selectedCountryCodeWithPlus}${binding.etMobileNo.text.toString()}"
+
         val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                Log.d("AUTHVERIFICATION", "onVerificationCompleted:$credential")
+                Log.d(AUTHVERIFICATIONTAG, "onVerificationCompleted:$credential")
             }
 
             override fun onVerificationFailed(e: FirebaseException) {
 
-                Log.w("AUTHVERIFICATION", "onVerificationFailed", e)
+                Log.w(AUTHVERIFICATIONTAG, "onVerificationFailed", e)
                 binding.progressBar.visibility = View.GONE
 
                 if (e is FirebaseAuthInvalidCredentialsException) {
-                    Log.w("AUTHVERIFICATION", "onVerificationFailed", e)
+                    Log.w(AUTHVERIFICATIONTAG, "onVerificationFailed", e)
                     Toast.makeText(context, "Invalid Credentials!", Toast.LENGTH_SHORT).show()
                 } else if (e is FirebaseTooManyRequestsException) {
-                    Log.w("AUTHVERIFICATION", "onVerificationFailed", e)
+                    Log.w(AUTHVERIFICATIONTAG, "onVerificationFailed", e)
                     Toast.makeText(context, "Too many requests", Toast.LENGTH_SHORT).show()
                 } else if (e is FirebaseAuthMissingActivityForRecaptchaException) {
-                    Log.w("AUTHVERIFICATION", "onVerificationFailed", e)
+                    Log.w(AUTHVERIFICATIONTAG, "onVerificationFailed", e)
                     Toast.makeText(context, "reCaptcha Problem", Toast.LENGTH_SHORT).show()
                 }
 
@@ -133,14 +134,15 @@ class Authentication : Fragment() {
                 resendToken = token
 
                 val action =
-                    AuthenticationDirections.actionAuthentication2ToOtpFragment(verificationId)
+                    AuthenticationDirections.actionAuthentication2ToOtpFragment(
+                        verificationId,
+                        phoneNumber
+                    )
                 findNavController().navigate(action)
             }
         }
 
 
-        val phoneNumber =
-            "${binding.etCountryCode.selectedCountryCodeWithPlus}${binding.etMobileNo.text.toString()}"
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(60L, TimeUnit.SECONDS)

@@ -48,13 +48,16 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentOtpBinding.bind(view)
+
         onClicks()
+        setupPhoneNumberTextView()
     }
+
+
 
     private fun onClicks() {
 
         val verificationID = args.verificationId
-
 
         binding.btnVerifyOtp.setOnClickListener {
             val credentitals =
@@ -68,6 +71,13 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
             }
         }
 
+    }
+
+    private fun setupPhoneNumberTextView() {
+        val phoneNumber = args.phoneNumber
+        val hiddenPhoneNumberText = "+91${phoneNumber.get(3)}${phoneNumber.get(4)}******${phoneNumber.get(11)}${phoneNumber.get(12)}"
+
+        binding.tvPhoneNo.text = hiddenPhoneNumberText
     }
 
     private suspend fun signinWithPhoneNumber(credentitals: PhoneAuthCredential) {

@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_otpFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <argument
+            android:name="phoneNumber"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/authentication2"
