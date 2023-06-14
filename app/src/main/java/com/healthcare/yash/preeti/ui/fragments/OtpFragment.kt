@@ -51,8 +51,15 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
 
         onClicks()
         setupPhoneNumberTextView()
-    }
 
+        binding.tvPhoneNo.setOnClickListener {
+            editPhoneNumberAndNavigateBackToAuthScreen()
+        }
+
+        binding.ivEditPhoneNo.setOnClickListener {
+            editPhoneNumberAndNavigateBackToAuthScreen()
+        }
+    }
 
 
     private fun onClicks() {
@@ -75,9 +82,16 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
 
     private fun setupPhoneNumberTextView() {
         val phoneNumber = args.phoneNumber
-        val hiddenPhoneNumberText = "+91${phoneNumber.get(3)}${phoneNumber.get(4)}******${phoneNumber.get(11)}${phoneNumber.get(12)}"
+        val hiddenPhoneNumberText =
+            "+91${phoneNumber.get(3)}${phoneNumber.get(4)}******${phoneNumber.get(11)}${
+                phoneNumber.get(12)
+            }"
 
         binding.tvPhoneNo.text = hiddenPhoneNumberText
+    }
+
+    private fun editPhoneNumberAndNavigateBackToAuthScreen() {
+        findNavController().navigate(R.id.action_otpFragment_to_authentication2)
     }
 
     private suspend fun signinWithPhoneNumber(credentitals: PhoneAuthCredential) {
