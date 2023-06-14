@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
@@ -22,8 +23,15 @@ import com.google.firebase.ktx.Firebase
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentAuthenticationBinding
 import com.healthcare.yash.preeti.other.Constants.AUTHVERIFICATIONTAG
+import com.healthcare.yash.preeti.other.PhoneAuthCallbackSealedClass
 import com.healthcare.yash.preeti.other.PhoneNumberValidation
+import com.healthcare.yash.preeti.utils.PhoneAuthCallback
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -40,6 +48,10 @@ class Authentication : Fragment() {
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
     private lateinit var phoneNoValidation: PhoneNumberValidation
+
+
+    @Inject
+    lateinit var phoneAuthCallback: PhoneAuthCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,55 +113,126 @@ class Authentication : Fragment() {
         val phoneNumber =
             "${binding.etCountryCode.selectedCountryCodeWithPlus}${binding.etMobileNo.text.toString()}"
 
-        val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                Log.d(AUTHVERIFICATIONTAG, "onVerificationCompleted:$credential")
-            }
-
-            override fun onVerificationFailed(e: FirebaseException) {
-
-                Log.w(AUTHVERIFICATIONTAG, "onVerificationFailed", e)
-                binding.progressBar.visibility = View.GONE
-
-                if (e is FirebaseAuthInvalidCredentialsException) {
-                    Log.w(AUTHVERIFICATIONTAG, "onVerificationFailed", e)
-                    Toast.makeText(context, "Invalid Credentials!", Toast.LENGTH_SHORT).show()
-                } else if (e is FirebaseTooManyRequestsException) {
-                    Log.w(AUTHVERIFICATIONTAG, "onVerificationFailed", e)
-                    Toast.makeText(context, "Too many requests", Toast.LENGTH_SHORT).show()
-                } else if (e is FirebaseAuthMissingActivityForRecaptchaException) {
-                    Log.w(AUTHVERIFICATIONTAG, "onVerificationFailed", e)
-                    Toast.makeText(context, "reCaptcha Problem", Toast.LENGTH_SHORT).show()
-                }
-
-            }
-
-            override fun onCodeSent(
-                verificationId: String,
-                token: PhoneAuthProvider.ForceResendingToken,
-            ) {
-                Log.d("AUTHVERIFICATION", "onCodeSent:$verificationId")
-                storedVerificationId = verificationId
-                resendToken = token
-
-                val action =
-                    AuthenticationDirections.actionAuthentication2ToOtpFragment(
-                        verificationId,
-                        phoneNumber
-                    )
-                findNavController().navigate(action)
-            }
-        }
-
+//        val callbacks = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+//
+//            override fun onVerificationCompleted(credential: PhoneAuthCredential) {
+//                Log.d(AUTHVERIFICATIONTAG, "onVerificationCompleted:$credential")
+//            }
+//
+//            override fun onVerificationFailed(e: FirebaseException) {
+//
+//                Log.w(AUTHVERIFICATIONTAG, "onVerificationFailed", e)
+//                binding.progressBar.visibility = View.GONE
+//
+//                if (e is FirebaseAuthInvalidCredentialsException) {
+//                    Log.w(AUTHVERIFICATIONTAG, "onVerificationFailed", e)
+//                    Toast.makeText(context, "Invalid Credentials!", Toast.LENGTH_SHORT).show()
+//                } else if (e is FirebaseTooManyRequestsException) {
+//                    Log.w(AUTHVERIFICATIONTAG, "onVerificationFailed", e)
+//                    Toast.makeText(context, "Too many requests", Toast.LENGTH_SHORT).show()
+//                } else if (e is FirebaseAuthMissingActivityForRecaptchaException) {
+//                    Log.w(AUTHVERIFICATIONTAG, "onVerificationFailed", e)
+//                    Toast.makeText(context, "reCaptcha Problem", Toast.LENGTH_SHORT).show()
+//                }
+//
+//            }
+//
+//            override fun onCodeSent(
+//                verificationId: String,
+//                token: PhoneAuthProvider.ForceResendingToken,
+//            ) {
+//                Log.d("AUTHVERIFICATION", "onCodeSent:$verificationId")
+//                storedVerificationId = verificationId
+//                resendToken = token
+//
+//                val action =
+//                    AuthenticationDirections.actionAuthentication2ToOtpFragment(
+//                        verificationId,
+//                        phoneNumber
+//                    )
+//                findNavController().navigate(action)
+//            }
+//        }
 
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)
             .setTimeout(60L, TimeUnit.SECONDS)
             .setActivity(requireActivity())
-            .setCallbacks(callbacks)
+            .setCallbacks(phoneAuthCallback.callbacks)
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
+
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            delay(4000)
+            phoneAuthCallback.callBackFlow?.value.let {
+                when (it) {
+                    is PhoneAuthCallbackSealedClass.ONVERIFICATIONCOMPLETED -> {
+                        Log.d(AUTHVERIFICATIONTAG, "Verification Completed")
+                    }
+
+                    is PhoneAuthCallbackSealedClass.ONVERIFICATIONFAILED -> {
+                        Log.d(AUTHVERIFICATIONTAG, "onVerificationFailed: ${it.firebaseException}")
+                        withContext(Dispatchers.Main) {
+                            binding.progressBar.visibility = View.GONE
+                        }
+                    }
+
+                    is PhoneAuthCallbackSealedClass.FIREBASEAUTHINVALIDCREDENTIALSEXCEPTION -> {
+                        Log.d(
+                            AUTHVERIFICATIONTAG,
+                            "onVerificationFailed: ${it.firebaseAuthInvalidCredentialsException}"
+                        )
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(context, "Invalid Credentials!", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+
+                    is PhoneAuthCallbackSealedClass.FIREBASETOOMANYREQUESTSEXCEPTION -> {
+                        Log.d(
+                            AUTHVERIFICATIONTAG,
+                            "onVerificationFailed: ${it.firebaseTooManyRequestsException}"
+                        )
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(context, "Too many requests", Toast.LENGTH_SHORT).show()
+                        }
+
+                    }
+
+                    is PhoneAuthCallbackSealedClass.FIREBASEAUTHMISSINGACTIVITYFORRECAPTCHAEXCEPTION -> {
+                        Log.d(
+                            AUTHVERIFICATIONTAG,
+                            "onVerificationFailed: ${it.firebaseAuthMissingActivityForRecaptchaException}"
+                        )
+                        withContext(Dispatchers.IO) {
+                            Toast.makeText(context, "reCaptcha Problem", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    is PhoneAuthCallbackSealedClass.ONCODESENT -> {
+                        Log.d("AUTHVERIFICATION", "onCodeSent:${it.verificationId}")
+                        storedVerificationId = it.verificationId.toString()
+                        resendToken = it.token!!
+
+                        val action =
+                            AuthenticationDirections.actionAuthentication2ToOtpFragment(
+                                it.verificationId.toString(),
+                                phoneNumber
+                            )
+                        withContext(Dispatchers.Main) {
+                            findNavController().navigate(action)
+                        }
+                    }
+
+                    else -> {
+
+                    }
+
+                }
+            }
+        }
+
     }
 
     override fun onDestroy() {
