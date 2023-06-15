@@ -9,12 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.FirebaseException
-import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
-import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -22,13 +17,13 @@ import com.google.firebase.ktx.Firebase
 
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentAuthenticationBinding
+import com.healthcare.yash.preeti.models.ResendTokenModelClass
 import com.healthcare.yash.preeti.other.Constants.AUTHVERIFICATIONTAG
 import com.healthcare.yash.preeti.other.PhoneAuthCallbackSealedClass
 import com.healthcare.yash.preeti.other.PhoneNumberValidation
 import com.healthcare.yash.preeti.utils.PhoneAuthCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -218,7 +213,8 @@ class Authentication : Fragment() {
                         val action =
                             AuthenticationDirections.actionAuthentication2ToOtpFragment(
                                 it.verificationId.toString(),
-                                phoneNumber
+                                phoneNumber,
+                                ResendTokenModelClass(resendToken)
                             )
                         withContext(Dispatchers.Main) {
                             findNavController().navigate(action)
@@ -226,7 +222,13 @@ class Authentication : Fragment() {
                     }
 
                     else -> {
-
+                        Log.d(
+                            AUTHVERIFICATIONTAG,
+                            "onVerificationFailed: ${it?.firebaseException}"
+                        )
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(context,"An Unknow Error Occured",Toast.LENGTH_SHORT).show()
+                        }
                     }
 
                 }

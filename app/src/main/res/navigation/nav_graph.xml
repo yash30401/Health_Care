@@ -22,6 +22,9 @@
         <argument
             android:name="phoneNumber"
             app:argType="string" />
+        <argument
+            android:name="resendToken"
+            app:argType="com.healthcare.yash.preeti.models.ResendTokenModelClass" />
     </fragment>
     <fragment
         android:id="@+id/authentication2"

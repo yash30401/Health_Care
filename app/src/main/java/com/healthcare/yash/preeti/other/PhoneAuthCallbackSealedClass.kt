@@ -21,17 +21,45 @@ sealed class PhoneAuthCallbackSealedClass(
         PhoneAuthCallbackSealedClass(null, null, firebaseException, null, null, null)
 
     class FIREBASEAUTHINVALIDCREDENTIALSEXCEPTION(firebaseAuthInvalidCredentialsException: String?) :
-        PhoneAuthCallbackSealedClass(null, null, null, firebaseAuthInvalidCredentialsException, null, null)
+        PhoneAuthCallbackSealedClass(
+            null,
+            null,
+            null,
+            firebaseAuthInvalidCredentialsException,
+            null,
+            null
+        )
 
     class FIREBASETOOMANYREQUESTSEXCEPTION(firebaseTooManyRequestsException: String?) :
-        PhoneAuthCallbackSealedClass(null, null, null, null, firebaseTooManyRequestsException, null)
+        PhoneAuthCallbackSealedClass(
+            null,
+            null,
+            null,
+            null,
+            firebaseTooManyRequestsException,
+            null
+        )
 
     class FIREBASEAUTHMISSINGACTIVITYFORRECAPTCHAEXCEPTION(
         firebaseAuthMissingActivityForRecaptchaException: String?
     ) :
-        PhoneAuthCallbackSealedClass(null, null, null, null, null, firebaseAuthMissingActivityForRecaptchaException)
+        PhoneAuthCallbackSealedClass(
+            null,
+            null,
+            null,
+            null,
+            null,
+            firebaseAuthMissingActivityForRecaptchaException
+        )
 
     class ONCODESENT(verificationId: String, token: ForceResendingToken) :
-        PhoneAuthCallbackSealedClass(verificationId, token, null, null, null, null)
+        PhoneAuthCallbackSealedClass(
+            verificationId,
+            token,
+            null,
+            null,
+            null,
+            null
+        )
 }
 

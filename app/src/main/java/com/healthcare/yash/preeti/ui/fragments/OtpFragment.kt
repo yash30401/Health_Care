@@ -21,14 +21,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentOtpBinding
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.COUNTDOWNTIMEINMINUTE
 import com.healthcare.yash.preeti.other.Constants.TAG
+import com.healthcare.yash.preeti.utils.PhoneAuthCallback
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import `in`.aabhasjindal.otptextview.OTPListener
@@ -39,12 +44,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class OtpFragment : Fragment(R.layout.fragment_otp) {
 
     private var _binding: FragmentOtpBinding? = null
     private val binding get() = _binding!!
+
     private val args: OtpFragmentArgs by navArgs()
 
     private val viewModel by viewModels<AuthViewModel>()
@@ -54,6 +62,10 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
     var currentCounterTimeInMilliSeconds = 0L
 
     private lateinit var phoneNumber: String
+
+    @Inject
+    lateinit var phoneAuthCallback: PhoneAuthCallback
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -80,23 +92,29 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
     private fun onClicks() {
 
         val verificationID = args.verificationId
+        val otp = binding.etOtpPin.editableText.toString()
 
         binding.btnVerifyOtp.setOnClickListener {
-            val credentitals =
-                PhoneAuthProvider.getCredential(
-                    verificationID,
-                    binding.etOtpPin.editableText.toString()
-                )
-            binding.progressBar.visibility = View.VISIBLE
-            lifecycleScope.launch(Dispatchers.IO) {
-                signinWithPhoneNumber(credentitals)
+
+            if (otp != "") {
+                val credentitals =
+                    PhoneAuthProvider.getCredential(
+                        verificationID,
+                        otp
+                    )
+                binding.progressBar.visibility = View.VISIBLE
+                lifecycleScope.launch(Dispatchers.IO) {
+                    signinWithPhoneNumber(credentitals)
+                }
+            }else{
+                Toast.makeText(requireContext(), "Please Enter Otp!", Toast.LENGTH_SHORT).show()
             }
         }
 
     }
 
     private fun setupPhoneNumberTextView() {
-        phoneNumber  = args.phoneNumber
+        phoneNumber = args.phoneNumber
         val hiddenPhoneNumberText =
             "+91${phoneNumber.get(3)}${phoneNumber.get(4)}******${phoneNumber.get(11)}${
                 phoneNumber.get(12)
@@ -143,13 +161,32 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
     }
 
     private fun resendOtpToPhoneNumber() {
-        if(isTimerRunning == true){
-            Log.d(TAG,"Timer is Running")
-        }else{
+        if (isTimerRunning == true) {
+            Log.d(TAG, "Timer is Running")
+        } else {
 
+            val resendToken = args.resendToken.resendingToken
+
+            val options = PhoneAuthOptions.newBuilder(Firebase.auth)
+                .setPhoneNumber(phoneNumber)
+                .setTimeout(60L, TimeUnit.SECONDS)
+                .setActivity(requireActivity())
+                .setCallbacks(phoneAuthCallback.callbacks)
+                .setForceResendingToken(resendToken!!)
+                .build()
+            PhoneAuthProvider.verifyPhoneNumber(options)
+
+            binding.tvResend.text = "Resend OTP in: "
+            binding.tvResend.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.black
+                )
+            )
+            binding.tvTimer.visibility = View.VISIBLE
+            startOtpResendTimer()
         }
     }
-
 
 
     private suspend fun signinWithPhoneNumber(credentitals: PhoneAuthCredential) {
