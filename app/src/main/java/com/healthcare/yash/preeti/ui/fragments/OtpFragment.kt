@@ -66,10 +66,13 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
     @Inject
     lateinit var phoneAuthCallback: PhoneAuthCallback
 
+    private lateinit var callbacks:PhoneAuthProvider.OnVerificationStateChangedCallbacks
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentOtpBinding.bind(view)
+
+        callbacks = phoneAuthCallback.callbacks
 
         onClicks()
         setupPhoneNumberTextView()
@@ -92,10 +95,9 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
     private fun onClicks() {
 
         val verificationID = args.verificationId
-        val otp = binding.etOtpPin.editableText.toString()
 
         binding.btnVerifyOtp.setOnClickListener {
-
+            val otp = binding.etOtpPin.editableText.toString()
             if (otp != "") {
                 val credentitals =
                     PhoneAuthProvider.getCredential(
@@ -171,7 +173,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
                 .setPhoneNumber(phoneNumber)
                 .setTimeout(60L, TimeUnit.SECONDS)
                 .setActivity(requireActivity())
-                .setCallbacks(phoneAuthCallback.callbacks)
+                .setCallbacks(callbacks)
                 .setForceResendingToken(resendToken!!)
                 .build()
             PhoneAuthProvider.verifyPhoneNumber(options)

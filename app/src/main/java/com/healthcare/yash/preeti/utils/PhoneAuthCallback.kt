@@ -72,7 +72,7 @@ class PhoneAuthCallback @Inject constructor() {
 //                        phoneNumber
 //                    )
 //                findNavController().navigate(action)
-            Log.d(Constants.AUTHVERIFICATIONTAG,"codeSent: ${token.toString()}")
+            Log.d(Constants.AUTHVERIFICATIONTAG,"codeSent")
             _callBackFlow.value = PhoneAuthCallbackSealedClass.ONCODESENT(verificationId, token)
         }
 

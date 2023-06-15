@@ -15,10 +15,23 @@ sealed class PhoneAuthCallbackSealedClass(
     val firebaseTooManyRequestsException: String?,
     val firebaseAuthMissingActivityForRecaptchaException: String?
 ) {
-    class ONVERIFICATIONCOMPLETED : PhoneAuthCallbackSealedClass(null, null, null, null, null, null)
+    class ONVERIFICATIONCOMPLETED : PhoneAuthCallbackSealedClass(
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+    )
 
     class ONVERIFICATIONFAILED(firebaseException: String?) :
-        PhoneAuthCallbackSealedClass(null, null, firebaseException, null, null, null)
+        PhoneAuthCallbackSealedClass(
+            null,
+            null, firebaseException,
+            null,
+            null,
+            null
+        )
 
     class FIREBASEAUTHINVALIDCREDENTIALSEXCEPTION(firebaseAuthInvalidCredentialsException: String?) :
         PhoneAuthCallbackSealedClass(

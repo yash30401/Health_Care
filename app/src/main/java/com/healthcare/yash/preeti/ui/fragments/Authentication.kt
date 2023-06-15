@@ -9,7 +9,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
+import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -24,6 +29,7 @@ import com.healthcare.yash.preeti.other.PhoneNumberValidation
 import com.healthcare.yash.preeti.utils.PhoneAuthCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,11 +48,10 @@ class Authentication : Fragment() {
     private lateinit var storedVerificationId: String
     private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
 
-    private lateinit var phoneNoValidation: PhoneNumberValidation
-
-
     @Inject
     lateinit var phoneAuthCallback: PhoneAuthCallback
+
+    private lateinit var callback: PhoneAuthProvider.OnVerificationStateChangedCallbacks
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,42 +72,35 @@ class Authentication : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAuthenticationBinding.bind(view)
 
+        callback = phoneAuthCallback.callbacks
 
         binding.btnRequestOtp.setOnClickListener {
-            val phoneNumber = validatePhoneNumber(binding.etMobileNo.text.toString())
+            val phoneNoValidation = validatePhoneNumber(binding.etMobileNo.text.toString())
+            phoneNoEventsHandle(phoneNoValidation)
+        }
+    }
 
-            when (phoneNoValidation) {
-                PhoneNumberValidation.SUCCESS -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                    sendVerificationCodeToPhoneNumber()
-                }
+    // Function to validate Phone numbers
+    private fun validatePhoneNumber(number: String): PhoneNumberValidation =
+        if (number.isEmpty()) PhoneNumberValidation.EMPTY else PhoneNumberValidation.SUCCESS
 
-                PhoneNumberValidation.EMPTY -> {
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(context, "Please Enter Your Mobile Number", Toast.LENGTH_SHORT)
-                        .show()
-                }
 
-                PhoneNumberValidation.WRONGFORMAT -> {
-                    binding.progressBar.visibility = View.GONE
-                }
+    private fun phoneNoEventsHandle(phoneNoValidation:PhoneNumberValidation) {
+        when (phoneNoValidation) {
+            PhoneNumberValidation.SUCCESS -> {
+                binding.progressBar.visibility = View.VISIBLE
+                sendVerificationCodeToPhoneNumber()
+            }
+            PhoneNumberValidation.EMPTY -> {
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(context, "Please Enter Your Mobile Number", Toast.LENGTH_SHORT)
+                    .show()
+            }
+            PhoneNumberValidation.WRONGFORMAT -> {
+                binding.progressBar.visibility = View.GONE
             }
         }
-
-
     }
-
-
-    // Function to validate Indian phone numbers
-    fun validatePhoneNumber(number: String): PhoneNumberValidation {
-        if (number.isEmpty()) {
-            phoneNoValidation = PhoneNumberValidation.EMPTY
-        } else {
-            phoneNoValidation = PhoneNumberValidation.SUCCESS
-        }
-        return phoneNoValidation
-    }
-
 
     private fun sendVerificationCodeToPhoneNumber() {
         val phoneNumber =
@@ -129,7 +127,6 @@ class Authentication : Fragment() {
 //                    Log.w(AUTHVERIFICATIONTAG, "onVerificationFailed", e)
 //                    Toast.makeText(context, "reCaptcha Problem", Toast.LENGTH_SHORT).show()
 //                }
-//
 //            }
 //
 //            override fun onCodeSent(
@@ -142,25 +139,18 @@ class Authentication : Fragment() {
 //
 //                val action =
 //                    AuthenticationDirections.actionAuthentication2ToOtpFragment(
-//                        verificationId,
-//                        phoneNumber
-//                    )
+//                               verificationId,
+//                                phoneNumber,
+//                                ResendTokenModelClass(resendToken)
+//                            )
 //                findNavController().navigate(action)
 //            }
 //        }
 
-        val options = PhoneAuthOptions.newBuilder(Firebase.auth)
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .setActivity(requireActivity())
-            .setCallbacks(phoneAuthCallback.callbacks)
-            .build()
-        PhoneAuthProvider.verifyPhoneNumber(options)
 
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            delay(4000)
-            phoneAuthCallback.callBackFlow?.value.let {
+        GlobalScope.launch(Dispatchers.IO) {
+            delay(2000)
+            phoneAuthCallback.callBackFlow?.collect {
                 when (it) {
                     is PhoneAuthCallbackSealedClass.ONVERIFICATIONCOMPLETED -> {
                         Log.d(AUTHVERIFICATIONTAG, "Verification Completed")
@@ -226,14 +216,18 @@ class Authentication : Fragment() {
                             AUTHVERIFICATIONTAG,
                             "onVerificationFailed: ${it?.firebaseException}"
                         )
-                        withContext(Dispatchers.Main) {
-                            Toast.makeText(context,"An Unknow Error Occured",Toast.LENGTH_SHORT).show()
-                        }
                     }
-
                 }
             }
         }
+
+        val options = PhoneAuthOptions.newBuilder(Firebase.auth)
+            .setPhoneNumber(phoneNumber)
+            .setTimeout(60L, TimeUnit.SECONDS)
+            .setActivity(requireActivity())
+            .setCallbacks(callback)
+            .build()
+        PhoneAuthProvider.verifyPhoneNumber(options)
 
     }
 
