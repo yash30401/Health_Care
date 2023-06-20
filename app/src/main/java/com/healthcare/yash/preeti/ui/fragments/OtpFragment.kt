@@ -115,6 +115,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
 
     }
 
+    //Setting Up Phone Number Textview With Stars(*)
     private fun setupPhoneNumberTextView() {
         phoneNumber = args.phoneNumber
         val hiddenPhoneNumberText =
@@ -129,6 +130,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
         findNavController().navigate(R.id.action_otpFragment_to_authentication2)
     }
 
+    // Timer For OTP Resend
     private fun startOtpResendTimer() {
         currentCounterTimeInMilliSeconds = COUNTDOWNTIMEINMINUTE.toLong() * 60000L
         countDownTimer = object : CountDownTimer(currentCounterTimeInMilliSeconds, 1000) {
@@ -155,6 +157,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
         isTimerRunning = true
     }
 
+    // Updating the Timer Textview
     private fun updateTimerUi() {
         val minute = (currentCounterTimeInMilliSeconds / 1000) / 60
         val seconds = (currentCounterTimeInMilliSeconds / 1000) % 60
@@ -162,6 +165,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
         binding.tvTimer.text = "$minute:$seconds"
     }
 
+    //Resending OTP
     private fun resendOtpToPhoneNumber() {
         if (isTimerRunning == true) {
             Log.d(TAG, "Timer is Running")
@@ -191,6 +195,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
     }
 
 
+    //SignInWith Credentials
     private suspend fun signinWithPhoneNumber(credentitals: PhoneAuthCredential) {
         //Signin with phone Number
         viewModel?.signinWithPhoneNumber(credentitals)

@@ -85,6 +85,7 @@ class Authentication : Fragment() {
         if (number.isEmpty()) PhoneNumberValidation.EMPTY else PhoneNumberValidation.SUCCESS
 
 
+    // Handling PhoneNumber Input Events
     private fun phoneNoEventsHandle(phoneNoValidation:PhoneNumberValidation) {
         when (phoneNoValidation) {
             PhoneNumberValidation.SUCCESS -> {
@@ -102,6 +103,7 @@ class Authentication : Fragment() {
         }
     }
 
+    // Verifying PhoneNumber And Sending OTP
     private fun sendVerificationCodeToPhoneNumber() {
         val phoneNumber =
             "${binding.etCountryCode.selectedCountryCodeWithPlus}${binding.etMobileNo.text.toString()}"
