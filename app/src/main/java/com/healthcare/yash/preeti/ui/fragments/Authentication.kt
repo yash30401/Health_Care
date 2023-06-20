@@ -1,14 +1,23 @@
 package com.healthcare.yash.preeti.ui.fragments
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.content.IntentSender
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.auth.api.identity.Identity
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuth
@@ -22,11 +31,15 @@ import com.google.firebase.ktx.Firebase
 
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentAuthenticationBinding
+import com.healthcare.yash.preeti.googleAuth.GoogleAuthUiClient
 import com.healthcare.yash.preeti.models.ResendTokenModelClass
+import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.AUTHVERIFICATIONTAG
+import com.healthcare.yash.preeti.other.Constants.TAG
 import com.healthcare.yash.preeti.other.PhoneAuthCallbackSealedClass
 import com.healthcare.yash.preeti.other.PhoneNumberValidation
 import com.healthcare.yash.preeti.utils.PhoneAuthCallback
+import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -53,6 +66,17 @@ class Authentication : Fragment() {
 
     private lateinit var callback: PhoneAuthProvider.OnVerificationStateChangedCallbacks
 
+    private val viewModel by viewModels<AuthViewModel>()
+
+    private val googleAuthUiClient by lazy {
+        GoogleAuthUiClient(
+            requireContext().applicationContext,
+            Identity.getSignInClient(requireActivity().applicationContext)
+        )
+    }
+
+    private lateinit var launcher: ActivityResultLauncher<IntentSenderRequest>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (firebaseAuth.currentUser != null) {
@@ -74,11 +98,18 @@ class Authentication : Fragment() {
 
         callback = phoneAuthCallback.callbacks
 
+        launcher = registerActivityForResult()
+
         binding.btnRequestOtp.setOnClickListener {
             val phoneNoValidation = validatePhoneNumber(binding.etMobileNo.text.toString())
             phoneNoEventsHandle(phoneNoValidation)
         }
+
+        binding.btnGoogleSignIn.setOnClickListener {
+            signInWithGoogle()
+        }
     }
+
 
     // Function to validate Phone numbers
     private fun validatePhoneNumber(number: String): PhoneNumberValidation =
@@ -86,17 +117,19 @@ class Authentication : Fragment() {
 
 
     // Handling PhoneNumber Input Events
-    private fun phoneNoEventsHandle(phoneNoValidation:PhoneNumberValidation) {
+    private fun phoneNoEventsHandle(phoneNoValidation: PhoneNumberValidation) {
         when (phoneNoValidation) {
             PhoneNumberValidation.SUCCESS -> {
                 binding.progressBar.visibility = View.VISIBLE
                 sendVerificationCodeToPhoneNumber()
             }
+
             PhoneNumberValidation.EMPTY -> {
                 binding.progressBar.visibility = View.GONE
                 Toast.makeText(context, "Please Enter Your Mobile Number", Toast.LENGTH_SHORT)
                     .show()
             }
+
             PhoneNumberValidation.WRONGFORMAT -> {
                 binding.progressBar.visibility = View.GONE
             }
@@ -231,6 +264,72 @@ class Authentication : Fragment() {
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
 
+    }
+
+
+    private fun signInWithGoogle() {
+        lifecycleScope.launch {
+            val signInIntentSender = googleAuthUiClient.signIn()
+            launcher.launch(
+                IntentSenderRequest.Builder(
+                    signInIntentSender ?: return@launch
+                ).build()
+            )
+
+            viewModel.googleSignInState?.collect {
+                when (it) {
+                    is NetworkResult.Loading -> {
+                        withContext(Dispatchers.Main) {
+                            binding.progressBar.visibility = View.VISIBLE
+                        }
+                    }
+
+                    is NetworkResult.Success -> {
+                        withContext(Dispatchers.Main) {
+                            findNavController().navigate(R.id.action_authentication2_to_mainFragment)
+                            Toast.makeText(
+                                requireContext(),
+                                "Sign In Successful",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+                    is NetworkResult.Error -> {
+                        withContext(Dispatchers.Main) {
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(
+                                requireContext(),
+                                it.message.toString(),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                    }
+
+                    else -> {
+                        Log.d(TAG, "An Unknow Error occur")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun registerActivityForResult(): ActivityResultLauncher<IntentSenderRequest> {
+        val launcher =
+            registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result: ActivityResult ->
+
+                if (result.resultCode == RESULT_OK) {
+                    lifecycleScope.launch {
+                        val signInResult = googleAuthUiClient.signInWithIntent(
+                            intent = result.data ?: return@launch
+                        )
+                        viewModel.onGoogleSignInResult(signInResult)
+                    }
+                }
+
+            }
+        return launcher
     }
 
     override fun onDestroy() {
