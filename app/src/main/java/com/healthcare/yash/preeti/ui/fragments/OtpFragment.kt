@@ -36,7 +36,6 @@ import com.healthcare.yash.preeti.other.Constants.TAG
 import com.healthcare.yash.preeti.utils.PhoneAuthCallback
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import `in`.aabhasjindal.otptextview.OTPListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay

@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "1032461311002-vovo4g4skq846j6i6hvgb8pueko0i1kf.apps.googleusercontent.com",
+          "client_id": "1032461311002-m6i7mp77rq4mvf3isdnip6mumac80hai.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.healthcare.yash.preeti",
+            "certificate_hash": "5aa585828c05539faef41f0310bc3897de911ce3"
+          }
+        },
+        {
+          "client_id": "1032461311002-heodl5e1hpth05c3d61jrq25f1fqiirk.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1032461311002-vovo4g4skq846j6i6hvgb8pueko0i1kf.apps.googleusercontent.com",
+              "client_id": "1032461311002-heodl5e1hpth05c3d61jrq25f1fqiirk.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
