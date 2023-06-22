@@ -68,12 +68,8 @@ class Authentication : Fragment() {
 
     private val viewModel by viewModels<AuthViewModel>()
 
-    private val googleAuthUiClient by lazy {
-        GoogleAuthUiClient(
-            requireContext().applicationContext,
-            Identity.getSignInClient(requireActivity().applicationContext)
-        )
-    }
+    @Inject
+    lateinit var googleAuthUiClient: GoogleAuthUiClient
 
     private lateinit var launcher: ActivityResultLauncher<IntentSenderRequest>
 
@@ -266,8 +262,10 @@ class Authentication : Fragment() {
 
     }
 
-
+    //Signing With Google Account
     private fun signInWithGoogle() {
+        /*Because OneTap Google SignIn sends an Intent. So thats why we used this way to create google SignIn using clean architecture.
+        */
         lifecycleScope.launch {
             val signInIntentSender = googleAuthUiClient.signIn()
             launcher.launch(
@@ -315,6 +313,10 @@ class Authentication : Fragment() {
         }
     }
 
+    /*
+    * ActivityResultLauncher is the new face of the trigger mechanism for Kotlin. This launcher has been used since 2020, moreover,
+    * startActivityForResult method died in 2020.
+    * */
     private fun registerActivityForResult(): ActivityResultLauncher<IntentSenderRequest> {
         val launcher =
             registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result: ActivityResult ->

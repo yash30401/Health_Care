@@ -7,7 +7,11 @@ import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
 
 
 data class ResendTokenModelClass(val resendingToken: ForceResendingToken?) : Parcelable {
-    constructor(parcel: Parcel) : this(parcel.readParcelable<PhoneAuthProvider.ForceResendingToken>(PhoneAuthProvider.ForceResendingToken::class.java.classLoader)!!){
+    constructor(parcel: Parcel) : this(
+        parcel.readParcelable<PhoneAuthProvider.ForceResendingToken>(
+            PhoneAuthProvider.ForceResendingToken::class.java.classLoader
+        )!!
+    ) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

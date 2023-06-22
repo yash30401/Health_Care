@@ -13,10 +13,11 @@ import com.healthcare.yash.preeti.models.GoogleSignInResult
 import com.healthcare.yash.preeti.models.UserData
 import com.healthcare.yash.preeti.other.Constants.WEB_CLIENT_ID
 import com.healthcare.yash.preeti.utils.await
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.CancellationException
 import javax.inject.Inject
 
-class GoogleAuthUiClient(
+class GoogleAuthUiClient @Inject constructor(
     private val context: Context,
     private val oneTapClient: SignInClient
 ) {
