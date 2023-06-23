@@ -19,6 +19,12 @@
         <action
             android:id="@+id/action_otpFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <argument
+            android:name="phoneNumber"
+            app:argType="string" />
+        <argument
+            android:name="resendToken"
+            app:argType="com.healthcare.yash.preeti.models.ResendTokenModelClass" />
     </fragment>
     <fragment
         android:id="@+id/authentication2"
@@ -30,6 +36,9 @@
             app:destination="@id/otpFragment" />
         <action
             android:id="@+id/action_authentication2_to_mainFragment"
+            app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_authentication2_to_mainFragment2"
             app:destination="@id/mainFragment" />
     </fragment>
     <fragment

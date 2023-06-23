@@ -78,6 +78,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
 
     implementation 'com.google.firebase:firebase-appcheck-safetynet:16.0.0-beta04'
+    // Dependency for the Google Play services library and specify its version
+    implementation 'com.google.android.gms:play-services-auth:20.5.0'
 
     //Hilt
     implementation "com.google.dagger:hilt-android:2.44"
@@ -88,13 +90,10 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
-    //Otpview Library
-    implementation 'com.github.aabhasr1:OtpView:v1.1.2-ktx'
-
     // country code picker
     implementation 'com.hbb20:ccp:2.7.0'
 
-    // otp pin view
+    //otp pin view
     implementation 'io.github.chaosleung:pinview:1.4.4'
 
 

@@ -9,4 +9,6 @@
     <color name="hint">#C6C6C8</color>
     <color name="dark_grey">#FF7F5D</color>
 
+    <color name="blueResendTextColor">#4C65F1</color>
+
 </resources>

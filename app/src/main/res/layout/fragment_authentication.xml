@@ -13,20 +13,23 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/dimen_30"
+            android:paddingBottom="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/tvAppName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="Health Care"
-                android:textSize="25sp"
                 android:fontFamily="@font/poppins_medium"
+                android:text="Health Care"
+                android:textAlignment="center"
+                android:textSize="25sp"
                 app:layout_constraintBottom_toTopOf="@+id/tvMobile"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -155,6 +158,7 @@
                 android:text="Google"
                 android:textColor="@color/black"
                 app:cornerRadius="20dp"
+                android:layout_marginHorizontal="1dp"
                 app:elevation="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -166,13 +170,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_20"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/bg_white_25"
                 android:drawableStart="@drawable/ic_fb"
                 android:paddingHorizontal="30dp"
                 android:text="Facebook"
+                android:layout_marginHorizontal="1dp"
                 android:textColor="@color/black"
                 app:cornerRadius="20dp"
                 app:elevation="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btnGoogleSignIn" />

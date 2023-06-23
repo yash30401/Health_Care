@@ -50,9 +50,8 @@ class MainActivity : AppCompatActivity() {
         val currentDestination = navController.currentDestination
         val isLoggedIn = firebaseAuth.currentUser != null
 
-        Toast.makeText(this, "Back Pressed", Toast.LENGTH_SHORT).show()
-        Log.d("FraTesting",isLoggedIn.toString())
-        Log.d("FraTesting",currentDestination.toString())
+        Log.d("FragTesting",isLoggedIn.toString())
+        Log.d("FragTesting",currentDestination.toString())
 
         if(isLoggedIn && currentDestination?.id ==R.id.mainFragment){
             showExitConfirmationDialog()

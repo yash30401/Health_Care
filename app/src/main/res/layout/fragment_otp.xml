@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/dimen_30"
+            android:paddingBottom="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -70,7 +71,7 @@
                     android:layout_marginStart="6dp"/>
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/tvEditMobileNo"
+                    android:id="@+id/iv_editPhoneNo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/ic_edit"
@@ -146,10 +147,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dimen_30"
                 android:layout_marginTop="@dimen/dimen_20"
-                android:paddingHorizontal="30dp"
                 android:background="@drawable/bg_btn_verify_login"
+                android:paddingHorizontal="30dp"
                 android:text="@string/verify"
+                android:layout_marginBottom="10dp"
                 android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/clResend" />
