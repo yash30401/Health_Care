@@ -1,27 +1,22 @@
 package com.healthcare.yash.preeti.ui
 
-import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
+import android.content.pm.PackageManager
+import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
-import android.view.Menu
-import android.widget.Toast
-import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -41,6 +36,20 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView2) as NavHostFragment
         navController = navHostFragment.navController
+
+        try {
+            val info = packageManager.getPackageInfo(
+                "com.healthcare.yash.preeti",
+                PackageManager.GET_SIGNATURES
+            )
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            }
+        } catch (e: NameNotFoundException) {
+        } catch (e: NoSuchAlgorithmException) {
+        }
 
     }
 

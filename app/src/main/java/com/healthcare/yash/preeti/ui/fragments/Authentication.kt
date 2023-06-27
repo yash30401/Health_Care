@@ -1,6 +1,7 @@
 package com.healthcare.yash.preeti.ui.fragments
 
 import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -32,6 +33,7 @@ import com.healthcare.yash.preeti.googleAuth.GoogleAuthUiClient
 import com.healthcare.yash.preeti.models.ResendTokenModelClass
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.AUTHVERIFICATIONTAG
+import com.healthcare.yash.preeti.other.Constants.FACEBOOKTEST
 import com.healthcare.yash.preeti.other.Constants.TAG
 import com.healthcare.yash.preeti.other.PhoneAuthCallbackSealedClass
 import com.healthcare.yash.preeti.other.PhoneNumberValidation
@@ -71,6 +73,7 @@ class Authentication : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        callbackManager = CallbackManager.Factory.create()
         if (firebaseAuth.currentUser != null) {
             findNavController().navigate(R.id.action_authentication2_to_mainFragment)
         }
@@ -80,9 +83,8 @@ class Authentication : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_authentication, container, false)
-        callbackManager = CallbackManager.Factory.create()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -111,7 +113,7 @@ class Authentication : Fragment() {
         LoginManager.getInstance().logInWithReadPermissions(
             this,
             callbackManager,
-            listOf("public_profile", "email")
+            listOf("public_profile")
         )
         LoginManager.getInstance()
             .registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
@@ -122,35 +124,33 @@ class Authentication : Fragment() {
 
                 override fun onSuccess(result: LoginResult) {
                     val bundle = Bundle()
-                    bundle.putString("fields", "id, email, first_name, last_name ")
+                    bundle.putString("fields", "id, first_name, last_name ")
                     val request = GraphRequest.newMeRequest(
                         result.accessToken
                     ) { fbObject, response ->
                         Log.v("LoginFragment Success", response.toString())
                         //For safety measure enclose the request with try and catch
                         try {
-                            Log.d("facebooktest", "onSuccess: fbObject $fbObject")
+                            Log.d(FACEBOOKTEST, "onSuccess: fbObject $fbObject")
                             val id = fbObject?.getString("id")
-                            val email = fbObject?.getString("email")
                             val firstName = fbObject?.getString("first_name")
                             val lastName = fbObject?.getString("last_name")
-                            Log.d("facebooktest", "onSuccess: id $id")
-                            Log.d("facebooktest", "onSuccess: email $email")
-                            Log.d("facebooktest", "onSuccess: email $firstName")
-                            Log.d("facebooktest", "onSuccess: email $lastName")
+                            Log.d(FACEBOOKTEST, "onSuccess: id $id")
+                            Log.d(FACEBOOKTEST, "onSuccess: email $firstName")
+                            Log.d(FACEBOOKTEST, "onSuccess: email $lastName")
                             if (id != null) {
-                                if (email != null) {
-                                    if (firstName != null) {
-                                        if (lastName != null) {
-                                            //socialLogin("facebook", id, email, firstName, lastName)
-                                            Toast.makeText(requireContext(), "Login Details", Toast.LENGTH_SHORT).show()
-                                        }
+                                if (firstName != null) {
+                                    if (lastName != null) {
+                                        //socialLogin("facebook", id, email, firstName, lastName)
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Login Details",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
-                                } else {
-                                    //socialLogin("facebook", id, "", "", "")
-                                    Toast.makeText(requireContext(), "Login", Toast.LENGTH_SHORT).show()
                                 }
                             }
+                            findNavController().navigate(R.id.action_authentication2_to_mainFragment)
 
                         } //If no data has been retrieve throw some error
                         catch (e: JSONException) {
@@ -393,6 +393,11 @@ class Authentication : Fragment() {
 
             }
         return launcher
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        callbackManager.onActivityResult(requestCode,resultCode,data)
     }
 
     override fun onDestroy() {
