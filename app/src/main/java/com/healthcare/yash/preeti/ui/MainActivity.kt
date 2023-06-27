@@ -44,8 +44,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-
     override fun onBackPressed() {
         val currentDestination = navController.currentDestination
         val isLoggedIn = firebaseAuth.currentUser != null
