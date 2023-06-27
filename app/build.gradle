@@ -96,6 +96,11 @@ dependencies {
     //otp pin view
     implementation 'io.github.chaosleung:pinview:1.4.4'
 
+    //Fb Login
+    implementation 'com.facebook.android:facebook-login:15.0.1'
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
+
+
 
 }
 

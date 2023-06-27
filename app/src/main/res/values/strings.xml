@@ -14,4 +14,8 @@
     <string name="_00_30_">00:30</string>
     <string name="verify">Verify OTP</string>
 
+    <string name="facebook_app_id">700000000000001</string>
+    <string name="fb_login_protocol_scheme">fb700000000000001</string>
+    <string name="facebook_client_token">70000000000000000000000000000001</string>
+
 </resources>

@@ -1,8 +1,6 @@
 package com.healthcare.yash.preeti.ui.fragments
 
 import android.app.Activity.RESULT_OK
-import android.content.Intent
-import android.content.IntentSender
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,18 +15,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.firebase.FirebaseException
-import com.google.firebase.FirebaseTooManyRequestsException
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.GraphRequest
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
-import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentAuthenticationBinding
 import com.healthcare.yash.preeti.googleAuth.GoogleAuthUiClient
@@ -41,11 +38,8 @@ import com.healthcare.yash.preeti.other.PhoneNumberValidation
 import com.healthcare.yash.preeti.utils.PhoneAuthCallback
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import org.json.JSONException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -73,6 +67,8 @@ class Authentication : Fragment() {
 
     private lateinit var launcher: ActivityResultLauncher<IntentSenderRequest>
 
+    private lateinit var callbackManager: CallbackManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (firebaseAuth.currentUser != null) {
@@ -86,6 +82,7 @@ class Authentication : Fragment() {
     ): View? {
 
         return inflater.inflate(R.layout.fragment_authentication, container, false)
+        callbackManager = CallbackManager.Factory.create()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -104,6 +101,66 @@ class Authentication : Fragment() {
         binding.btnGoogleSignIn.setOnClickListener {
             signInWithGoogle()
         }
+
+        binding.btnFacebookSignIn.setOnClickListener {
+            signInWithFacebook()
+        }
+    }
+
+    private fun signInWithFacebook() {
+        LoginManager.getInstance().logInWithReadPermissions(
+            this,
+            callbackManager,
+            listOf("public_profile", "email")
+        )
+        LoginManager.getInstance()
+            .registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+                override fun onCancel() {}
+                override fun onError(error: FacebookException) {
+                    Log.e("FacebookException", error.message.toString())
+                }
+
+                override fun onSuccess(result: LoginResult) {
+                    val bundle = Bundle()
+                    bundle.putString("fields", "id, email, first_name, last_name ")
+                    val request = GraphRequest.newMeRequest(
+                        result.accessToken
+                    ) { fbObject, response ->
+                        Log.v("LoginFragment Success", response.toString())
+                        //For safety measure enclose the request with try and catch
+                        try {
+                            Log.d("facebooktest", "onSuccess: fbObject $fbObject")
+                            val id = fbObject?.getString("id")
+                            val email = fbObject?.getString("email")
+                            val firstName = fbObject?.getString("first_name")
+                            val lastName = fbObject?.getString("last_name")
+                            Log.d("facebooktest", "onSuccess: id $id")
+                            Log.d("facebooktest", "onSuccess: email $email")
+                            Log.d("facebooktest", "onSuccess: email $firstName")
+                            Log.d("facebooktest", "onSuccess: email $lastName")
+                            if (id != null) {
+                                if (email != null) {
+                                    if (firstName != null) {
+                                        if (lastName != null) {
+                                            //socialLogin("facebook", id, email, firstName, lastName)
+                                            Toast.makeText(requireContext(), "Login Details", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                } else {
+                                    //socialLogin("facebook", id, "", "", "")
+                                    Toast.makeText(requireContext(), "Login", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+
+                        } //If no data has been retrieve throw some error
+                        catch (e: JSONException) {
+                            e.printStackTrace()
+                        }
+                    }
+                    request.parameters = bundle
+                    request.executeAsync()
+                }
+            })
     }
 
 
@@ -266,8 +323,10 @@ class Authentication : Fragment() {
     private fun signInWithGoogle() {
         /*Because OneTap Google SignIn sends an Intent. So thats why we used this way to create google SignIn using clean architecture.
         */
+        Log.e(TAG, "signInWithGoogle: ")
         lifecycleScope.launch {
             val signInIntentSender = googleAuthUiClient.signIn()
+            Log.e(TAG, "signInWithGoogle: $signInIntentSender")
             launcher.launch(
                 IntentSenderRequest.Builder(
                     signInIntentSender ?: return@launch
@@ -275,6 +334,7 @@ class Authentication : Fragment() {
             )
 
             viewModel.googleSignInState?.collect {
+                Log.e(TAG, "signInViewModel: $it")
                 when (it) {
                     is NetworkResult.Loading -> {
                         withContext(Dispatchers.Main) {
@@ -284,6 +344,7 @@ class Authentication : Fragment() {
 
                     is NetworkResult.Success -> {
                         withContext(Dispatchers.Main) {
+                            Log.e(TAG, "Success: ")
                             findNavController().navigate(R.id.action_authentication2_to_mainFragment)
                             Toast.makeText(
                                 requireContext(),
