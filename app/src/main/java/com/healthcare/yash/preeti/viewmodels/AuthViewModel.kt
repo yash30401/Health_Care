@@ -61,7 +61,7 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
         viewModelScope.launch {
             _facebookSigninState.value = NetworkResult.Loading()
             val result = repository.signInWithFacebook(callbackManager, fragment)
-            _facebookSigninState.value = NetworkResult.Success(result?.data!!)
+            _facebookSigninState.value = NetworkResult.Success(result.data!!)
         }
 
 

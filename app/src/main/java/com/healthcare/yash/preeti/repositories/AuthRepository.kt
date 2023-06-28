@@ -24,7 +24,10 @@ import com.healthcare.yash.preeti.utils.await
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.json.JSONException
 import javax.inject.Inject
 
@@ -48,27 +51,29 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    fun signInWithFacebook(
+    suspend fun signInWithFacebook(
         callbackManager: CallbackManager,
         fragment: Fragment
-    ): NetworkResult<FirebaseUser>? {
+    ): NetworkResult<FirebaseUser> {
 
-        var networkResult: NetworkResult<FirebaseUser>? = null
+        var networkResult: NetworkResult<FirebaseUser> = NetworkResult.Loading()
 
-        LoginManager.getInstance().logInWithReadPermissions(
-            fragment,
-            callbackManager,
-            listOf("public_profile")
-        )
+        return suspendCancellableCoroutine { continuation ->
+            LoginManager.getInstance().logInWithReadPermissions(
+                fragment,
+                callbackManager,
+                listOf("public_profile")
+            )
 
-        LoginManager.getInstance()
-            .registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+            LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
                 override fun onCancel() {
                     Log.d(TAG, "onCancel: Facebook Signin Cancel")
+                    continuation.cancel() // Cancel the coroutine
                 }
 
                 override fun onError(error: FacebookException) {
                     Log.e(FACEBOOKTEST, error.message.toString())
+                    continuation.resumeWith(Result.failure(error)) // Resume the coroutine with an error result
                 }
 
                 override fun onSuccess(result: LoginResult) {
@@ -89,16 +94,23 @@ class AuthRepository @Inject constructor(
                             Log.d(Constants.FACEBOOKTEST, "onSuccess: email $lastName")
 
                             CoroutineScope(Dispatchers.IO).launch {
-                                networkResult = handleFacebookLogin(result.accessToken)
+                                val result = async { handleFacebookLogin(result.accessToken) }
+                                continuation.resume(result.await(),{
+                                    Log.d(FACEBOOKTEST,it.message.toString())
+                                }) // Resume the coroutine with the result
                             }
+
                         } catch (e: JSONException) {
                             e.printStackTrace()
+                            continuation.resumeWith(Result.failure(e)) // Resume the coroutine with an error result
                         }
                     }
                     request.parameters = bundle
                     request.executeAsync()
                 }
             })
+        }
+        Log.d(FACEBOOKTEST,"Hello, ${networkResult.data?.displayName.toString()}")
         return networkResult
     }
 

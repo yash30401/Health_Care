@@ -350,7 +350,9 @@ class Authentication : Fragment() {
             viewModel.facebookSigninState?.collect {
                 when (it) {
                     is NetworkResult.Loading -> {
-                        binding.progressBar.visibility = View.VISIBLE
+                        withContext(Dispatchers.Main){
+                            binding.progressBar.visibility = View.VISIBLE
+                        }
                         Log.d(FACEBOOKTEST, "Loading")
                     }
 
