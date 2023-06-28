@@ -16,12 +16,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.GraphRequest
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
@@ -151,6 +153,7 @@ class Authentication : Fragment() {
                                 }
                             }
                             findNavController().navigate(R.id.action_authentication2_to_mainFragment)
+                            handleFacebookLogin(result.accessToken)
 
                         } //If no data has been retrieve throw some error
                         catch (e: JSONException) {
@@ -161,6 +164,29 @@ class Authentication : Fragment() {
                     request.executeAsync()
                 }
             })
+
+
+    }
+
+    private fun handleFacebookLogin(token: AccessToken) {
+        Log.d(TAG, "handleFacebookAccessToken:$token")
+
+        val credential = FacebookAuthProvider.getCredential(token.token)
+        firebaseAuth.signInWithCredential(credential).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(TAG, "signInWithCredential:success")
+
+            }else {
+                // If sign in fails, display a message to the user.
+                Log.w(TAG, "signInWithCredential:failure", task.exception)
+                Toast.makeText(
+                    requireContext(),
+                    "Authentication failed.",
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+
+        }
     }
 
 
@@ -397,7 +423,7 @@ class Authentication : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        callbackManager.onActivityResult(requestCode,resultCode,data)
+        callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onDestroy() {
