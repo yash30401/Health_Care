@@ -1,20 +1,15 @@
 package com.healthcare.yash.preeti.utils
 
 import android.util.Log
-import android.view.View
-import android.widget.Toast
-import androidx.navigation.fragment.findNavController
 import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthMissingActivityForRecaptchaException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider
-import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
 import com.healthcare.yash.preeti.other.Constants
 import com.healthcare.yash.preeti.other.PhoneAuthCallbackSealedClass
 
-import com.healthcare.yash.preeti.ui.fragments.AuthenticationDirections
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
