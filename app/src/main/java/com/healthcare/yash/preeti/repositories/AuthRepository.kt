@@ -90,8 +90,8 @@ class AuthRepository @Inject constructor(
                             val firstName = fbObject?.getString("first_name")
                             val lastName = fbObject?.getString("last_name")
                             Log.d(Constants.FACEBOOKTEST, "onSuccess: id $id")
-                            Log.d(Constants.FACEBOOKTEST, "onSuccess: email $firstName")
-                            Log.d(Constants.FACEBOOKTEST, "onSuccess: email $lastName")
+                            Log.d(Constants.FACEBOOKTEST, "onSuccess: firstname $firstName")
+                            Log.d(Constants.FACEBOOKTEST, "onSuccess: lastname $lastName")
 
                             CoroutineScope(Dispatchers.IO).launch {
                                 val result = async { handleFacebookLogin(result.accessToken) }

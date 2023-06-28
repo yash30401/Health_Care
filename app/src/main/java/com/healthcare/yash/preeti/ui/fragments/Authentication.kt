@@ -62,7 +62,7 @@ class Authentication : Fragment() {
 
     private lateinit var launcher: ActivityResultLauncher<IntentSenderRequest>
 
-    @Inject
+
     lateinit var callbackManager: CallbackManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,8 +76,8 @@ class Authentication : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        callbackManager = CallbackManager.Factory.create()
         return inflater.inflate(R.layout.fragment_authentication, container, false)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
