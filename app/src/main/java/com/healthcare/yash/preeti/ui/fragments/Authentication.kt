@@ -45,6 +45,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import org.json.JSONException
 import java.util.concurrent.TimeUnit
+import javax.annotation.meta.When
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -71,11 +72,11 @@ class Authentication : Fragment() {
 
     private lateinit var launcher: ActivityResultLauncher<IntentSenderRequest>
 
-    private lateinit var callbackManager: CallbackManager
+    @Inject
+    lateinit var callbackManager: CallbackManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        callbackManager = CallbackManager.Factory.create()
         if (firebaseAuth.currentUser != null) {
             findNavController().navigate(R.id.action_authentication2_to_mainFragment)
         }
@@ -110,85 +111,6 @@ class Authentication : Fragment() {
             signInWithFacebook()
         }
     }
-
-    private fun signInWithFacebook() {
-        LoginManager.getInstance().logInWithReadPermissions(
-            this,
-            callbackManager,
-            listOf("public_profile")
-        )
-        LoginManager.getInstance()
-            .registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-                override fun onCancel() {}
-                override fun onError(error: FacebookException) {
-                    Log.e("FacebookException", error.message.toString())
-                }
-
-                override fun onSuccess(result: LoginResult) {
-                    val bundle = Bundle()
-                    bundle.putString("fields", "id, first_name, last_name ")
-                    val request = GraphRequest.newMeRequest(
-                        result.accessToken
-                    ) { fbObject, response ->
-                        Log.v("LoginFragment Success", response.toString())
-                        //For safety measure enclose the request with try and catch
-                        try {
-                            Log.d(FACEBOOKTEST, "onSuccess: fbObject $fbObject")
-                            val id = fbObject?.getString("id")
-                            val firstName = fbObject?.getString("first_name")
-                            val lastName = fbObject?.getString("last_name")
-                            Log.d(FACEBOOKTEST, "onSuccess: id $id")
-                            Log.d(FACEBOOKTEST, "onSuccess: email $firstName")
-                            Log.d(FACEBOOKTEST, "onSuccess: email $lastName")
-                            if (id != null) {
-                                if (firstName != null) {
-                                    if (lastName != null) {
-                                        //socialLogin("facebook", id, email, firstName, lastName)
-                                        Toast.makeText(
-                                            requireContext(),
-                                            "Login Details",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
-                                }
-                            }
-                            findNavController().navigate(R.id.action_authentication2_to_mainFragment)
-                            handleFacebookLogin(result.accessToken)
-
-                        } //If no data has been retrieve throw some error
-                        catch (e: JSONException) {
-                            e.printStackTrace()
-                        }
-                    }
-                    request.parameters = bundle
-                    request.executeAsync()
-                }
-            })
-
-
-    }
-
-    private fun handleFacebookLogin(token: AccessToken) {
-        Log.d(TAG, "handleFacebookAccessToken:$token")
-
-        val credential = FacebookAuthProvider.getCredential(token.token)
-        firebaseAuth.signInWithCredential(credential).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d(TAG, "signInWithCredential:success")
-
-            }else {
-                // If sign in fails, display a message to the user.
-                Log.w(TAG, "signInWithCredential:failure", task.exception)
-                Toast.makeText(
-                    requireContext(),
-                    "Authentication failed.",
-                    Toast.LENGTH_SHORT,
-                ).show()
-            }
-
-        }
-    }
-
 
     // Function to validate Phone numbers
     private fun validatePhoneNumber(number: String): PhoneNumberValidation =
@@ -421,10 +343,48 @@ class Authentication : Fragment() {
         return launcher
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        callbackManager.onActivityResult(requestCode, resultCode, data)
+
+    private fun signInWithFacebook() {
+        viewModel.signInWithFacebook(callbackManager, this@Authentication)
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.facebookSigninState?.collect {
+                when (it) {
+                    is NetworkResult.Loading -> {
+                        binding.progressBar.visibility = View.VISIBLE
+                        Log.d(FACEBOOKTEST, "Loading")
+                    }
+
+                    is NetworkResult.Success -> {
+                        withContext(Dispatchers.Main) {
+                            Log.d(FACEBOOKTEST, "signInWithFacebook: Success")
+                            findNavController().navigate(R.id.action_authentication2_to_mainFragment)
+                            Toast.makeText(
+                                requireContext(),
+                                "Sign In Successful",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+                    is NetworkResult.Error -> {
+                        withContext(Dispatchers.Main) {
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(
+                                requireContext(),
+                                it.message.toString(),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+                    else -> {
+                        Log.d(TAG, "An Unknow Error occur")
+                    }
+                }
+            }
+        }
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

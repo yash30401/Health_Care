@@ -3,8 +3,10 @@ package com.healthcare.yash.preeti.viewmodels
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.facebook.CallbackManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.PhoneAuthCredential
@@ -29,6 +31,9 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
     private val _googleSinginState = MutableStateFlow<NetworkResult<UserData>?>(null)
     val googleSignInState: StateFlow<NetworkResult<UserData>?> = _googleSinginState
 
+    private val _facebookSigninState = MutableStateFlow<NetworkResult<FirebaseUser>?>(null)
+    val facebookSigninState: StateFlow<NetworkResult<FirebaseUser>?> = _facebookSigninState
+
     //Getting Current User
     val currentUser: FirebaseUser?
         get() = repository.currentUser
@@ -52,6 +57,12 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
         _googleSinginState.value = NetworkResult.Success(result!!)
     }
 
+    fun signInWithFacebook(callbackManager: CallbackManager, fragment: Fragment) =
+        viewModelScope.launch {
+            _facebookSigninState.value = NetworkResult.Loading()
+            val result = repository.signInWithFacebook(callbackManager, fragment)
+            _facebookSigninState.value = NetworkResult.Success(result?.data!!)
+        }
 
 
     fun logout() {
