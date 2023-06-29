@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.facebook.CallbackManager
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthProvider
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -174,13 +175,14 @@ class Authentication : Fragment() {
 //        }
 
 
-        GlobalScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             delay(2000)
             phoneAuthCallback.callBackFlow?.collect {
                 when (it) {
                     is PhoneAuthCallbackSealedClass.ONVERIFICATIONCOMPLETED -> {
                         Log.d(AUTHVERIFICATIONTAG, "Verification Completed")
                     }
+
 
                     is PhoneAuthCallbackSealedClass.ONVERIFICATIONFAILED -> {
                         Log.d(AUTHVERIFICATIONTAG, "onVerificationFailed: ${it.firebaseException}")
@@ -222,7 +224,7 @@ class Authentication : Fragment() {
                     }
 
                     is PhoneAuthCallbackSealedClass.ONCODESENT -> {
-                        Log.d("AUTHVERIFICATION", "onCodeSent:${it.verificationId}")
+                        Log.d(AUTHVERIFICATIONTAG, "onCodeSent:${it.verificationId}")
                         storedVerificationId = it.verificationId.toString()
                         resendToken = it.token!!
 
@@ -246,6 +248,8 @@ class Authentication : Fragment() {
                 }
             }
         }
+
+
 
         val options = PhoneAuthOptions.newBuilder(Firebase.auth)
             .setPhoneNumber(phoneNumber)
