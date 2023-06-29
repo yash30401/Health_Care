@@ -336,7 +336,7 @@ class Authentication : Fragment() {
 
     private fun signInWithFacebook() {
         viewModel.signInWithFacebook(callbackManager, this@Authentication)
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch {
             viewModel.facebookSigninState?.collect {
                 when (it) {
                     is NetworkResult.Loading -> {
