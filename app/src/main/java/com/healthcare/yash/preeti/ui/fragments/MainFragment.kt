@@ -1,11 +1,15 @@
 package com.healthcare.yash.preeti.ui.fragments
 
-import android.annotation.SuppressLint
+
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -13,19 +17,16 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentMainBinding
-import androidx.navigation.ui.setupActionBarWithNavController
-import com.google.android.material.navigation.NavigationView
+import com.healthcare.yash.preeti.other.Constants
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
@@ -37,6 +38,9 @@ class MainFragment : Fragment() {
     private lateinit var navigationView: NavigationView
 
     private val viewModel by viewModels<AuthViewModel>()
+
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,7 +68,6 @@ class MainFragment : Fragment() {
             // Handle navigation item clicks here
             when (menuItem.itemId) {
                 R.id.home -> {
-
                     true
                 }
 
@@ -78,6 +81,9 @@ class MainFragment : Fragment() {
                 else -> false
             }
         }
+
+        setupNavigationHeader()
+
         return rootView
     }
 
@@ -99,6 +105,21 @@ class MainFragment : Fragment() {
         }
     }
 
+
+    private fun setupNavigationHeader() {
+        val headerLayout = navigationView.getHeaderView(0)
+        val name = headerLayout.findViewById<TextView>(R.id.tvName)
+        val email = headerLayout.findViewById<TextView>(R.id.tvEmail)
+
+        Log.d(Constants.HEADERLAYOUTTAG, name.text.toString())
+        name.text =  firebaseAuth.currentUser?.displayName.toString()
+        email.text = firebaseAuth.currentUser?.email.toString()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+    }
 
     override fun onDestroy() {
         super.onDestroy()

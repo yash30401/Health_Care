@@ -4,4 +4,9 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+
+
+    <style name="Theme.HealthCare" parent="Base.Theme.HealthCare">
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 </resources>
