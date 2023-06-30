@@ -240,8 +240,11 @@ class Authentication : Fragment() {
                     else -> {
                         Log.d(
                             AUTHVERIFICATIONTAG,
-                            "onVerificationFailed: ${it?.firebaseException}"
+                            "Verification Error: ${it?.firebaseException}"
                         )
+                        withContext(Dispatchers.Main) {
+                            binding.progressBar.visibility = View.GONE
+                        }
                     }
                 }
             }

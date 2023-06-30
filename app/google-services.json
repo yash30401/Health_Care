@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1032461311002-34vqtm9aq4gjjha2hcb0ahs57emnbts6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.healthcare.yash.preeti",
+            "certificate_hash": "0b470189b31c94d5d2a0ac03c75da147a8417d2e"
+          }
+        },
+        {
           "client_id": "1032461311002-m6i7mp77rq4mvf3isdnip6mumac80hai.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

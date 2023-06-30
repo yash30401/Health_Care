@@ -161,7 +161,8 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
         val minute = (currentCounterTimeInMilliSeconds / 1000) / 60
         val seconds = (currentCounterTimeInMilliSeconds / 1000) % 60
 
-        binding.tvTimer.text = "$minute:$seconds"
+        val formattedSeconds = String.format("%02d", seconds)
+        binding.tvTimer.text = "$minute:$formattedSeconds"
     }
 
     //Resending OTP
