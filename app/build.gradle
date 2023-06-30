@@ -104,6 +104,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-appcheck-playintegrity:17.0.1'
     implementation 'com.google.firebase:firebase-appcheck-safetynet:16.1.2'
 
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
 
 
 }

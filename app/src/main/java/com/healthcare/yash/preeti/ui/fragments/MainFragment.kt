@@ -9,6 +9,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -108,12 +109,16 @@ class MainFragment : Fragment() {
 
     private fun setupNavigationHeader() {
         val headerLayout = navigationView.getHeaderView(0)
+        val userPic = headerLayout.findViewById<ImageView>(R.id.ivUserPic)
         val name = headerLayout.findViewById<TextView>(R.id.tvName)
         val email = headerLayout.findViewById<TextView>(R.id.tvEmail)
 
         Log.d(Constants.HEADERLAYOUTTAG, name.text.toString())
+
+        userPic.setImageURI(firebaseAuth.currentUser?.photoUrl)
         name.text =  firebaseAuth.currentUser?.displayName.toString()
         email.text = firebaseAuth.currentUser?.email.toString()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
