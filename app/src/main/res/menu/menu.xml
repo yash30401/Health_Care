@@ -2,14 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/home"
-        android:title="Home"
-        android:icon="@drawable/baseline_home_24"
-        app:showAsAction="ifRoom"/>
+    <group android:id="@+id/mainGroup" android:checkableBehavior="single">
+        <item android:id="@+id/home"
+            android:title="Home"
+            android:icon="@drawable/baseline_home_24"
+            android:checked="true"
+            app:showAsAction="ifRoom"/>
 
-    <item android:id="@+id/logout"
-        android:title="Logout"
-        android:icon="@drawable/baseline_logout_24"
-        app:showAsAction="ifRoom"/>
+        <item android:id="@+id/logout"
+            android:title="Logout"
+            android:icon="@drawable/baseline_logout_24"
+            app:showAsAction="ifRoom"/>
+    </group>
+
 
 </menu>
