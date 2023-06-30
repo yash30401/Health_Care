@@ -19,6 +19,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.healthcare.yash.preeti.R
@@ -113,9 +114,10 @@ class MainFragment : Fragment() {
         val name = headerLayout.findViewById<TextView>(R.id.tvName)
         val email = headerLayout.findViewById<TextView>(R.id.tvEmail)
 
-        Log.d(Constants.HEADERLAYOUTTAG, name.text.toString())
+        Log.d(Constants.HEADERLAYOUTTAG, firebaseAuth.currentUser?.displayName.toString())
+        Log.d(Constants.HEADERLAYOUTTAG, firebaseAuth.currentUser?.photoUrl.toString())
 
-        userPic.setImageURI(firebaseAuth.currentUser?.photoUrl)
+        Glide.with(this).load(firebaseAuth.currentUser?.photoUrl).centerCrop().into(userPic)
         name.text =  firebaseAuth.currentUser?.displayName.toString()
         email.text = firebaseAuth.currentUser?.email.toString()
 

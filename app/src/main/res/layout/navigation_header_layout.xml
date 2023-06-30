@@ -7,8 +7,8 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         app:cardBackgroundColor="@color/white"
@@ -18,12 +18,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:strokeWidth="0dp">
 
-
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        app:cardCornerRadius="100dp"
+        android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/ivUserPic"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_gravity="center"
             android:src="@drawable/user_profile_icon" />
+    </androidx.cardview.widget.CardView>
+
 
     </com.google.android.material.card.MaterialCardView>
 
