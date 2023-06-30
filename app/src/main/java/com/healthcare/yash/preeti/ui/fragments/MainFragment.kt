@@ -1,6 +1,7 @@
 package com.healthcare.yash.preeti.ui.fragments
 
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentMainBinding
@@ -114,14 +116,43 @@ class MainFragment : Fragment() {
         val name = headerLayout.findViewById<TextView>(R.id.tvName)
         val email = headerLayout.findViewById<TextView>(R.id.tvEmail)
 
-        Log.d(Constants.HEADERLAYOUTTAG, firebaseAuth.currentUser?.displayName.toString())
-        Log.d(Constants.HEADERLAYOUTTAG, firebaseAuth.currentUser?.photoUrl.toString())
+        val currentUser = firebaseAuth.currentUser
 
-        Glide.with(this).load(firebaseAuth.currentUser?.photoUrl).centerCrop().into(userPic)
-        name.text =  firebaseAuth.currentUser?.displayName.toString()
-        email.text = firebaseAuth.currentUser?.email.toString()
+        Log.d(Constants.HEADERLAYOUTTAG, "Display Name:- ${currentUser?.displayName.toString()}")
+        Log.d(Constants.HEADERLAYOUTTAG, "Photo Url:- ${currentUser?.photoUrl.toString()}")
+        Log.d(Constants.HEADERLAYOUTTAG, "Phone Number:- ${currentUser?.phoneNumber.toString()}")
+
+
+
+        if (currentUser?.phoneNumber.toString() == "" || currentUser?.phoneNumber == null) {
+            Glide.with(this).load(currentUser?.photoUrl).centerCrop().into(userPic)
+        } else {
+
+            val hiddenPhoneNumberText =
+                "+91${currentUser?.phoneNumber?.get(3)}${currentUser?.phoneNumber?.get(4)}******${
+                    currentUser?.phoneNumber?.get(
+                        11
+                    )
+                }${
+                    currentUser?.phoneNumber?.get(12)
+                }"
+            name.text = hiddenPhoneNumberText
+        }
+
+
+        if (currentUser?.displayName.toString() == "" || currentUser?.displayName ==null ) {
+
+        }else{
+            name.text = currentUser?.displayName.toString()
+        }
+
+        firebaseAuth.currentUser?.email?.let {
+            email.text = it
+        }
+
 
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
