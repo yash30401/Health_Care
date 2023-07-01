@@ -140,9 +140,9 @@ class MainFragment : Fragment() {
         }
 
 
-        if (currentUser?.displayName.toString() == "" || currentUser?.displayName ==null ) {
+        if (currentUser?.displayName.toString() == "" || currentUser?.displayName == null) {
 
-        }else{
+        } else {
             name.text = currentUser?.displayName.toString()
         }
 

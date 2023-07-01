@@ -11,4 +11,6 @@
 
     <color name="blueResendTextColor">#4C65F1</color>
 
+    <color name="menuIconItemTint">#009688</color>
+
 </resources>
