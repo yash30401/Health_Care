@@ -1,6 +1,7 @@
 package com.healthcare.yash.preeti.utils
 
 import com.google.android.gms.tasks.Task
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resumeWithException
 

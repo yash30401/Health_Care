@@ -13,6 +13,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/dimen_30"
@@ -96,6 +97,7 @@
                 app:layout_constraintStart_toEndOf="@id/etCountryCode"
                 app:layout_constraintTop_toTopOf="@id/etCountryCode" />
 
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnRequestOtp"
                 android:layout_width="match_parent"
@@ -151,16 +153,16 @@
                 style="@style/ThemeOverlay.Material3.Button.ElevatedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="1dp"
                 android:layout_marginTop="@dimen/dimen_50"
                 android:background="@drawable/bg_white_25"
                 android:drawableStart="@drawable/ic_googles"
                 android:paddingHorizontal="30dp"
                 android:text="@string/signin_with_google"
+                android:textAllCaps="false"
                 android:textColor="@color/black"
                 app:cornerRadius="20dp"
-                android:layout_marginHorizontal="1dp"
                 app:elevation="5dp"
-                android:textAllCaps="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/LlOr" />
@@ -170,17 +172,17 @@
                 style="@style/ThemeOverlay.Material3.Button.ElevatedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="1dp"
                 android:layout_marginTop="@dimen/dimen_20"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/bg_white_25"
                 android:drawableStart="@drawable/ic_fb"
                 android:paddingHorizontal="30dp"
                 android:text="@string/continue_with_facebook"
-                android:layout_marginHorizontal="1dp"
+                android:textAllCaps="false"
                 android:textColor="@color/black"
                 app:cornerRadius="20dp"
                 app:elevation="5dp"
-                android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -196,7 +198,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -88,6 +88,7 @@ class Authentication : Fragment() {
 
         launcher = registerActivityForResult()
 
+
         binding.btnRequestOtp.setOnClickListener {
             val phoneNoValidation = validatePhoneNumber(binding.etMobileNo.text.toString())
             phoneNoEventsHandle(phoneNoValidation)
@@ -129,6 +130,7 @@ class Authentication : Fragment() {
 
     // Verifying PhoneNumber And Sending OTP
     private fun sendVerificationCodeToPhoneNumber() {
+        binding.progressBar.visibility =View.VISIBLE
         val phoneNumber =
             "${binding.etCountryCode.selectedCountryCodeWithPlus}${binding.etMobileNo.text.toString()}"
 
@@ -175,7 +177,6 @@ class Authentication : Fragment() {
 
 
         GlobalScope.launch(Dispatchers.IO) {
-            delay(2000)
             phoneAuthCallback.callBackFlow?.collect {
                 when (it) {
                     is PhoneAuthCallbackSealedClass.ONVERIFICATIONCOMPLETED -> {
@@ -197,6 +198,7 @@ class Authentication : Fragment() {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(context, "Invalid Credentials!", Toast.LENGTH_SHORT)
                                 .show()
+                            binding.progressBar.visibility = View.GONE
                         }
                     }
 
@@ -207,6 +209,7 @@ class Authentication : Fragment() {
                         )
                         withContext(Dispatchers.Main) {
                             Toast.makeText(context, "Too many requests", Toast.LENGTH_SHORT).show()
+                            binding.progressBar.visibility = View.GONE
                         }
 
                     }
@@ -218,13 +221,26 @@ class Authentication : Fragment() {
                         )
                         withContext(Dispatchers.IO) {
                             Toast.makeText(context, "reCaptcha Problem", Toast.LENGTH_SHORT).show()
+                            binding.progressBar.visibility = View.GONE
                         }
                     }
 
                     is PhoneAuthCallbackSealedClass.ONCODESENT -> {
                         Log.d("AUTHVERIFICATION", "onCodeSent:${it.verificationId}")
-                        storedVerificationId = it.verificationId.toString()
-                        resendToken = it.token!!
+
+
+                        suspendCancellableCoroutine { continuation ->
+                            CoroutineScope(Dispatchers.IO).launch {
+                                val result = async {
+                                    storedVerificationId = it.verificationId.toString()
+                                    resendToken = it.token!!
+                                }
+                                continuation.resume(result.await(), {
+                                    Log.d(FACEBOOKTEST, it.message.toString())
+                                }) // Resume the coroutine with the result
+                            }
+                        }
+
 
                         val action =
                             AuthenticationDirections.actionAuthentication2ToOtpFragment(
@@ -242,9 +258,9 @@ class Authentication : Fragment() {
                             AUTHVERIFICATIONTAG,
                             "Verification Error: ${it?.firebaseException}"
                         )
-                        withContext(Dispatchers.Main) {
-                            binding.progressBar.visibility = View.GONE
-                        }
+//                        withContext(Dispatchers.Main) {
+//                            binding.progressBar.visibility = View.GONE
+//                        }
                     }
                 }
             }
@@ -343,7 +359,7 @@ class Authentication : Fragment() {
             viewModel.facebookSigninState?.collect {
                 when (it) {
                     is NetworkResult.Loading -> {
-                        withContext(Dispatchers.Main){
+                        withContext(Dispatchers.Main) {
                             binding.progressBar.visibility = View.VISIBLE
                         }
                         Log.d(FACEBOOKTEST, "Loading")
