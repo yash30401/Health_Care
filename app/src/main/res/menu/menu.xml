@@ -11,11 +11,50 @@
 
             app:showAsAction="ifRoom"/>
 
-        <item android:id="@+id/logout"
-            android:title="Logout"
 
-            android:icon="@drawable/baseline_logout_24"
-            app:showAsAction="ifRoom"/>
+    </group>
+
+    <group android:id="@+id/moreInfoAndSupport" android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/subtitle"
+            android:title="More Info And Support">
+            <menu>
+                <item
+                    android:id="@+id/aboutApp"
+                    android:icon="@drawable/baseline_info_24"
+                    android:title="About App" />
+
+                <item
+                    android:id="@+id/privacyPolicy"
+                    android:icon="@drawable/baseline_lock_person_24"
+                    android:title="Privacy Policy" />
+
+                <item
+                    android:id="@+id/contactUs"
+                    android:icon="@drawable/baseline_email_24"
+                    android:title="Contact Us" />
+
+            </menu>
+        </item>
+
+    </group>
+
+    <group android:id="@+id/logoutGroup" android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/logoutSubtitle"
+            android:title="Logout">
+            <menu>
+                <item android:id="@+id/logout"
+                    android:title="Logout"
+
+                    android:icon="@drawable/baseline_logout_24"
+                    app:showAsAction="ifRoom"/>
+
+            </menu>
+        </item>
+
     </group>
 
 

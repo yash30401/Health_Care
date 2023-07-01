@@ -27,6 +27,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentMainBinding
 import com.healthcare.yash.preeti.other.Constants
+import com.healthcare.yash.preeti.other.Constants.HEADERLAYOUTTAG
+import com.healthcare.yash.preeti.other.Constants.MAINFRAGMENTTAG
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -75,6 +77,21 @@ class MainFragment : Fragment() {
                     true
                 }
 
+                R.id.aboutApp -> {
+                    Log.d(MAINFRAGMENTTAG,"About App")
+                    true
+                }
+
+                R.id.privacyPolicy -> {
+                    Log.d(MAINFRAGMENTTAG,"Privacy Policy")
+                    true
+                }
+
+                R.id.contactUs -> {
+                    Log.d(MAINFRAGMENTTAG,"Contact Us")
+                    true
+                }
+
                 R.id.logout -> {
                     //Logout User
                     viewModel.logout()
@@ -118,9 +135,9 @@ class MainFragment : Fragment() {
 
         val currentUser = firebaseAuth.currentUser
 
-        Log.d(Constants.HEADERLAYOUTTAG, "Display Name:- ${currentUser?.displayName.toString()}")
-        Log.d(Constants.HEADERLAYOUTTAG, "Photo Url:- ${currentUser?.photoUrl.toString()}")
-        Log.d(Constants.HEADERLAYOUTTAG, "Phone Number:- ${currentUser?.phoneNumber.toString()}")
+        Log.d(HEADERLAYOUTTAG, "Display Name:- ${currentUser?.displayName.toString()}")
+        Log.d(HEADERLAYOUTTAG, "Photo Url:- ${currentUser?.photoUrl.toString()}")
+        Log.d(HEADERLAYOUTTAG, "Phone Number:- ${currentUser?.phoneNumber.toString()}")
 
 
 
@@ -141,7 +158,7 @@ class MainFragment : Fragment() {
 
 
         if (currentUser?.displayName.toString() == "" || currentUser?.displayName == null) {
-
+            Log.d(HEADERLAYOUTTAG, "User Logged In Using Phone Number")
         } else {
             name.text = currentUser?.displayName.toString()
         }
@@ -153,11 +170,6 @@ class MainFragment : Fragment() {
 
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-    }
 
     override fun onDestroy() {
         super.onDestroy()
