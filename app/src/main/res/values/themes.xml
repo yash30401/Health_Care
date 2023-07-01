@@ -6,10 +6,6 @@
 
 
 
-        <item name="colorNavigationItem">@color/menu_item_state_color</item>
-        <item name="colorNavigationItemSelected">@color/white</item>
-        <item name="drawableNavigationItemBackground">@drawable/menu_backgound_color_state</item>
-
     </style>
 
 
@@ -17,10 +13,6 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
-    <style name="Widget.Custom.NavigationView" parent="Widget.Design.NavigationView">
-        <item name="itemIconTint">?attr/colorNavigationItem</item>
-        <item name="itemTextColor">?attr/colorNavigationItem</item>
-        <item name="itemBackground">?attr/drawableNavigationItemBackground</item>
-    </style>
+
 
 </resources>
