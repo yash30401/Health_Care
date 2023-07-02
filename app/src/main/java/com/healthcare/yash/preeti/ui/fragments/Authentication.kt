@@ -1,6 +1,7 @@
 package com.healthcare.yash.preeti.ui.fragments
 
 import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -31,6 +32,7 @@ import com.healthcare.yash.preeti.other.Constants.FACEBOOKTEST
 import com.healthcare.yash.preeti.other.Constants.TAG
 import com.healthcare.yash.preeti.other.PhoneAuthCallbackSealedClass
 import com.healthcare.yash.preeti.other.PhoneNumberValidation
+import com.healthcare.yash.preeti.ui.MainActivity2
 import com.healthcare.yash.preeti.utils.PhoneAuthCallback
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -90,8 +92,12 @@ class Authentication : Fragment() {
 
 
         binding.btnRequestOtp.setOnClickListener {
-            val phoneNoValidation = validatePhoneNumber(binding.etMobileNo.text.toString())
-            phoneNoEventsHandle(phoneNoValidation)
+//            val phoneNoValidation = validatePhoneNumber(binding.etMobileNo.text.toString())
+//            phoneNoEventsHandle(phoneNoValidation)
+
+            Intent(requireActivity(),MainActivity2::class.java).also{
+                startActivity(it)
+            }
         }
 
         binding.btnGoogleSignIn.setOnClickListener {
