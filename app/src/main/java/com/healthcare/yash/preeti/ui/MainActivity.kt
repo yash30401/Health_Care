@@ -49,20 +49,6 @@ class MainActivity : AppCompatActivity() {
         )
 
 
-        try {
-            val info = packageManager.getPackageInfo(
-                "com.healthcare.yash.preeti",
-                PackageManager.GET_SIGNATURES
-            )
-            for (signature in info.signatures) {
-                val md = MessageDigest.getInstance("SHA")
-                md.update(signature.toByteArray())
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
-            }
-        } catch (e: NameNotFoundException) {
-        } catch (e: NoSuchAlgorithmException) {
-        }
-
     }
 
     override fun onBackPressed() {
