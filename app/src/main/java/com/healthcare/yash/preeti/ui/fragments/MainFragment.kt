@@ -96,12 +96,16 @@ class MainFragment : Fragment() {
 
                 R.id.logout -> {
                     //Logout User
+
+                    // Slide Bottom Bottom Nav For Better UX.
                     val bottomNav =
                         requireActivity().findViewById<BottomNavigationView>(R.id.bottomNav)
-                    bottomNav.animation =
+                    val bottomAnim =
                         AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_bottom)
-//                    viewModel.logout()
-//                    findNavController().navigate(R.id.action_mainFragment_to_authentication2)
+                    bottomNav.startAnimation(bottomAnim)
+
+                    viewModel.logout()
+                    findNavController().navigate(R.id.action_mainFragment_to_authentication2)
                     true
                 }
                 // Add more navigation items and their handling
