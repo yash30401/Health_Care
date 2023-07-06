@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -49,8 +50,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class OtpFragment : Fragment(R.layout.fragment_otp) {
 
-    private var _binding: FragmentOtpBinding? = null
-    private val binding get() = _binding!!
+//    private var _binding: FragmentOtpBinding? = null
+    private lateinit var binding:FragmentOtpBinding
 
     private val args: OtpFragmentArgs by navArgs()
 
@@ -65,11 +66,10 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
     @Inject
     lateinit var phoneAuthCallback: PhoneAuthCallback
 
-    private lateinit var callbacks:PhoneAuthProvider.OnVerificationStateChangedCallbacks
-
+    private lateinit var callbacks: PhoneAuthProvider.OnVerificationStateChangedCallbacks
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentOtpBinding.bind(view)
+        binding = FragmentOtpBinding.bind(view)
 
         callbacks = phoneAuthCallback.callbacks
 
@@ -107,7 +107,7 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
                 lifecycleScope.launch(Dispatchers.IO) {
                     signinWithPhoneNumber(credentitals)
                 }
-            }else{
+            } else {
                 Toast.makeText(requireContext(), "Please Enter Otp!", Toast.LENGTH_SHORT).show()
             }
         }
@@ -237,6 +237,6 @@ class OtpFragment : Fragment(R.layout.fragment_otp) {
 
     override fun onDestroy() {
         super.onDestroy()
-        _binding = null
+//        _binding = null
     }
 }

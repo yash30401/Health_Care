@@ -255,6 +255,7 @@ class Authentication : Fragment() {
                             )
                         withContext(Dispatchers.Main) {
                             findNavController().navigate(action)
+
                         }
                     }
 
