@@ -5,9 +5,11 @@ import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
@@ -39,8 +41,12 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView2) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView2) as NavHostFragment
         navController = navHostFragment.navController
+
+        binding.bottomNav.setupWithNavController(navController)
+        hideBottomNavOnAuthFragment()
 
         Firebase.initialize(this)
         val firebaseAppCheck = FirebaseAppCheck.getInstance()
@@ -51,16 +57,27 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun hideBottomNavOnAuthFragment() {
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+
+            if (destination.id == R.id.authentication2 || destination.id == R.id.otpFragment) {
+                binding.bottomNav.visibility = View.GONE
+            } else {
+                binding.bottomNav.visibility = View.VISIBLE
+            }
+        }
+    }
+
     override fun onBackPressed() {
         val currentDestination = navController.currentDestination
         val isLoggedIn = firebaseAuth.currentUser != null
 
-        Log.d("FragTesting",isLoggedIn.toString())
-        Log.d("FragTesting",currentDestination.toString())
+        Log.d("FragTesting", isLoggedIn.toString())
+        Log.d("FragTesting", currentDestination.toString())
 
-        if(isLoggedIn && currentDestination?.id ==R.id.mainFragment){
+        if (isLoggedIn && currentDestination?.id == R.id.mainFragment) {
             showExitConfirmationDialog()
-        }else{
+        } else {
             super.onBackPressed()
         }
     }
@@ -70,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         val dialog = MaterialAlertDialogBuilder(this)
             .setTitle("Exit Confirmation")
             .setMessage("Are you sure you want to exit?")
-            .setPositiveButton("Exit"){_,_->
+            .setPositiveButton("Exit") { _, _ ->
                 finishAffinity()
             }
             .setNegativeButton("Cancel", null)

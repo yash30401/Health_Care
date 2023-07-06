@@ -50,4 +50,14 @@
             android:id="@+id/action_mainFragment_to_authentication2"
             app:destination="@id/authentication2" />
     </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.healthcare.yash.preeti.ui.fragments.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" />
+    <fragment
+        android:id="@+id/profileFrament"
+        android:name="com.healthcare.yash.preeti.ui.fragments.ProfileFrament"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

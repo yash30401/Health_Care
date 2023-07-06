@@ -10,6 +10,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -21,6 +22,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -78,24 +80,28 @@ class MainFragment : Fragment() {
                 }
 
                 R.id.aboutApp -> {
-                    Log.d(MAINFRAGMENTTAG,"About App")
+                    Log.d(MAINFRAGMENTTAG, "About App")
                     true
                 }
 
                 R.id.privacyPolicy -> {
-                    Log.d(MAINFRAGMENTTAG,"Privacy Policy")
+                    Log.d(MAINFRAGMENTTAG, "Privacy Policy")
                     true
                 }
 
                 R.id.contactUs -> {
-                    Log.d(MAINFRAGMENTTAG,"Contact Us")
+                    Log.d(MAINFRAGMENTTAG, "Contact Us")
                     true
                 }
 
                 R.id.logout -> {
                     //Logout User
-                    viewModel.logout()
-                    findNavController().navigate(R.id.action_mainFragment_to_authentication2)
+                    val bottomNav =
+                        requireActivity().findViewById<BottomNavigationView>(R.id.bottomNav)
+                    bottomNav.animation =
+                        AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_bottom)
+//                    viewModel.logout()
+//                    findNavController().navigate(R.id.action_mainFragment_to_authentication2)
                     true
                 }
                 // Add more navigation items and their handling
