@@ -8,11 +8,6 @@ plugins {
     id 'androidx.navigation.safeargs.kotlin'
 }
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('keys.properties').newDataInputStream())
-def facebook_application_id = properties.getProperty('facebook_application_id')
-
-
 
 android {
     namespace 'com.healthcare.yash.preeti'
