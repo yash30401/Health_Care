@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("FragTesting", isLoggedIn.toString())
         Log.d("FragTesting", currentDestination.toString())
 
-        if (isLoggedIn && currentDestination?.id == R.id.mainFragment) {
+        if (isLoggedIn && currentDestination?.id == R.id.mainFragment || isLoggedIn && currentDestination?.id == R.id.chatFragment || isLoggedIn && currentDestination?.id == R.id.profileFrament) {
             showExitConfirmationDialog()
         } else {
             super.onBackPressed()

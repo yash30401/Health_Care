@@ -131,6 +131,7 @@ class Authentication : Fragment() {
     // Verifying PhoneNumber And Sending OTP
     private fun sendVerificationCodeToPhoneNumber() {
         binding.progressBar.visibility =View.VISIBLE
+        binding.btnRequestOtp.isEnabled = false
         val phoneNumber =
             "${binding.etCountryCode.selectedCountryCodeWithPlus}${binding.etMobileNo.text.toString()}"
 
@@ -187,6 +188,7 @@ class Authentication : Fragment() {
                         Log.d(AUTHVERIFICATIONTAG, "onVerificationFailed: ${it.firebaseException}")
                         withContext(Dispatchers.Main) {
                             binding.progressBar.visibility = View.GONE
+                            binding.btnRequestOtp.isEnabled = true
                         }
                     }
 
@@ -199,6 +201,7 @@ class Authentication : Fragment() {
                             Toast.makeText(context, "Invalid Credentials!", Toast.LENGTH_SHORT)
                                 .show()
                             binding.progressBar.visibility = View.GONE
+                            binding.btnRequestOtp.isEnabled = true
                         }
                     }
 
@@ -210,6 +213,7 @@ class Authentication : Fragment() {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(context, "Too many requests", Toast.LENGTH_SHORT).show()
                             binding.progressBar.visibility = View.GONE
+                            binding.btnRequestOtp.isEnabled = true
                         }
 
                     }
@@ -222,6 +226,7 @@ class Authentication : Fragment() {
                         withContext(Dispatchers.IO) {
                             Toast.makeText(context, "reCaptcha Problem", Toast.LENGTH_SHORT).show()
                             binding.progressBar.visibility = View.GONE
+                            binding.btnRequestOtp.isEnabled = true
                         }
                     }
 

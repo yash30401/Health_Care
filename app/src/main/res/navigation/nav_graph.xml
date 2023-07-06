@@ -25,6 +25,9 @@
         <argument
             android:name="resendToken"
             app:argType="com.healthcare.yash.preeti.models.ResendTokenModelClass" />
+        <action
+            android:id="@+id/action_otpFragment_to_authentication22"
+            app:destination="@id/authentication2" />
     </fragment>
     <fragment
         android:id="@+id/authentication2"
