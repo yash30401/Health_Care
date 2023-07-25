@@ -113,8 +113,6 @@ class MainFragment : Fragment() {
             }
         }
 
-        setupNavigationHeader()
-
         return rootView
     }
 
@@ -122,6 +120,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentMainBinding.bind(view)
 
+        setupNavigationHeader()
 
     }
 
@@ -164,6 +163,7 @@ class MainFragment : Fragment() {
                     currentUser?.phoneNumber?.get(12)
                 }"
             name.text = hiddenPhoneNumberText
+            binding.tvPersonName.text = hiddenPhoneNumberText
         }
 
 
@@ -171,6 +171,7 @@ class MainFragment : Fragment() {
             Log.d(HEADERLAYOUTTAG, "User Logged In Using Phone Number")
         } else {
             name.text = currentUser?.displayName.toString()
+            binding.tvPersonName.text = currentUser?.displayName.toString()
         }
 
         firebaseAuth.currentUser?.email?.let {

@@ -19,5 +19,8 @@
     <string name="facebook_client_token">4c5070f98fab6a66070fa020f4b2fb75</string>
     <string name="continue_with_facebook">Continue With Facebook</string>
     <string name="signin_with_google">Signin With Google</string>
+    
+    <string name="greeting">Hope you are feeling\ngood Today! <font color="#FF6969">If not.</font></string>
+
 
 </resources>
