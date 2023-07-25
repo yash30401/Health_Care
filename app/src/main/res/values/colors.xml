@@ -13,4 +13,6 @@
 
     <color name="menuIconItemTint">#009688</color>
 
+    <color name="screenBackgroundColor">#F5F5F5</color>
+
 </resources>
