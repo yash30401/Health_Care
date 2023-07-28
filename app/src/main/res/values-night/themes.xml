@@ -9,4 +9,16 @@
     <style name="Theme.HealthCare" parent="Base.Theme.HealthCare">
         <item name="android:windowIsTranslucent">true</item>
     </style>
+
+    <style name="RoundImageShape" parent="">
+        <item name="cornerFamilyTopLeft">rounded</item>
+        <item name="cornerFamilyTopRight">cut</item>
+        <item name="cornerFamilyBottomLeft">cut</item>
+        <item name="cornerFamilyBottomRight">rounded</item>
+        <item name="cornerSizeTopLeft">50%</item>
+        <item name="cornerSizeTopRight">25%</item>
+        <item name="cornerSizeBottomLeft">25%</item>
+        <item name="cornerSizeBottomRight">50%</item>
+
+    </style>
 </resources>

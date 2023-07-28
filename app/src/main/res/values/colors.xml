@@ -17,4 +17,9 @@
 
     <color name="buttonRippleColor">#9C9E97AA</color>
 
+    <color name="cardStrokeColor">#E0E0E0</color>
+
+    <color name="ratingsCardBackgroundcColor">#56FDE390</color>
+
+    <color name="specialistCardBackgroundColor">#E8DEF8</color>
 </resources>
