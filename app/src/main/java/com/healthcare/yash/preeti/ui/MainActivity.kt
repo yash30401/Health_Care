@@ -19,6 +19,7 @@ import com.google.firebase.ktx.app
 import com.google.firebase.ktx.initialize
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ActivityMainBinding
+import com.healthcare.yash.preeti.other.Constants.BACKSTACK
 import dagger.hilt.android.AndroidEntryPoint
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -54,7 +55,26 @@ class MainActivity : AppCompatActivity() {
             PlayIntegrityAppCheckProviderFactory.getInstance(),
         )
 
+        binding.bottomNav.setOnNavigationItemSelectedListener { menuItem->
+            when(menuItem.itemId){
+                R.id.home->{
+                   navController.navigate(R.id.mainFragment)
+                    true
+                }
+                R.id.chatFragment->{
+                    navController.navigate(R.id.chatFragment)
+                    true
+                }
+                R.id.profileFrament->{
+                    navController.navigate(R.id.profileFrament)
+                    true
+                }
 
+                else -> {
+                    false
+                }
+            }
+        }
     }
 
     private fun hideBottomNavOnAuthFragment() {
@@ -80,6 +100,8 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onBackPressed()
         }
+
+
     }
 
 

@@ -122,6 +122,9 @@ class MainFragment : Fragment() {
 
         setupNavigationHeader()
 
+        binding.btnConsult.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_consultDoctor)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
