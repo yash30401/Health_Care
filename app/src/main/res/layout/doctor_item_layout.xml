@@ -8,6 +8,7 @@
     android:background="@color/screenBackgroundColor">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/itemCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -27,7 +28,7 @@
             android:layout_height="match_parent">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/shapeableImageView"
+                android:id="@+id/ivDoctor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -38,7 +39,7 @@
                 app:shapeAppearance="@style/RoundImageShape" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/tvDoctorName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -49,11 +50,11 @@
                 android:text="Dr.Michael Rodriguez"
                 android:textColor="#2B2B2B"
                 android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@+id/shapeableImageView"
-                app:layout_constraintTop_toTopOf="@+id/shapeableImageView" />
+                app:layout_constraintStart_toEndOf="@+id/ivDoctor"
+                app:layout_constraintTop_toTopOf="@+id/ivDoctor" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/tvDoctorBio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -63,8 +64,8 @@
                 android:lines="2"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintStart_toStartOf="@+id/tvDoctorName"
+                app:layout_constraintTop_toBottomOf="@+id/tvDoctorName" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="wrap_content"
@@ -74,9 +75,9 @@
                 app:cardCornerRadius="17dp"
                 android:layout_marginTop="15dp"
                 app:cardBackgroundColor="@color/ratingsCardBackgroundcColor"
-                app:layout_constraintEnd_toEndOf="@+id/shapeableImageView"
-                app:layout_constraintStart_toStartOf="@+id/shapeableImageView"
-                app:layout_constraintTop_toBottomOf="@+id/shapeableImageView">
+                app:layout_constraintEnd_toEndOf="@+id/ivDoctor"
+                app:layout_constraintStart_toStartOf="@+id/ivDoctor"
+                app:layout_constraintTop_toBottomOf="@+id/ivDoctor">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -93,6 +94,7 @@
                         android:src="@drawable/star"/>
 
                     <TextView
+                        android:id="@+id/tvDoctorRating"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:text="4.8"
@@ -112,10 +114,11 @@
                 app:strokeWidth="0dp"
                 app:cardBackgroundColor="@color/specialistCardBackgroundColor"
                 app:cardCornerRadius="17dp"
-                app:layout_constraintStart_toStartOf="@+id/textView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView2">
+                app:layout_constraintStart_toStartOf="@+id/tvDoctorBio"
+                app:layout_constraintTop_toBottomOf="@+id/tvDoctorBio">
 
                 <TextView
+                    android:id="@+id/tvDoctorSpecialization"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Radiologist"
@@ -129,7 +132,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/btnChatWithDoctor"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
                 android:layout_marginTop="15dp"
@@ -139,8 +142,8 @@
                 android:fontFamily="@font/poppins"
                 android:textSize="12sp"
                 android:drawableLeft="@drawable/chat_button_icon"
-                app:layout_constraintEnd_toEndOf="@+id/textView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                app:layout_constraintEnd_toEndOf="@+id/tvDoctorBio"
+                app:layout_constraintTop_toBottomOf="@+id/tvDoctorBio" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
