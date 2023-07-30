@@ -10,6 +10,7 @@ data class Doctor(
     @get:PropertyName("Contact_Info") val contactInfo: ContactInfo? = null,
     @get:PropertyName("Experience") val experience:Int = 0,
     @get:PropertyName("Name") val name:String = "",
+    @get:PropertyName("Profile_Pic") val profilePic:String = "",
     @get:PropertyName("Reviews_and_Ratings") val reviewsAndRatings:List<ReviewsAndRatings> = emptyList(),
     @get:PropertyName("Services") val services:List<String> = emptyList(),
     @get:PropertyName("Specialization") val specialization: String = "",
