@@ -70,13 +70,18 @@ class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor) {
         consultDoctorViewModel.doctorsListFlow.collect{
             when(it){
                 is NetworkResult.Error -> {
+                    binding.searchProgress.visibility = View.GONE
+                    binding.tvSearch.visibility = View.GONE
                     Log.d(CONSULTDOCTORFRAGTESTTAG,"Error:- "+it.message.toString())
                     Toast.makeText(requireContext(), it.message.toString(), Toast.LENGTH_SHORT).show()
                 }
                 is NetworkResult.Loading -> {
-
+                    binding.searchProgress.visibility = View.VISIBLE
+                    binding.tvSearch.visibility = View.VISIBLE
                 }
                 is NetworkResult.Success -> {
+                    binding.searchProgress.visibility = View.GONE
+                    binding.tvSearch.visibility = View.GONE
                     consultDoctorAdapter.setData(it.data!!)
                 }
                 else -> {

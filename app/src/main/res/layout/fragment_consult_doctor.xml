@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/screenBackgroundColor"
     tools:context=".ui.fragments.ConsultDoctor">
 
@@ -14,5 +15,28 @@
         tools:listitem="@layout/doctor_item_layout"
         android:layout_marginBottom="90dp"
         />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/searchProgress"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:lottie_rawRes="@raw/search_anim"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"/>
+
+    <TextView
+        android:id="@+id/tvSearch"
+        android:layout_width="wrap_content"
+        android:textSize="17sp"
+        android:fontFamily="@font/poppins_medium"
+        android:includeFontPadding="false"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:layout_marginTop="65dp"
+        android:layout_height="wrap_content"
+        android:text="Searching Doctors In Your Area..."/>
 
 </FrameLayout>

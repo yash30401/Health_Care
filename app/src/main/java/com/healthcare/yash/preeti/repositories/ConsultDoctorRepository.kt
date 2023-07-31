@@ -2,6 +2,7 @@ package com.healthcare.yash.preeti.repositories
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import com.healthcare.yash.preeti.models.ContactInfo
 import com.healthcare.yash.preeti.models.Doctor
 import com.healthcare.yash.preeti.models.ReviewsAndRatings
