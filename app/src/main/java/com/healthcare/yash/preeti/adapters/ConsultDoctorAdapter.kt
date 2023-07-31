@@ -18,7 +18,8 @@ import com.healthcare.yash.preeti.other.ConsultDoctorDiffUtil
 class ConsultDoctorAdapter : RecyclerView.Adapter<ConsultDoctorAdapter.ConsultDoctorViewHolder>() {
 
     private val doctorsList = emptyList<Doctor>()
-    private val asyncListDiffer = AsyncListDiffer<Doctor>(this,ConsultDoctorDiffUtil())
+    private val asyncListDiffer = AsyncListDiffer<Doctor>(this, ConsultDoctorDiffUtil())
+
     inner class ConsultDoctorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = DoctorItemLayoutBinding.bind(itemView)
     }
@@ -45,19 +46,25 @@ class ConsultDoctorAdapter : RecyclerView.Adapter<ConsultDoctorAdapter.ConsultDo
 
         holder.binding.tvDoctorName.text = doctor.Name
         holder.binding.tvDoctorBio.text = doctor.About
-        if (doctor.Reviews_And_Ratings.isNotEmpty()) {
-            // If there are reviews and ratings for the doctor, display the rating.
-            // You can choose to display the first rating, the average rating, etc.
-            val firstRating = doctor.Reviews_And_Ratings[0].rating
-            holder.binding.tvDoctorRating.text = firstRating.toString()
-        } else {
-            // If there are no reviews and ratings, display a default value or a message.
-            holder.binding.tvDoctorRating.text = "N/A"
+
+        var averageRating: Double = 0.0
+        doctor.Reviews_And_Ratings.forEach {
+            val rating = it.rating
+            averageRating += rating
         }
-        holder.binding.tvDoctorSpecialization.text = doctor.Specialization
+        val formattedRating = String.format("%.1f", averageRating / 3)
+        holder.binding.tvDoctorRating.text = formattedRating
+
+        if (doctor.Specialization.length > 10) {
+            holder.binding.tvDoctorSpecialization.text =
+                "${doctor.Specialization.subSequence(0, 10)}..."
+        } else {
+            holder.binding.tvDoctorSpecialization.text = doctor.Specialization
+        }
+
     }
 
-    fun setData(newList:List<Doctor>){
+    fun setData(newList: List<Doctor>) {
         asyncListDiffer.submitList(newList)
     }
 

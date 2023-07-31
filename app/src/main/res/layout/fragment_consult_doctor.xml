@@ -10,7 +10,9 @@
         android:id="@+id/recyclerViewDoctor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
         tools:listitem="@layout/doctor_item_layout"
+        android:layout_marginBottom="90dp"
         />
 
 </FrameLayout>
