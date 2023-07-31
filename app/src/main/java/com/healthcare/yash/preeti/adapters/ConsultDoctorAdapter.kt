@@ -52,7 +52,7 @@ class ConsultDoctorAdapter : RecyclerView.Adapter<ConsultDoctorAdapter.ConsultDo
             val rating = it.rating
             averageRating += rating
         }
-        val formattedRating = String.format("%.1f", averageRating / 3)
+        val formattedRating = String.format("%.1f", averageRating / doctor.Reviews_And_Ratings.size)
         holder.binding.tvDoctorRating.text = formattedRating
 
         if (doctor.Specialization.length > 10) {
