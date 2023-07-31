@@ -1,5 +1,6 @@
 package com.healthcare.yash.preeti.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.DoctorItemLayoutBinding
 import com.healthcare.yash.preeti.models.Doctor
+import com.healthcare.yash.preeti.other.Constants.CONSULTDOCTORFRAGTESTTAG
 import com.healthcare.yash.preeti.other.ConsultDoctorDiffUtil
 
 class ConsultDoctorAdapter : RecyclerView.Adapter<ConsultDoctorAdapter.ConsultDoctorViewHolder>() {
@@ -36,15 +38,23 @@ class ConsultDoctorAdapter : RecyclerView.Adapter<ConsultDoctorAdapter.ConsultDo
     override fun onBindViewHolder(holder: ConsultDoctorViewHolder, position: Int) {
         val doctor = asyncListDiffer.currentList[position]
 
-
-        Glide.with(holder.itemView).load(doctor.profilePic.toUri()).diskCacheStrategy(
+        Log.d(CONSULTDOCTORFRAGTESTTAG, "Doctor Name: ${doctor.Name}")
+        Glide.with(holder.itemView).load(doctor.Profile_Pic.toUri()).diskCacheStrategy(
             DiskCacheStrategy.DATA
         ).into(holder.binding.ivDoctor)
 
-        holder.binding.tvDoctorName.text = doctor.name
-        holder.binding.tvDoctorBio.text = doctor.about
-        holder.binding.tvDoctorRating.text = doctor.reviewsAndRatings[position].rating.toString()
-        holder.binding.tvDoctorSpecialization.text = doctor.specialization
+        holder.binding.tvDoctorName.text = doctor.Name
+        holder.binding.tvDoctorBio.text = doctor.About
+        if (doctor.Reviews_And_Ratings.isNotEmpty()) {
+            // If there are reviews and ratings for the doctor, display the rating.
+            // You can choose to display the first rating, the average rating, etc.
+            val firstRating = doctor.Reviews_And_Ratings[0].rating
+            holder.binding.tvDoctorRating.text = firstRating.toString()
+        } else {
+            // If there are no reviews and ratings, display a default value or a message.
+            holder.binding.tvDoctorRating.text = "N/A"
+        }
+        holder.binding.tvDoctorSpecialization.text = doctor.Specialization
     }
 
     fun setData(newList:List<Doctor>){

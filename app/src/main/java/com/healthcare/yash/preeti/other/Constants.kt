@@ -17,4 +17,6 @@ object Constants {
 
     // Backstack
     const val BACKSTACK = "BACKSTACK"
+
+    const val CONSULTDOCTORFRAGTESTTAG = "CONSULTDOCTORFRAGTESTTAG"
 }
