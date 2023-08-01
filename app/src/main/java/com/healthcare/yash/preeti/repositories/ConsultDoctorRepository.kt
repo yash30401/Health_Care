@@ -9,14 +9,19 @@ import com.healthcare.yash.preeti.models.ReviewsAndRatings
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.CONSULTDOCTORFRAGTESTTAG
 import com.healthcare.yash.preeti.utils.await
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+
 import javax.inject.Inject
+
 
 class ConsultDoctorRepository @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore
 ) {
 
-    suspend fun fetchDoctorsInYourArea(): NetworkResult<List<Doctor>> {
-        return try {
+    suspend fun fetchDoctorsInYourArea(): Flow<List<Doctor>> {
+        return flow<List<Doctor>> {
             val doctorsCollectionRef = firebaseFirestore.collection("Doctors")
             val querySnapshot = doctorsCollectionRef.get().await()
             val doctorsList = mutableListOf<Doctor>()
@@ -69,10 +74,7 @@ class ConsultDoctorRepository @Inject constructor(
                 }
             }
 
-            NetworkResult.Success(doctorsList)
-        } catch (e: Exception) {
-            Log.d(CONSULTDOCTORFRAGTESTTAG,"EXCEPTION:- ${e.message.toString()}")
-            NetworkResult.Error(e.message)
+         emit(doctorsList)
         }
     }
 }

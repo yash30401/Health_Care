@@ -10,6 +10,8 @@ import com.healthcare.yash.preeti.repositories.ConsultDoctorRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,14 +23,22 @@ class ConsultDoctorViewModel @Inject constructor(private val consultDoctorReposi
 
     fun getAllDoctorsListInYourArea() = viewModelScope.launch{
         _doctorsListFlow.value = NetworkResult.Loading()
-        val result = consultDoctorRepository.fetchDoctorsInYourArea().data
-        Log.d(Constants.CONSULTDOCTORFRAGTESTTAG,"DATA:- ${result.toString()}")
-        if(result!=null){
-            _doctorsListFlow.value = NetworkResult.Success(result!!)
-        }else{
-           _doctorsListFlow.value= NetworkResult.Error("Data is null or empty")
-        }
 
+        try {
+            val result = consultDoctorRepository.fetchDoctorsInYourArea()
+            result.catch { e->
+                _doctorsListFlow.value = NetworkResult.Error("Error fetching data: ${e.message}")
+            }.collect {doctorList->
+                if (doctorList.isNotEmpty()) {
+                    _doctorsListFlow.value = NetworkResult.Success(doctorList)
+                } else {
+                    _doctorsListFlow.value = NetworkResult.Error("Data is null or empty")
+                }
+
+            }
+        }catch (e:Exception){
+            _doctorsListFlow.value = NetworkResult.Error("Error fetching data: ${e.message}")
+        }
 
     }
 }

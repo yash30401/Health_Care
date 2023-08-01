@@ -55,17 +55,19 @@ class MainActivity : AppCompatActivity() {
             PlayIntegrityAppCheckProviderFactory.getInstance(),
         )
 
-        binding.bottomNav.setOnNavigationItemSelectedListener { menuItem->
-            when(menuItem.itemId){
-                R.id.home->{
-                   navController.navigate(R.id.mainFragment)
+        binding.bottomNav.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.home -> {
+                    navController.navigate(R.id.mainFragment)
                     true
                 }
-                R.id.chatFragment->{
+
+                R.id.chatFragment -> {
                     navController.navigate(R.id.chatFragment)
                     true
                 }
-                R.id.profileFrament->{
+
+                R.id.profileFrament -> {
                     navController.navigate(R.id.profileFrament)
                     true
                 }
