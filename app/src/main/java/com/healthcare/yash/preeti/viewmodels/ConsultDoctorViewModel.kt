@@ -16,27 +16,28 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ConsultDoctorViewModel @Inject constructor(private val consultDoctorRepository: ConsultDoctorRepository):ViewModel() {
+class ConsultDoctorViewModel @Inject constructor(private val consultDoctorRepository: ConsultDoctorRepository) :
+    ViewModel() {
 
     private val _doctorsListFlow = MutableStateFlow<NetworkResult<List<Doctor>>?>(null)
-    val doctorsListFlow:StateFlow<NetworkResult<List<Doctor>>?> = _doctorsListFlow
+    val doctorsListFlow: StateFlow<NetworkResult<List<Doctor>>?> = _doctorsListFlow
 
-    fun getAllDoctorsListInYourArea() = viewModelScope.launch{
+    fun getAllDoctorsListInYourArea() = viewModelScope.launch {
         _doctorsListFlow.value = NetworkResult.Loading()
 
+        // Fetching the doctor list
         try {
             val result = consultDoctorRepository.fetchDoctorsInYourArea()
-            result.catch { e->
+            result.catch { e ->
                 _doctorsListFlow.value = NetworkResult.Error("Error fetching data: ${e.message}")
-            }.collect {doctorList->
+            }.collect { doctorList ->
                 if (doctorList.isNotEmpty()) {
                     _doctorsListFlow.value = NetworkResult.Success(doctorList)
                 } else {
                     _doctorsListFlow.value = NetworkResult.Error("Data is null or empty")
                 }
-
             }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             _doctorsListFlow.value = NetworkResult.Error("Error fetching data: ${e.message}")
         }
 

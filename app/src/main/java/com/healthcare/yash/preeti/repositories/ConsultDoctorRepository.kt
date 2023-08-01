@@ -2,7 +2,9 @@ package com.healthcare.yash.preeti.repositories
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.ktx.Firebase
 import com.healthcare.yash.preeti.models.ContactInfo
 import com.healthcare.yash.preeti.models.Doctor
 import com.healthcare.yash.preeti.models.ReviewsAndRatings
@@ -19,12 +21,14 @@ import javax.inject.Inject
 class ConsultDoctorRepository @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore
 ) {
-
     suspend fun fetchDoctorsInYourArea(): Flow<List<Doctor>> {
         return flow<List<Doctor>> {
+
+            // Collection Ref of Firestore Collection of Doctors
             val doctorsCollectionRef = firebaseFirestore.collection("Doctors")
-            val querySnapshot = doctorsCollectionRef.get().await()
+            val querySnapshot = doctorsCollectionRef.get().await() // Await for the result on completelistener
             val doctorsList = mutableListOf<Doctor>()
+
 
             for (document in querySnapshot) {
                 if (document.exists()) {
@@ -39,7 +43,7 @@ class ConsultDoctorRepository @Inject constructor(
                         Services = document.get("Services") as List<String>,
                         Specialization = document.getString("Specialization") ?: "",
                         Working_Hours = document.getString("Working_Hours") ?: ""
-                    )
+                    )  // Mapping into Doctor data class
 
                     val contactInfoData = document.get("Contact_Info") as? HashMap<*, *>
                     val reviewsAndRatingsData = document.get("Reviews_and_Ratings") as? ArrayList<*>
@@ -51,7 +55,7 @@ class ConsultDoctorRepository @Inject constructor(
                             website = contactInfoData["website"] as? String ?: ""
                         )
                         doctor.Contact_Info = contactInfo
-                    }
+                    } // Mapping into Contact data class and then set to contact info field
 
                     if (reviewsAndRatingsData != null) {
                         val reviewsAndRatings = reviewsAndRatingsData.mapNotNull {
@@ -74,7 +78,7 @@ class ConsultDoctorRepository @Inject constructor(
                 }
             }
 
-         emit(doctorsList)
+         emit(doctorsList) // Emitting the doctors list
         }
     }
 }
