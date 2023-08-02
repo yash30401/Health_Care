@@ -43,7 +43,7 @@
         android:fontFamily="@font/poppins_medium"
         android:includeFontPadding="false"
         android:text="Searching Doctors In Your Area..."
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:textAlignment="center"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="@+id/searchProgress"
