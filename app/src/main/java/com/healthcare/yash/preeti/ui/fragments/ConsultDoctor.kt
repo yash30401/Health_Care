@@ -16,6 +16,7 @@ import com.healthcare.yash.preeti.databinding.FragmentConsultDoctorBinding
 import com.healthcare.yash.preeti.models.Doctor
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.CONSULTDOCTORFRAGTESTTAG
+import com.healthcare.yash.preeti.other.OnConsultDoctorClickListner
 import com.healthcare.yash.preeti.viewmodels.ConsultDoctorViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
@@ -25,7 +26,7 @@ import kotlin.coroutines.resume
 
 
 @AndroidEntryPoint
-class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor) {
+class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor),OnConsultDoctorClickListner {
 
     private var _binding: FragmentConsultDoctorBinding? = null
     private val binding get() = _binding!!
@@ -52,7 +53,7 @@ class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor) {
     }
 
     private fun setupRecylerView() {
-        consultDoctorAdapter = ConsultDoctorAdapter()
+        consultDoctorAdapter = ConsultDoctorAdapter(this)
         binding.recyclerViewDoctor.apply {
             adapter = consultDoctorAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -94,5 +95,9 @@ class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor) {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onClick(doctor: Doctor) {
+
     }
 }

@@ -14,8 +14,9 @@ import com.healthcare.yash.preeti.databinding.DoctorItemLayoutBinding
 import com.healthcare.yash.preeti.models.Doctor
 import com.healthcare.yash.preeti.other.Constants.CONSULTDOCTORFRAGTESTTAG
 import com.healthcare.yash.preeti.other.ConsultDoctorDiffUtil
+import com.healthcare.yash.preeti.other.OnConsultDoctorClickListner
 
-class ConsultDoctorAdapter : RecyclerView.Adapter<ConsultDoctorAdapter.ConsultDoctorViewHolder>() {
+class ConsultDoctorAdapter(val doctorClickListner: OnConsultDoctorClickListner) : RecyclerView.Adapter<ConsultDoctorAdapter.ConsultDoctorViewHolder>() {
 
     private val doctorsList = emptyList<Doctor>()
     private val asyncListDiffer = AsyncListDiffer<Doctor>(this, ConsultDoctorDiffUtil())
@@ -28,6 +29,10 @@ class ConsultDoctorAdapter : RecyclerView.Adapter<ConsultDoctorAdapter.ConsultDo
         val viewHolder = ConsultDoctorViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.doctor_item_layout, parent, false)
         )
+
+            viewHolder.binding.itemCardView.setOnClickListener {
+                doctorClickListner.onClick(asyncListDiffer.currentList[viewHolder.adapterPosition])
+            }
 
         return viewHolder
     }
