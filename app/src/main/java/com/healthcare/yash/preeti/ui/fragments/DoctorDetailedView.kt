@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentDoctorDetailedViewBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
 
     private var _binding: FragmentDoctorDetailedViewBinding? = null

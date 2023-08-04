@@ -86,5 +86,17 @@
         <action
             android:id="@+id/action_consultDoctor_to_chatFragment"
             app:destination="@id/chatFragment" />
+        <action
+            android:id="@+id/action_consultDoctor_to_doctorDetailedView"
+            app:destination="@id/doctorDetailedView" />
+    </fragment>
+    <fragment
+        android:id="@+id/doctorDetailedView"
+        android:name="com.healthcare.yash.preeti.ui.fragments.DoctorDetailedView"
+        android:label="fragment_doctor_detailed_view"
+        tools:layout="@layout/fragment_doctor_detailed_view" >
+        <argument
+            android:name="doctor"
+            app:argType="com.healthcare.yash.preeti.models.Doctor" />
     </fragment>
 </navigation>

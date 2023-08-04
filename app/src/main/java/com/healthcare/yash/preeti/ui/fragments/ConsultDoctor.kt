@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.adapters.ConsultDoctorAdapter
@@ -26,7 +27,7 @@ import kotlin.coroutines.resume
 
 
 @AndroidEntryPoint
-class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor),OnConsultDoctorClickListner {
+class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor), OnConsultDoctorClickListner {
 
     private var _binding: FragmentConsultDoctorBinding? = null
     private val binding get() = _binding!!
@@ -64,29 +65,33 @@ class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor),OnConsultDoctor
     }
 
     private suspend fun fetchDoctors() {
-        suspendCancellableCoroutine{
-            val data= consultDoctorViewModel.getAllDoctorsListInYourArea()
+        suspendCancellableCoroutine {
+            val data = consultDoctorViewModel.getAllDoctorsListInYourArea()
             it.resume(data)
         }
-        consultDoctorViewModel.doctorsListFlow.collect{
-            when(it){
+        consultDoctorViewModel.doctorsListFlow.collect {
+            when (it) {
                 is NetworkResult.Error -> {
                     binding.searchProgress.visibility = View.GONE
                     binding.tvSearch.visibility = View.GONE
-                    Log.d(CONSULTDOCTORFRAGTESTTAG,"Error:- "+it.message.toString())
-                    Toast.makeText(requireContext(), it.message.toString(), Toast.LENGTH_SHORT).show()
+                    Log.d(CONSULTDOCTORFRAGTESTTAG, "Error:- " + it.message.toString())
+                    Toast.makeText(requireContext(), it.message.toString(), Toast.LENGTH_SHORT)
+                        .show()
                 }
+
                 is NetworkResult.Loading -> {
                     binding.searchProgress.visibility = View.VISIBLE
                     binding.tvSearch.visibility = View.VISIBLE
                 }
+
                 is NetworkResult.Success -> {
                     binding.searchProgress.visibility = View.GONE
                     binding.tvSearch.visibility = View.GONE
                     consultDoctorAdapter.setData(it.data!!)
                 }
+
                 else -> {
-                    Log.d(CONSULTDOCTORFRAGTESTTAG,"ELSE:- "+it?.message.toString())
+                    Log.d(CONSULTDOCTORFRAGTESTTAG, "ELSE:- " + it?.message.toString())
                 }
             }
         }
@@ -98,6 +103,6 @@ class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor),OnConsultDoctor
     }
 
     override fun onClick(doctor: Doctor) {
-
+        val action = ConsultDoctorDirections.actionConsultDoctorToDoctorDetailedView(doctor)
     }
 }

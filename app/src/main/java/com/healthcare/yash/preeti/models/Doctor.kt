@@ -1,5 +1,10 @@
 package com.healthcare.yash.preeti.models
 
+import android.os.Parcel
+import android.os.Parcelable
+import com.google.firebase.auth.PhoneAuthProvider
+import java.io.Serializable
+
 data class Doctor(
     val About: String = "",
     val Address: String = "",
@@ -13,7 +18,7 @@ data class Doctor(
     val Services: List<String> = emptyList(),
     val Specialization: String = "",
     val Working_Hours: String = ""
-)
+):Serializable
 
 data class ContactInfo(
     val email: String = "",
