@@ -15,6 +15,7 @@ import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.adapters.ReviewsAndRatingsAdapter
 import com.healthcare.yash.preeti.adapters.ServicesChipAdatpter
 import com.healthcare.yash.preeti.databinding.FragmentDoctorDetailedViewBinding
+import com.healthcare.yash.preeti.utils.averageRating
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,7 +24,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
     private var _binding: FragmentDoctorDetailedViewBinding? = null
     private val binding get() = _binding!!
 
-    private val args:DoctorDetailedViewArgs by navArgs()
+    private val args: DoctorDetailedViewArgs by navArgs()
     private lateinit var reviewsAndRatingsAdapter: ReviewsAndRatingsAdapter
     private lateinit var servicesChipAdatpter: ServicesChipAdatpter
 
@@ -61,12 +62,11 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
 
         val averageRatingTextView = binding.ratingCard.tvDoctorRating
 
-        var averageRating: Double = 0.0
-        args.doctor.Reviews_And_Ratings.forEach {
-            val rating = it.rating.toDouble()
-            averageRating += rating
-        }
-        val formattedRating = String.format("%.1f", averageRating / args.doctor.Reviews_And_Ratings.size)
+
+        val averageRating = args.doctor.Reviews_And_Ratings.averageRating()
+
+        val formattedRating =
+            String.format("%.1f", averageRating)
         averageRatingTextView.text = formattedRating
 
         binding.tvRatingNumber.text = "(${args.doctor.Reviews_And_Ratings.size.toString()})"
@@ -77,12 +77,12 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
     }
 
 
-
     private fun setupRatingsRecylerView() {
         reviewsAndRatingsAdapter = ReviewsAndRatingsAdapter(args.doctor.Reviews_And_Ratings)
         binding.reviewRecylerView.apply {
             adapter = reviewsAndRatingsAdapter
-            layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
     }
 
@@ -90,7 +90,8 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
         servicesChipAdatpter = ServicesChipAdatpter(args.doctor.Services)
         binding.chipRecylerView.apply {
             adapter = servicesChipAdatpter
-            layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
     }
 
