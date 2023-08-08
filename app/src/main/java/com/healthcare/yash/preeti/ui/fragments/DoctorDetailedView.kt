@@ -38,12 +38,18 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
         }
 
         setupHeaderView()
+        setupBottomSheet()
     }
+
 
     private fun setupHeaderView() {
         Glide.with(this).load(args.doctor.Profile_Pic.toUri()).into(binding.ivDoctorImage)
         binding.tvDoctorNameInDetailView.text = args.doctor.Name
         binding.tvSpecializationDetailedView.text = args.doctor.Specialization
+
+    }
+
+    private fun setupBottomSheet() {
         binding.tvAboutDoctorDetailedView.text = args.doctor.About
 
         val averageRatingTextView = binding.ratingCard.tvDoctorRating
