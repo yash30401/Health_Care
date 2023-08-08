@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.healthcare.yash.preeti.R
+import com.healthcare.yash.preeti.adapters.ReviewsAndRatingsAdapter
 import com.healthcare.yash.preeti.databinding.FragmentDoctorDetailedViewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,6 +22,8 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
     private val binding get() = _binding!!
 
     private val args:DoctorDetailedViewArgs by navArgs()
+    private lateinit var reviewsAndRatingsAdapter: ReviewsAndRatingsAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,6 +67,16 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
         averageRatingTextView.text = formattedRating
 
         binding.tvRatingNumber.text = "(${args.doctor.Reviews_And_Ratings.size.toString()})"
+
+        setupRatingsRecylerView()
+    }
+
+    private fun setupRatingsRecylerView() {
+        reviewsAndRatingsAdapter = ReviewsAndRatingsAdapter(args.doctor.Reviews_And_Ratings)
+        binding.reviewRecylerView.apply {
+            adapter = reviewsAndRatingsAdapter
+            layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+        }
     }
 
     override fun onDestroy() {
