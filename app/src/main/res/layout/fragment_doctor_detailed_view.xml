@@ -113,6 +113,20 @@
                             app:layout_constraintStart_toEndOf="@+id/ratingCard"
                             app:layout_constraintTop_toTopOf="@+id/textView4" />
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/reviewRecylerView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            tools:listitem="@layout/reviews_item_layout"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintTop_toBottomOf="@+id/textView4"/>
+
+
+
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </ScrollView>
             </LinearLayout>

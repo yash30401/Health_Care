@@ -27,6 +27,8 @@ data class ContactInfo(
 )
 
 data class ReviewsAndRatings(
+    val date:String = "",
+    val name:String="",
     val rating: Double = 0.0,
     val review: String = ""
 )

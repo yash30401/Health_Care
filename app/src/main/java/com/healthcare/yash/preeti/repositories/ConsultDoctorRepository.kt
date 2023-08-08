@@ -26,7 +26,8 @@ class ConsultDoctorRepository @Inject constructor(
 
             // Collection Ref of Firestore Collection of Doctors
             val doctorsCollectionRef = firebaseFirestore.collection("Doctors")
-            val querySnapshot = doctorsCollectionRef.get().await() // Await for the result on completelistener
+            val querySnapshot =
+                doctorsCollectionRef.get().await() // Await for the result on completelistener
             val doctorsList = mutableListOf<Doctor>()
 
 
@@ -60,10 +61,17 @@ class ConsultDoctorRepository @Inject constructor(
                     if (reviewsAndRatingsData != null) {
                         val reviewsAndRatings = reviewsAndRatingsData.mapNotNull {
                             if (it is HashMap<*, *>) {
+                                val date = it["date"] as? String
+                                val name = it["name"] as? String
                                 val rating = it["rating"]
                                 val review = it["review"] as? String
-                                if (rating != null && review != null) {
-                                    ReviewsAndRatings(rating.toString().toDouble(), review)
+                                if (date != null && name != null && rating != null && review != null) {
+                                    ReviewsAndRatings(
+                                        date,
+                                        name,
+                                        rating.toString().toDouble(),
+                                        review
+                                    )
                                 } else {
                                     null
                                 }
@@ -71,6 +79,7 @@ class ConsultDoctorRepository @Inject constructor(
                                 null
                             }
                         }
+                        Log.d("DATEANDNAMETEST",reviewsAndRatings.get(0).name.toString())
                         doctor.Reviews_And_Ratings = reviewsAndRatings
                     }
 
@@ -78,7 +87,7 @@ class ConsultDoctorRepository @Inject constructor(
                 }
             }
 
-         emit(doctorsList) // Emitting the doctors list
+            emit(doctorsList) // Emitting the doctors list
         }
     }
 }
