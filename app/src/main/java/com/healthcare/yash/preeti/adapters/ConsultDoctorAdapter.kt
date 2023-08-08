@@ -16,7 +16,8 @@ import com.healthcare.yash.preeti.other.Constants.CONSULTDOCTORFRAGTESTTAG
 import com.healthcare.yash.preeti.other.ConsultDoctorDiffUtil
 import com.healthcare.yash.preeti.other.OnConsultDoctorClickListner
 
-class ConsultDoctorAdapter(val doctorClickListner: OnConsultDoctorClickListner) : RecyclerView.Adapter<ConsultDoctorAdapter.ConsultDoctorViewHolder>() {
+class ConsultDoctorAdapter(val doctorClickListner: OnConsultDoctorClickListner) :
+    RecyclerView.Adapter<ConsultDoctorAdapter.ConsultDoctorViewHolder>() {
 
     private val doctorsList = emptyList<Doctor>()
     private val asyncListDiffer = AsyncListDiffer<Doctor>(this, ConsultDoctorDiffUtil())
@@ -30,9 +31,9 @@ class ConsultDoctorAdapter(val doctorClickListner: OnConsultDoctorClickListner) 
             LayoutInflater.from(parent.context).inflate(R.layout.doctor_item_layout, parent, false)
         )
 
-            viewHolder.binding.itemCardView.setOnClickListener {
-                doctorClickListner.onClick(asyncListDiffer.currentList[viewHolder.adapterPosition])
-            }
+        viewHolder.binding.itemCardView.setOnClickListener {
+            doctorClickListner.onClick(asyncListDiffer.currentList[viewHolder.adapterPosition])
+        }
 
         return viewHolder
     }
@@ -54,7 +55,7 @@ class ConsultDoctorAdapter(val doctorClickListner: OnConsultDoctorClickListner) 
 
         var averageRating: Double = 0.0
         doctor.Reviews_And_Ratings.forEach {
-            val rating = it.rating
+            val rating = it.rating.toDouble()
             averageRating += rating
         }
         val formattedRating = String.format("%.1f", averageRating / doctor.Reviews_And_Ratings.size)

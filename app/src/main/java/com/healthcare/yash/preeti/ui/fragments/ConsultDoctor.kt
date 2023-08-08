@@ -104,5 +104,6 @@ class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor), OnConsultDocto
 
     override fun onClick(doctor: Doctor) {
         val action = ConsultDoctorDirections.actionConsultDoctorToDoctorDetailedView(doctor)
+        findNavController().navigate(action)
     }
 }
