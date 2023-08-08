@@ -68,12 +68,12 @@
 
     <Button
         android:id="@+id/btnCall"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:drawableLeft="@drawable/call_icon"
-        android:padding="20dp"
+        android:padding="15dp"
         app:cornerRadius="100dp"
         android:elevation="5dp"
         app:layout_constraintEnd_toStartOf="@+id/btnMail"
@@ -83,11 +83,11 @@
 
     <Button
         android:id="@+id/btnMail"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginTop="5dp"
         android:drawableLeft="@drawable/mail_icon"
-        android:padding="19dp"
+        android:padding="14dp"
         app:cornerRadius="100dp"
         app:layout_constraintEnd_toStartOf="@+id/btnWebsite"
         app:layout_constraintHorizontal_bias="0.5"
@@ -96,11 +96,11 @@
 
     <Button
         android:id="@+id/btnWebsite"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginTop="5dp"
         android:drawableLeft="@drawable/website_icon"
-        android:padding="20dp"
+        android:padding="15dp"
         app:cornerRadius="100dp"
         app:layout_constraintEnd_toStartOf="@+id/btnChat"
         app:layout_constraintHorizontal_bias="0.5"
@@ -109,12 +109,12 @@
 
     <Button
         android:id="@+id/btnChat"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="20dp"
         android:drawableLeft="@drawable/chat_left_dots_fill_icon"
-        android:padding="20dp"
+        android:padding="15dp"
         app:cornerRadius="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnWebsite"
