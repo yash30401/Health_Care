@@ -20,7 +20,6 @@ import com.healthcare.yash.preeti.other.Constants.CONSULTDOCTORFRAGTESTTAG
 import com.healthcare.yash.preeti.other.OnConsultDoctorClickListner
 import com.healthcare.yash.preeti.viewmodels.ConsultDoctorViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume

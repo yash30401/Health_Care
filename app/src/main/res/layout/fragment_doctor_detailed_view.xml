@@ -12,11 +12,11 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_marginTop="10dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/doctor_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="centerCrop"
         app:shapeAppearance="@style/RoundImageShape" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -38,6 +38,84 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingBottom="20dp">
+
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="30dp"
+                            android:fontFamily="@font/poppins_semibold"
+                            android:includeFontPadding="false"
+                            android:text="About Doctor"
+                            android:textColor="@color/black"
+                            android:textSize="22sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tvAboutDoctorDetailedView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="15dp"
+                            android:fontFamily="@font/poppins"
+                            android:text="Dr. Emily Chen is an experienced pediatrician committed to providing compassionate and comprehensive care to children and adolescents."
+                            android:textColor="#2B2B2B"
+                            android:textSize="15sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/textView2"
+                            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:fontFamily="@font/poppins_semibold"
+                            android:includeFontPadding="false"
+                            android:text="Reviews"
+                            android:textColor="@color/black"
+                            android:textSize="22sp"
+                            app:layout_constraintStart_toStartOf="@+id/tvAboutDoctorDetailedView"
+                            app:layout_constraintTop_toBottomOf="@+id/tvAboutDoctorDetailedView" />
+
+                        <include
+                            android:id="@+id/ratingCard"
+                            layout="@layout/rating_card"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/textView4"
+                            app:layout_constraintStart_toEndOf="@+id/textView4"
+                            app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+                        <TextView
+                            android:id="@+id/tvRatingNumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:text="(127)"
+                            app:layout_constraintBottom_toBottomOf="@+id/textView4"
+                            app:layout_constraintStart_toEndOf="@+id/ratingCard"
+                            app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </ScrollView>
+            </LinearLayout>
         </FrameLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -73,9 +151,10 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:drawableLeft="@drawable/call_icon"
-        android:padding="15dp"
-        app:cornerRadius="100dp"
         android:elevation="5dp"
+        android:padding="15dp"
+        android:tooltipText="Call"
+        app:cornerRadius="100dp"
         app:layout_constraintEnd_toStartOf="@+id/btnMail"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,6 +167,7 @@
         android:layout_marginTop="5dp"
         android:drawableLeft="@drawable/mail_icon"
         android:padding="14dp"
+        android:tooltipText="Mail"
         app:cornerRadius="100dp"
         app:layout_constraintEnd_toStartOf="@+id/btnWebsite"
         app:layout_constraintHorizontal_bias="0.5"
@@ -101,6 +181,7 @@
         android:layout_marginTop="5dp"
         android:drawableLeft="@drawable/website_icon"
         android:padding="15dp"
+        android:tooltipText="Website"
         app:cornerRadius="100dp"
         app:layout_constraintEnd_toStartOf="@+id/btnChat"
         app:layout_constraintHorizontal_bias="0.5"
@@ -115,6 +196,7 @@
         android:layout_marginEnd="20dp"
         android:drawableLeft="@drawable/chat_left_dots_fill_icon"
         android:padding="15dp"
+        android:tooltipText="Chat"
         app:cornerRadius="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btnWebsite"

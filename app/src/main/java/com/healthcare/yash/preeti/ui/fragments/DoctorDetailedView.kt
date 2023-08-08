@@ -44,6 +44,19 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
         Glide.with(this).load(args.doctor.Profile_Pic.toUri()).into(binding.ivDoctorImage)
         binding.tvDoctorNameInDetailView.text = args.doctor.Name
         binding.tvSpecializationDetailedView.text = args.doctor.Specialization
+        binding.tvAboutDoctorDetailedView.text = args.doctor.About
+
+        val averageRatingTextView = binding.ratingCard.tvDoctorRating
+
+        var averageRating: Double = 0.0
+        args.doctor.Reviews_And_Ratings.forEach {
+            val rating = it.rating.toDouble()
+            averageRating += rating
+        }
+        val formattedRating = String.format("%.1f", averageRating / args.doctor.Reviews_And_Ratings.size)
+        averageRatingTextView.text = formattedRating
+
+        binding.tvRatingNumber.text = "(${args.doctor.Reviews_And_Ratings.size.toString()})"
     }
 
     override fun onDestroy() {

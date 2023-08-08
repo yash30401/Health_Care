@@ -60,10 +60,10 @@ class ConsultDoctorRepository @Inject constructor(
                     if (reviewsAndRatingsData != null) {
                         val reviewsAndRatings = reviewsAndRatingsData.mapNotNull {
                             if (it is HashMap<*, *>) {
-                                val rating = it["rating"] as? Double
+                                val rating = it["rating"]
                                 val review = it["review"] as? String
                                 if (rating != null && review != null) {
-                                    ReviewsAndRatings(rating, review)
+                                    ReviewsAndRatings(rating.toString().toDouble(), review)
                                 } else {
                                     null
                                 }

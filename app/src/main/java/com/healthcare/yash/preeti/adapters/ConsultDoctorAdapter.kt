@@ -54,12 +54,16 @@ class ConsultDoctorAdapter(val doctorClickListner: OnConsultDoctorClickListner) 
         holder.binding.tvDoctorBio.text = doctor.About
 
         var averageRating: Double = 0.0
+        var itemNo = 0
         doctor.Reviews_And_Ratings.forEach {
             val rating = it.rating.toDouble()
             averageRating += rating
+            itemNo++
         }
+
         val formattedRating = String.format("%.1f", averageRating / doctor.Reviews_And_Ratings.size)
         holder.binding.tvDoctorRating.text = formattedRating
+        Log.d("SIZECHECK","${doctor.Name}: "+itemNo.toString())
 
         if (doctor.Specialization.length > 10) {
             holder.binding.tvDoctorSpecialization.text =
