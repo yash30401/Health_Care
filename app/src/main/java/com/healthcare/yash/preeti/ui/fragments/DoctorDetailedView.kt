@@ -34,8 +34,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
         _binding = FragmentDoctorDetailedViewBinding.bind(view)
 
         BottomSheetBehavior.from(binding.bottomSheet).apply {
-            peekHeight = binding.bottomSheet.height+1300
-            this.state = BottomSheetBehavior.STATE_EXPANDED
+            this.state = BottomSheetBehavior.STATE_DRAGGING
         }
 
         setupHeaderView()

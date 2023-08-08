@@ -32,6 +32,7 @@
                 android:layout_height="60dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="15dp"
+                android:scaleType="centerCrop"
                 android:src="@drawable/doctor_image"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

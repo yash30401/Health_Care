@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/specialistCardBackgroundColor"
     tools:context=".ui.fragments.DoctorDetailedView">
 
@@ -16,11 +16,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:scaleType="centerCrop"
         app:shapeAppearance="@style/RoundImageShape" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinatorLayout2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="650dp"
+        android:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -43,11 +46,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="Dr. Yashveer Singh"
-        android:textSize="20sp"
         android:fontFamily="@font/poppins_semibold"
-        android:textColor="@color/black"
         android:includeFontPadding="false"
+        android:text="Dr. Yashveer Singh"
+        android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/ivDoctorImage"
         app:layout_constraintStart_toStartOf="@+id/ivDoctorImage"
         app:layout_constraintTop_toBottomOf="@+id/ivDoctorImage" />
@@ -56,12 +59,66 @@
         android:id="@+id/tvSpecializationDetailedView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Radiologist"
         android:fontFamily="@font/poppins"
         android:includeFontPadding="false"
+        android:text="Radiologist"
         app:layout_constraintEnd_toEndOf="@+id/tvDoctorNameInDetailView"
         app:layout_constraintStart_toStartOf="@+id/tvDoctorNameInDetailView"
         app:layout_constraintTop_toBottomOf="@+id/tvDoctorNameInDetailView" />
+
+    <Button
+        android:id="@+id/btnCall"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:drawableLeft="@drawable/call_icon"
+        android:padding="20dp"
+        app:cornerRadius="100dp"
+        android:elevation="5dp"
+        app:layout_constraintEnd_toStartOf="@+id/btnMail"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSpecializationDetailedView" />
+
+    <Button
+        android:id="@+id/btnMail"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:drawableLeft="@drawable/mail_icon"
+        android:padding="19dp"
+        app:cornerRadius="100dp"
+        app:layout_constraintEnd_toStartOf="@+id/btnWebsite"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnCall"
+        app:layout_constraintTop_toBottomOf="@+id/tvSpecializationDetailedView" />
+
+    <Button
+        android:id="@+id/btnWebsite"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:drawableLeft="@drawable/website_icon"
+        android:padding="20dp"
+        app:cornerRadius="100dp"
+        app:layout_constraintEnd_toStartOf="@+id/btnChat"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnMail"
+        app:layout_constraintTop_toBottomOf="@+id/tvSpecializationDetailedView" />
+
+    <Button
+        android:id="@+id/btnChat"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="20dp"
+        android:drawableLeft="@drawable/chat_left_dots_fill_icon"
+        android:padding="20dp"
+        app:cornerRadius="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btnWebsite"
+        app:layout_constraintTop_toBottomOf="@+id/tvSpecializationDetailedView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
