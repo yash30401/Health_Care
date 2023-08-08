@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
     private fun hideBottomNavOnAuthFragment() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
 
-            if (destination.id == R.id.authentication2 || destination.id == R.id.otpFragment) {
+            if (destination.id == R.id.authentication2 || destination.id == R.id.otpFragment || destination.id == R.id.doctorDetailedView) {
                 binding.bottomNav.visibility = View.GONE
             } else {
                 binding.bottomNav.visibility = View.VISIBLE
