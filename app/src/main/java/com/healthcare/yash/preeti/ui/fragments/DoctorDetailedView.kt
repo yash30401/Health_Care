@@ -10,8 +10,10 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.chip.Chip
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.adapters.ReviewsAndRatingsAdapter
+import com.healthcare.yash.preeti.adapters.ServicesChipAdatpter
 import com.healthcare.yash.preeti.databinding.FragmentDoctorDetailedViewBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,6 +25,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
 
     private val args:DoctorDetailedViewArgs by navArgs()
     private lateinit var reviewsAndRatingsAdapter: ReviewsAndRatingsAdapter
+    private lateinit var servicesChipAdatpter: ServicesChipAdatpter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,12 +72,24 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
         binding.tvRatingNumber.text = "(${args.doctor.Reviews_And_Ratings.size.toString()})"
 
         setupRatingsRecylerView()
+        setupServicesChipView()
+
     }
+
+
 
     private fun setupRatingsRecylerView() {
         reviewsAndRatingsAdapter = ReviewsAndRatingsAdapter(args.doctor.Reviews_And_Ratings)
         binding.reviewRecylerView.apply {
             adapter = reviewsAndRatingsAdapter
+            layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+        }
+    }
+
+    private fun setupServicesChipView() {
+        servicesChipAdatpter = ServicesChipAdatpter(args.doctor.Services)
+        binding.chipRecylerView.apply {
+            adapter = servicesChipAdatpter
             layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         }
     }
