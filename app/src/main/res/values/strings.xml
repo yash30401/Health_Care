@@ -23,5 +23,6 @@
     <string name="greeting">Hope you are feeling\ngood Today! <font color="#FF6969">If not.</font></string>
 
     <string name="doctorAbout">Dr. Michael Rodriguez is a compassionate family physician dedicated to providing...</string>
-
+    <string name="readMore">...Read More</string>
+    <string name="readLess">...Read Less</string>
 </resources>

@@ -16,6 +16,7 @@ import com.healthcare.yash.preeti.adapters.ReviewsAndRatingsAdapter
 import com.healthcare.yash.preeti.adapters.ServicesChipAdatpter
 import com.healthcare.yash.preeti.databinding.FragmentDoctorDetailedViewBinding
 import com.healthcare.yash.preeti.utils.averageRating
+import com.healthcare.yash.preeti.utils.setResizableText
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -58,7 +59,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
     }
 
     private fun setupBottomSheet() {
-        binding.tvAboutDoctorDetailedView.text = args.doctor.About
+        binding.tvAboutDoctorDetailedView.setResizableText(args.doctor.About,4,true)
 
         val averageRatingTextView = binding.ratingCard.tvDoctorRating
 
@@ -74,6 +75,10 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
         setupRatingsRecylerView()
         setupServicesChipView()
 
+        binding.tvWorkingHours.text = args.doctor.Working_Hours
+
+        binding.tvCity.text = args.doctor.City
+        binding.tvAddress.text = args.doctor.Address
     }
 
 

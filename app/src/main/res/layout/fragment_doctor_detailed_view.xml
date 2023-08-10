@@ -38,13 +38,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
 
-                <ScrollView
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
+                    android:layout_marginTop="20dp"
                     android:layout_height="match_parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -58,7 +55,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="15dp"
-                            android:layout_marginTop="30dp"
+                            android:layout_marginTop="10dp"
                             android:fontFamily="@font/poppins_semibold"
                             android:includeFontPadding="false"
                             android:text="About Doctor"
@@ -128,7 +125,7 @@
                             android:id="@+id/textView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
+                            android:layout_marginTop="15dp"
                             android:fontFamily="@font/poppins_semibold"
                             android:includeFontPadding="false"
                             android:text="Services"
@@ -148,9 +145,97 @@
                             app:layout_constraintTop_toBottomOf="@id/textView"
                             tools:listitem="@layout/chip_item_layout" />
 
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:fontFamily="@font/poppins_semibold"
+                            android:includeFontPadding="false"
+                            android:text="Working Hours"
+                            android:textColor="@color/black"
+                            android:textSize="22sp"
+                            app:layout_constraintStart_toStartOf="@+id/textView"
+                            app:layout_constraintTop_toBottomOf="@+id/chipRecylerView" />
+
+                        <TextView
+                            android:id="@+id/tvWorkingHours"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginEnd="15dp"
+                            android:fontFamily="@font/poppins"
+                            android:includeFontPadding="false"
+                            android:text="Monday to Saturday, 8:00 AM - 6:00 PM."
+                            android:textColor="#393939"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/textView3"
+                            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+                        <TextView
+                            android:id="@+id/textView6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:fontFamily="@font/poppins_semibold"
+                            android:includeFontPadding="false"
+                            android:text="Location"
+                            android:textColor="@color/black"
+                            android:textSize="22sp"
+                            app:layout_constraintStart_toStartOf="@+id/textView3"
+                            app:layout_constraintTop_toBottomOf="@+id/tvWorkingHours" />
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/materialCardView4"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="5dp"
+                            app:cardBackgroundColor="@color/specialistCardBackgroundColor"
+                            app:cardCornerRadius="50dp"
+                            app:layout_constraintStart_toStartOf="@+id/textView6"
+                            app:layout_constraintTop_toBottomOf="@+id/textView6"
+                            app:strokeWidth="0dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:src="@drawable/location_icon" />
+
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <TextView
+                            android:id="@+id/tvCity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:fontFamily="@font/poppins_medium"
+                            android:text="Aligarh"
+                            android:textSize="16sp"
+                            android:includeFontPadding="false"
+                            android:textColor="@color/black"
+                            app:layout_constraintBottom_toTopOf="@+id/tvAddress"
+                            app:layout_constraintStart_toEndOf="@+id/materialCardView4"
+                            app:layout_constraintTop_toTopOf="@+id/materialCardView4" />
+
+                        <TextView
+                            android:id="@+id/tvAddress"
+                            android:layout_width="0dp"
+                            android:layout_marginEnd="15dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins"
+                            android:includeFontPadding="false"
+                            android:textColor="#777777"
+                            android:text="789 Maple Lane, Kidstown."
+                            app:layout_constraintBottom_toBottomOf="@+id/materialCardView4"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/tvCity"
+                            app:layout_constraintTop_toBottomOf="@+id/tvCity" />
+
                     </androidx.constraintlayout.widget.ConstraintLayout>
-                </ScrollView>
-            </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+
         </FrameLayout>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

@@ -22,4 +22,5 @@
     <color name="ratingsCardBackgroundcColor">#56FDE390</color>
 
     <color name="specialistCardBackgroundColor">#E8DEF8</color>
+    <color name="primaryColor">#6750A4</color>
 </resources>
