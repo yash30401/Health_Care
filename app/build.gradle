@@ -6,6 +6,7 @@ plugins {
     id 'com.google.dagger.hilt.android'
     id 'com.google.gms.google-services'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -82,6 +83,10 @@ dependencies {
 
     // Dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.5.0'
+    // Play Services for maps
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.android.libraries.places:places:3.1.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     //Hilt
     implementation "com.google.dagger:hilt-android:2.44"
