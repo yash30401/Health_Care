@@ -9,6 +9,9 @@ import androidx.core.net.toUri
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.chip.Chip
 import com.healthcare.yash.preeti.R
@@ -20,7 +23,7 @@ import com.healthcare.yash.preeti.utils.setResizableText
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
+class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view),OnMapReadyCallback {
 
     private var _binding: FragmentDoctorDetailedViewBinding? = null
     private val binding get() = _binding!!
@@ -28,6 +31,8 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
     private val args: DoctorDetailedViewArgs by navArgs()
     private lateinit var reviewsAndRatingsAdapter: ReviewsAndRatingsAdapter
     private lateinit var servicesChipAdatpter: ServicesChipAdatpter
+
+    private lateinit var map:GoogleMap
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +46,9 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentDoctorDetailedViewBinding.bind(view)
+
+        val mapFragment = activity?.supportFragmentManager?.findFragmentById(R.id.mapFragment) as? SupportMapFragment
+        mapFragment?.getMapAsync(this)
 
         BottomSheetBehavior.from(binding.bottomSheet).apply {
             this.state = BottomSheetBehavior.STATE_DRAGGING
@@ -100,9 +108,15 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view) {
         }
     }
 
+
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
     }
 
 }
