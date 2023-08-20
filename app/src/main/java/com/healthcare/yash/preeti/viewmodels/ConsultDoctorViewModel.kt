@@ -22,6 +22,10 @@ class ConsultDoctorViewModel @Inject constructor(private val consultDoctorReposi
     private val _doctorsListFlow = MutableStateFlow<NetworkResult<List<Doctor>>?>(null)
     val doctorsListFlow: StateFlow<NetworkResult<List<Doctor>>?> = _doctorsListFlow
 
+    init {
+        getAllDoctorsListInYourArea()
+    }
+
     fun getAllDoctorsListInYourArea() = viewModelScope.launch {
         _doctorsListFlow.value = NetworkResult.Loading()
 

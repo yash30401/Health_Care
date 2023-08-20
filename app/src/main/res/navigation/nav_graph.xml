@@ -88,7 +88,7 @@
             app:destination="@id/chatFragment" />
         <action
             android:id="@+id/action_consultDoctor_to_doctorDetailedView"
-            app:destination="@id/doctorDetailedView" />
+            app:destination="@id/doctorDetailedView"/>
     </fragment>
     <fragment
         android:id="@+id/doctorDetailedView"

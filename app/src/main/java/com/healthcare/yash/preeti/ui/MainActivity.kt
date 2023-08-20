@@ -7,6 +7,8 @@ import android.util.Base64
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -20,6 +22,7 @@ import com.google.firebase.ktx.initialize
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ActivityMainBinding
 import com.healthcare.yash.preeti.other.Constants.BACKSTACK
+import com.healthcare.yash.preeti.ui.fragments.ConsultDoctor
 import dagger.hilt.android.AndroidEntryPoint
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -48,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNav.setupWithNavController(navController)
         hideBottomNavOnAuthFragment()
+
 
         Firebase.initialize(this)
         val firebaseAppCheck = FirebaseAppCheck.getInstance()
