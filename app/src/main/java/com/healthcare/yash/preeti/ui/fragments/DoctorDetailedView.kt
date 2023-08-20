@@ -88,7 +88,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
 
         binding.tvCity.text = args.doctor.City
         binding.tvAddress.text = args.doctor.Address
-        binding.tvConsultationFee.text = args.doctor.Consultation_Fee.toString()
+        binding.tvConsultationFee.text = "₹"+args.doctor.Consultation_Fee.toString()
     }
 
 
