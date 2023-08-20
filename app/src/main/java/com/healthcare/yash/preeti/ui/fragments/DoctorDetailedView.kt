@@ -23,7 +23,7 @@ import com.healthcare.yash.preeti.utils.setResizableText
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view),OnMapReadyCallback {
+class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnMapReadyCallback {
 
     private var _binding: FragmentDoctorDetailedViewBinding? = null
     private val binding get() = _binding!!
@@ -32,7 +32,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view),OnMa
     private lateinit var reviewsAndRatingsAdapter: ReviewsAndRatingsAdapter
     private lateinit var servicesChipAdatpter: ServicesChipAdatpter
 
-    private lateinit var map:GoogleMap
+    private lateinit var map: GoogleMap
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +47,8 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view),OnMa
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentDoctorDetailedViewBinding.bind(view)
 
-        val mapFragment = activity?.supportFragmentManager?.findFragmentById(R.id.mapFragment) as? SupportMapFragment
+        val mapFragment =
+            activity?.supportFragmentManager?.findFragmentById(R.id.mapFragment) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
 
         BottomSheetBehavior.from(binding.bottomSheet).apply {
@@ -67,7 +68,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view),OnMa
     }
 
     private fun setupBottomSheet() {
-        binding.tvAboutDoctorDetailedView.setResizableText(args.doctor.About,4,true)
+        binding.tvAboutDoctorDetailedView.setResizableText(args.doctor.About, 4, true)
 
         val averageRatingTextView = binding.ratingCard.tvDoctorRating
 
@@ -87,6 +88,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view),OnMa
 
         binding.tvCity.text = args.doctor.City
         binding.tvAddress.text = args.doctor.Address
+        binding.tvConsultationFee.text = args.doctor.Consultation_Fee.toString()
     }
 
 
@@ -107,7 +109,6 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view),OnMa
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
     }
-
 
 
     override fun onDestroy() {

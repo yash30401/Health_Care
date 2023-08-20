@@ -17,6 +17,7 @@ import com.healthcare.yash.preeti.databinding.FragmentConsultDoctorBinding
 import com.healthcare.yash.preeti.models.Doctor
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.CONSULTDOCTORFRAGTESTTAG
+import com.healthcare.yash.preeti.other.Constants.FRAGLIFECYCLETESTING
 import com.healthcare.yash.preeti.other.OnConsultDoctorClickListner
 import com.healthcare.yash.preeti.viewmodels.ConsultDoctorViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,6 +34,7 @@ class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor), OnConsultDocto
 
     private val consultDoctorViewModel by viewModels<ConsultDoctorViewModel>()
     private lateinit var consultDoctorAdapter: ConsultDoctorAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,7 +42,7 @@ class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor), OnConsultDocto
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_consult_doctor, container, false)
 
-
+        Log.d(FRAGLIFECYCLETESTING,"OnCreateView")
         return rootView
     }
 
@@ -49,8 +51,11 @@ class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor), OnConsultDocto
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentConsultDoctorBinding.bind(view)
 
+        Log.d(FRAGLIFECYCLETESTING,"OnViewCreated")
         setupRecylerView()
     }
+
+
 
     private fun setupRecylerView() {
         consultDoctorAdapter = ConsultDoctorAdapter(this)
@@ -96,9 +101,11 @@ class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor), OnConsultDocto
         }
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        Log.d(FRAGLIFECYCLETESTING,"Destroy")
     }
 
     override fun onClick(doctor: Doctor) {
