@@ -29,10 +29,12 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
     private var _binding: FragmentDoctorDetailedViewBinding? = null
     private val binding get() = _binding!!
 
+    // Retrieve arguments using Safe Args
     private val args: DoctorDetailedViewArgs by navArgs()
     private lateinit var reviewsAndRatingsAdapter: ReviewsAndRatingsAdapter
     private lateinit var servicesChipAdatpter: ServicesChipAdatpter
 
+    // GoogleMap instance
     private lateinit var map: GoogleMap
 
     override fun onCreateView(
@@ -48,6 +50,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentDoctorDetailedViewBinding.bind(view)
 
+        // Initialize Google Maps fragment
         val mapFragment =
             activity?.supportFragmentManager?.findFragmentById(R.id.mapFragment) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
@@ -57,44 +60,49 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         }
 
 
-
+        // Set up header view
         setupHeaderView()
+        // Set up bottom sheet content
         setupBottomSheet()
     }
 
-
+    // Method to set up the header view
     private fun setupHeaderView() {
+        // Load doctor's profile picture using Glide
         Glide.with(this).load(args.doctor.Profile_Pic.toUri()).into(binding.ivDoctorImage)
         binding.tvDoctorNameInDetailView.text = args.doctor.Name
         binding.tvSpecializationDetailedView.text = args.doctor.Specialization
 
     }
 
+    // Method to set up the bottom sheet content
     private fun setupBottomSheet() {
+        // Set up expandable text view for doctor's about information
         binding.tvAboutDoctorDetailedView.setResizableText(args.doctor.About, 4, true)
 
+        // Calculate and display average rating
         val averageRatingTextView = binding.ratingCard.tvDoctorRating
-
-
         val averageRating = args.doctor.Reviews_And_Ratings.averageRating()
-
         val formattedRating =
             String.format("%.1f", averageRating)
         averageRatingTextView.text = formattedRating
 
+        // Display number of ratings
         binding.tvRatingNumber.text = "(${args.doctor.Reviews_And_Ratings.size.toString()})"
 
+        // Set up RecyclerView for reviews and ratings
         setupRatingsRecylerView()
+        // Set up RecyclerView for services chips
         setupServicesChipView()
 
+        // Set other doctor's information
         binding.tvWorkingHours.text = args.doctor.Working_Hours
-
         binding.tvCity.text = args.doctor.City
         binding.tvAddress.text = args.doctor.Address
-        binding.tvConsultationFee.text = "₹"+args.doctor.Consultation_Fee.toString()
+        binding.tvConsultationFee.text = "₹" + args.doctor.Consultation_Fee.toString()
     }
 
-
+    // Method to set up the RecyclerView for reviews and ratings
     private fun setupRatingsRecylerView() {
         reviewsAndRatingsAdapter = ReviewsAndRatingsAdapter(args.doctor.Reviews_And_Ratings)
         binding.reviewRecylerView.apply {
@@ -104,6 +112,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         }
     }
 
+    // Method to set up the RecyclerView for services chips
     private fun setupServicesChipView() {
         servicesChipAdatpter = ServicesChipAdatpter(args.doctor.Services)
         binding.chipRecylerView.apply {
@@ -119,6 +128,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         _binding = null
     }
 
+    // GoogleMap's onMapReady callback
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
     }

@@ -59,7 +59,7 @@ class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor), OnConsultDocto
     }
 
 
-
+    // Method to set up RecyclerView
     private fun setupRecylerView() {
         consultDoctorAdapter = ConsultDoctorAdapter(this)
         binding.recyclerViewDoctor.apply {
@@ -71,7 +71,9 @@ class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor), OnConsultDocto
         }
     }
 
+    // Coroutine to fetch doctors' data
     private suspend fun fetchDoctors() {
+        // Collect data from the ViewModel's Flow
         consultDoctorViewModel.doctorsListFlow.collect {
             when (it) {
                 is NetworkResult.Error -> {
@@ -108,6 +110,7 @@ class ConsultDoctor : Fragment(R.layout.fragment_consult_doctor), OnConsultDocto
     }
 
     override fun onClick(doctor: Doctor) {
+        // Navigate to a detailed view using Navigation component
         val action = ConsultDoctorDirections.actionConsultDoctorToDoctorDetailedView(doctor)
         findNavController().navigate(action)
 
