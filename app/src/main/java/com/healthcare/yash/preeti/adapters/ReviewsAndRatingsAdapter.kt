@@ -5,16 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ReviewsItemLayoutBinding
+import com.healthcare.yash.preeti.models.Doctor
 import com.healthcare.yash.preeti.models.ReviewsAndRatings
+import com.healthcare.yash.preeti.other.ConsultDoctorDiffUtil
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
 
-class ReviewsAndRatingsAdapter(private val reviewsAndRatingsList: List<ReviewsAndRatings>) :
+class ReviewsAndRatingsAdapter() :
     RecyclerView.Adapter<ReviewsAndRatingsAdapter.ReviewsAndRatingViewHolder>() {
+
+    private val reviewsAndRatingsList = emptyList<ReviewsAndRatings>()
+    private val asyncListDiffer = AsyncListDiffer<ReviewsAndRatings>(this,ConsultDoctorDiffUtil())
 
     inner class ReviewsAndRatingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = ReviewsItemLayoutBinding.bind(itemView)
@@ -29,12 +35,12 @@ class ReviewsAndRatingsAdapter(private val reviewsAndRatingsList: List<ReviewsAn
     }
 
     override fun getItemCount(): Int {
-        return reviewsAndRatingsList.size
+        return asyncListDiffer.currentList.size
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ReviewsAndRatingViewHolder, position: Int) {
-        val currentReview = reviewsAndRatingsList[position]
+        val currentReview = asyncListDiffer.currentList[position]
 
         holder.binding.tvReviewPersonName.text = currentReview.name
         holder.binding.reviewRatingCard.tvDoctorRating.text = currentReview.rating.toString()
@@ -63,6 +69,10 @@ class ReviewsAndRatingsAdapter(private val reviewsAndRatingsList: List<ReviewsAn
             days > 0 -> "$days days ago"
             else -> "Today"
         }
+    }
+
+    fun setData(newList: List<ReviewsAndRatings>) {
+        asyncListDiffer.submitList(newList)
     }
 
 }

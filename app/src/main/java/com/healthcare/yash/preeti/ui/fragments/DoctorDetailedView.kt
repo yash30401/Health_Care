@@ -82,7 +82,8 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
 
         // Calculate and display average rating
         val averageRatingTextView = binding.ratingCard.tvDoctorRating
-        val averageRating = args.doctor.Reviews_And_Ratings.averageRating()
+        val averageRating =
+            args.doctor.Reviews_And_Ratings.averageRating() // Extension function for calculating the average rating of a list of ReviewsAndRatings
         val formattedRating =
             String.format("%.1f", averageRating)
         averageRatingTextView.text = formattedRating
@@ -104,7 +105,8 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
 
     // Method to set up the RecyclerView for reviews and ratings
     private fun setupRatingsRecylerView() {
-        reviewsAndRatingsAdapter = ReviewsAndRatingsAdapter(args.doctor.Reviews_And_Ratings)
+        reviewsAndRatingsAdapter = ReviewsAndRatingsAdapter()
+        reviewsAndRatingsAdapter.setData(args.doctor.Reviews_And_Ratings)
         binding.reviewRecylerView.apply {
             adapter = reviewsAndRatingsAdapter
             layoutManager =
@@ -114,7 +116,8 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
 
     // Method to set up the RecyclerView for services chips
     private fun setupServicesChipView() {
-        servicesChipAdatpter = ServicesChipAdatpter(args.doctor.Services)
+        servicesChipAdatpter = ServicesChipAdatpter()
+        servicesChipAdatpter.setData(args.doctor.Services)
         binding.chipRecylerView.apply {
             adapter = servicesChipAdatpter
             layoutManager =
