@@ -13,7 +13,7 @@ import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.DoctorItemLayoutBinding
 import com.healthcare.yash.preeti.models.Doctor
 import com.healthcare.yash.preeti.other.Constants.CONSULTDOCTORFRAGTESTTAG
-import com.healthcare.yash.preeti.other.ConsultDoctorDiffUtil
+import com.healthcare.yash.preeti.utils.ConsultDoctorDiffUtil
 import com.healthcare.yash.preeti.other.OnConsultDoctorClickListner
 import com.healthcare.yash.preeti.utils.averageRating
 
@@ -62,7 +62,7 @@ class ConsultDoctorAdapter(val doctorClickListner: OnConsultDoctorClickListner) 
 //            itemNo++
 //        }
 
-        val averageRating = doctor.Reviews_And_Ratings.averageRating()
+        val averageRating = doctor.Reviews_And_Ratings?.averageRating()
 
         val formattedRating = String.format("%.1f", averageRating)
         holder.binding.tvDoctorRating.text = formattedRating

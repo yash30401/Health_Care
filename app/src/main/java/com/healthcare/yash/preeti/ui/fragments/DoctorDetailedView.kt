@@ -83,13 +83,13 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         // Calculate and display average rating
         val averageRatingTextView = binding.ratingCard.tvDoctorRating
         val averageRating =
-            args.doctor.Reviews_And_Ratings.averageRating() // Extension function for calculating the average rating of a list of ReviewsAndRatings
+            args.doctor.Reviews_And_Ratings?.averageRating() // Extension function for calculating the average rating of a list of ReviewsAndRatings
         val formattedRating =
             String.format("%.1f", averageRating)
         averageRatingTextView.text = formattedRating
 
         // Display number of ratings
-        binding.tvRatingNumber.text = "(${args.doctor.Reviews_And_Ratings.size.toString()})"
+        binding.tvRatingNumber.text = "(${args.doctor.Reviews_And_Ratings?.size.toString()})"
 
         // Set up RecyclerView for reviews and ratings
         setupRatingsRecylerView()
@@ -100,13 +100,13 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         binding.tvWorkingHours.text = args.doctor.Working_Hours
         binding.tvCity.text = args.doctor.City
         binding.tvAddress.text = args.doctor.Address
-        binding.tvConsultationFee.text = "₹" + args.doctor.Consultation_Fee.toString()
+        binding.tvConsultationFee.text = "₹" + args.doctor.video_consult.toString()
     }
 
     // Method to set up the RecyclerView for reviews and ratings
     private fun setupRatingsRecylerView() {
         reviewsAndRatingsAdapter = ReviewsAndRatingsAdapter()
-        reviewsAndRatingsAdapter.setData(args.doctor.Reviews_And_Ratings)
+        reviewsAndRatingsAdapter.setData(args.doctor.Reviews_And_Ratings!!)
         binding.reviewRecylerView.apply {
             adapter = reviewsAndRatingsAdapter
             layoutManager =

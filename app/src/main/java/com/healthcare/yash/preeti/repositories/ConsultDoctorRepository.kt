@@ -36,14 +36,15 @@ class ConsultDoctorRepository @Inject constructor(
                     val doctor = Doctor(
                         Name = document.getString("Name") ?: "",
                         About = document.getString("About") ?: "",
-                        Consultation_Fee = document.getLong("Consultation_Fee")?.toInt() ?: 0,
+                        clinic_visit = document.getLong("clinic_visit")?.toInt() ?: 0,
                         Address = document.getString("Address") ?: "",
                         City = document.getString("City") ?: "",
                         Experience = document.getLong("Experience")?.toInt() ?: 0,
                         Profile_Pic = document.getString("Profile_Pic") ?: "",
                         Services = document.get("Services") as List<String>,
                         Specialization = document.getString("Specialization") ?: "",
-                        Working_Hours = document.getString("Working_Hours") ?: ""
+                        Working_Hours = document.getString("Working_Hours") ?: "",
+                        video_consult =  document.getLong("video_consult")?.toInt() ?: 0,
                     )  // Mapping into Doctor data class
 
                     val contactInfoData = document.get("Contact_Info") as? HashMap<*, *>

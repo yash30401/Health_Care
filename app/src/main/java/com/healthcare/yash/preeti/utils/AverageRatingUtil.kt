@@ -7,7 +7,9 @@ fun  List<ReviewsAndRatings>.averageRating():Double{
     var averageRating: Double = 0.0
     forEach {
         val rating = it.rating
-        averageRating += rating
+        if (rating != null) {
+            averageRating += rating
+        }
     }
     return (averageRating/size)
 }

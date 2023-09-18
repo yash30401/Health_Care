@@ -9,9 +9,8 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ReviewsItemLayoutBinding
-import com.healthcare.yash.preeti.models.Doctor
 import com.healthcare.yash.preeti.models.ReviewsAndRatings
-import com.healthcare.yash.preeti.other.ConsultDoctorDiffUtil
+import com.healthcare.yash.preeti.utils.ConsultDoctorDiffUtil
 import java.time.LocalDate
 import java.time.Period
 import java.time.format.DateTimeFormatter
@@ -20,7 +19,7 @@ class ReviewsAndRatingsAdapter() :
     RecyclerView.Adapter<ReviewsAndRatingsAdapter.ReviewsAndRatingViewHolder>() {
 
     private val reviewsAndRatingsList = emptyList<ReviewsAndRatings>()
-    private val asyncListDiffer = AsyncListDiffer<ReviewsAndRatings>(this,ConsultDoctorDiffUtil())
+    private val asyncListDiffer = AsyncListDiffer<ReviewsAndRatings>(this, ConsultDoctorDiffUtil())
 
     inner class ReviewsAndRatingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = ReviewsItemLayoutBinding.bind(itemView)
@@ -45,7 +44,7 @@ class ReviewsAndRatingsAdapter() :
         holder.binding.tvReviewPersonName.text = currentReview.name
         holder.binding.reviewRatingCard.tvDoctorRating.text = currentReview.rating.toString()
 
-        val date = formatDateDifference(currentReview.date)
+        val date = formatDateDifference(currentReview.date!!)
         holder.binding.tvDaysAgo.text = date
 
 

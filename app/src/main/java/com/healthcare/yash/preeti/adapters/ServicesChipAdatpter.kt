@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ChipItemLayoutBinding
-import com.healthcare.yash.preeti.other.ConsultDoctorDiffUtil
+import com.healthcare.yash.preeti.utils.ConsultDoctorDiffUtil
 
 class ServicesChipAdatpter() :
     RecyclerView.Adapter<ServicesChipAdatpter.ServicesChipViewHolder>() {
 
     private val servicesChipList = emptyList<String>()
-    private val asyncListDiffer = AsyncListDiffer<String>(this,ConsultDoctorDiffUtil())
+    private val asyncListDiffer = AsyncListDiffer<String>(this, ConsultDoctorDiffUtil())
     inner class ServicesChipViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = ChipItemLayoutBinding.bind(itemView)
     }
