@@ -42,6 +42,7 @@ class ReviewsAndRatingsAdapter() :
         val currentReview = asyncListDiffer.currentList[position]
 
         holder.binding.tvReviewPersonName.text = currentReview.name
+
         holder.binding.reviewRatingCard.tvDoctorRating.text = currentReview.rating.toString()
 
         val date = formatDateDifference(currentReview.date!!)

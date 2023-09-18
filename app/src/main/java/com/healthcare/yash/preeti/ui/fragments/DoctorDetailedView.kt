@@ -86,8 +86,11 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
             args.doctor.Reviews_And_Ratings?.averageRating() // Extension function for calculating the average rating of a list of ReviewsAndRatings
         val formattedRating =
             String.format("%.1f", averageRating)
-        averageRatingTextView.text = formattedRating
-
+        if(formattedRating == "NaN") {
+            averageRatingTextView.text = "No Reviews"
+        }else{
+            averageRatingTextView.text = formattedRating
+        }
         // Display number of ratings
         binding.tvRatingNumber.text = "(${args.doctor.Reviews_And_Ratings?.size.toString()})"
 
