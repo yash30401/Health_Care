@@ -1,6 +1,7 @@
 package com.healthcare.yash.preeti.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -80,22 +81,22 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         // Set up expandable text view for doctor's about information
         binding.tvAboutDoctorDetailedView.setResizableText(args.doctor.About, 4, true)
 
-        // Calculate and display average rating
-        val averageRatingTextView = binding.ratingCard.tvDoctorRating
-        val averageRating =
-            args.doctor.Reviews_And_Ratings?.averageRating() // Extension function for calculating the average rating of a list of ReviewsAndRatings
-        val formattedRating =
-            String.format("%.1f", averageRating)
-        if(formattedRating == "NaN") {
-            averageRatingTextView.text = "No Reviews"
-        }else{
-            averageRatingTextView.text = formattedRating
-        }
-        // Display number of ratings
-        binding.tvRatingNumber.text = "(${args.doctor.Reviews_And_Ratings?.size.toString()})"
+
 
         // Set up RecyclerView for reviews and ratings
-        setupRatingsRecylerView()
+        if(!args.doctor.Reviews_And_Ratings?.get(0)?.date.equals("")){
+            Log.d("DATATESTING",args.doctor.Reviews_And_Ratings?.get(0)?.date.toString())
+            setupRatingsRecylerView()
+        }else{
+            binding.textView4.apply {
+                visibility = View.GONE
+            }
+            binding.ratingCard.tvDoctorRating.visibility = View.GONE
+            binding.ratingCard.materialCardView2.visibility = View.GONE
+
+            binding.tvRatingNumber.visibility = View.GONE
+        }
+
         // Set up RecyclerView for services chips
         setupServicesChipView()
 
@@ -108,6 +109,20 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
 
     // Method to set up the RecyclerView for reviews and ratings
     private fun setupRatingsRecylerView() {
+        // Calculate and display average rating
+        val averageRatingTextView = binding.ratingCard.tvDoctorRating
+        val averageRating =
+            args.doctor.Reviews_And_Ratings?.averageRating() // Extension function for calculating the average rating of a list of ReviewsAndRatings
+        val formattedRating =
+            String.format("%.1f", averageRating)
+        if(formattedRating == "0.0") {
+            averageRatingTextView.text = "No Reviews"
+        }else{
+            averageRatingTextView.text = formattedRating
+        }
+        // Display number of ratings
+        binding.tvRatingNumber.text = "(${args.doctor.Reviews_And_Ratings?.size.toString()})"
+
         reviewsAndRatingsAdapter = ReviewsAndRatingsAdapter()
         reviewsAndRatingsAdapter.setData(args.doctor.Reviews_And_Ratings!!)
         binding.reviewRecylerView.apply {

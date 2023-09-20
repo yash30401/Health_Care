@@ -54,21 +54,26 @@ class ReviewsAndRatingsAdapter() :
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun formatDateDifference(dateString: String): String {
-        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        val parsedDate = LocalDate.parse(dateString, formatter)
-        val currentDate = LocalDate.now()
+        if(dateString == ""){
+            return ""
+        }else{
+            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            val parsedDate = LocalDate.parse(dateString, formatter)
+            val currentDate = LocalDate.now()
 
-        val period = Period.between(parsedDate, currentDate)
-        val years = period.years
-        val months = period.months
-        val days = period.days
+            val period = Period.between(parsedDate, currentDate)
+            val years = period.years
+            val months = period.months
+            val days = period.days
 
-        return when {
-            years > 0 -> "$years years ago"
-            months > 0 -> "$months months ago"
-            days > 0 -> "$days days ago"
-            else -> "Today"
+            return when {
+                years > 0 -> "$years years ago"
+                months > 0 -> "$months months ago"
+                days > 0 -> "$days days ago"
+                else -> "Today"
+            }
         }
+        return ""
     }
 
     fun setData(newList: List<ReviewsAndRatings>) {

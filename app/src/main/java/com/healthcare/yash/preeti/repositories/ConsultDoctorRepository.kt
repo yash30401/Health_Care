@@ -11,8 +11,10 @@ import com.healthcare.yash.preeti.models.ReviewsAndRatings
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.CONSULTDOCTORFRAGTESTTAG
 import com.healthcare.yash.preeti.utils.await
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
 import javax.inject.Inject
@@ -44,7 +46,7 @@ class ConsultDoctorRepository @Inject constructor(
                         Services = document.get("Services") as List<String>,
                         Specialization = document.getString("Specialization") ?: "",
                         Working_Hours = document.getString("Working_Hours") ?: "",
-                        video_consult =  document.getLong("video_consult")?.toInt() ?: 0,
+                        video_consult = document.getLong("video_consult")?.toInt() ?: 0,
                     )  // Mapping into Doctor data class
 
                     val contactInfoData = document.get("Contact_Info") as? HashMap<*, *>
@@ -80,8 +82,18 @@ class ConsultDoctorRepository @Inject constructor(
                                 null
                             }
                         }
-                        Log.d("DATEANDNAMETEST",reviewsAndRatings.get(0).name.toString())
+                        Log.d(
+                            "REVIEWSANDRATING",
+                            "date:- ${reviewsAndRatings.get(0)?.date}\name:- ${
+                                reviewsAndRatings.get(0)?.name
+                            }"
+                        )
                         doctor.Reviews_And_Ratings = reviewsAndRatings
+                    }else{
+                        Log.d(
+                            "REVIEWSANDRATING",
+                            "Reviews Data is empty"
+                        )
                     }
 
                     doctorsList.add(doctor)
@@ -89,6 +101,6 @@ class ConsultDoctorRepository @Inject constructor(
             }
 
             emit(doctorsList) // Emitting the doctors list
-        }
+        }.flowOn(Dispatchers.IO)
     }
 }

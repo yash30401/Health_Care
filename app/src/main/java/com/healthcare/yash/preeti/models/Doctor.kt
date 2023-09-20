@@ -27,8 +27,8 @@ data class ContactInfo(
 ):Serializable
 
 data class ReviewsAndRatings(
-    val date:String? = "",
-    val name:String? ="",
-    val rating: Double? = 0.0,
-    val review: String? = ""
+    val date:String = "",
+    val name:String ="",
+    val rating: Double = 0.0,
+    val review: String = ""
 ):Serializable
