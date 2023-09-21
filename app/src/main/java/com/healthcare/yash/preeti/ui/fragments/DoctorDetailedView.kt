@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -15,7 +14,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.chip.Chip
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.adapters.ReviewsAndRatingsAdapter
 import com.healthcare.yash.preeti.adapters.ServicesChipAdatpter
@@ -60,6 +58,14 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
             this.state = BottomSheetBehavior.STATE_DRAGGING
         }
 
+        binding.btnBookAppointment.setOnClickListener {
+           val fragmentManager = activity?.supportFragmentManager
+            val dialogFragment = AppointmentDialogFragment()
+
+            if (fragmentManager != null) {
+                dialogFragment.show(fragmentManager,"Appointment Dialog")
+            }
+        }
 
         // Set up header view
         setupHeaderView()
@@ -80,8 +86,6 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
     private fun setupBottomSheet() {
         // Set up expandable text view for doctor's about information
         binding.tvAboutDoctorDetailedView.setResizableText(args.doctor.About, 4, true)
-
-
 
         // Set up RecyclerView for reviews and ratings
         if(!args.doctor.Reviews_And_Ratings?.get(0)?.date.equals("")){
