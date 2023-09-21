@@ -362,8 +362,8 @@
             android:fontFamily="@font/poppins"
             android:includeFontPadding="false"
             android:textColor="#959595"
-            app:layout_constraintBottom_toTopOf="@+id/button3"
-            app:layout_constraintStart_toStartOf="@+id/button3"
+            app:layout_constraintBottom_toTopOf="@+id/btnBookAppointment"
+            app:layout_constraintStart_toStartOf="@+id/btnBookAppointment"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -376,7 +376,7 @@
             android:fontFamily="@font/poppins_semibold"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@id/textView7"
-            app:layout_constraintEnd_toEndOf="@+id/button3"
+            app:layout_constraintEnd_toEndOf="@+id/btnBookAppointment"
             app:layout_constraintTop_toTopOf="@id/textView7" />
 
         <Button
