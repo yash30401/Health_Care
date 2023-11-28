@@ -23,6 +23,28 @@ class AppointmentDialogFragment:DialogFragment() {
             Toast.makeText(requireContext(), "Video Consult", Toast.LENGTH_SHORT).show()
         }
 
+        btnBookClinicVisit.setOnClickListener {
+            val fragmentManager = activity?.supportFragmentManager
+            val dialogFragment = AppointmentTimingDialogFragment()
+
+            if(fragmentManager!=null){
+                dialogFragment.show(fragmentManager,"Appointment Timings")
+            }
+        }
+
+        return builder.create()
+    }
+}
+
+class AppointmentTimingDialogFragment():DialogFragment(){
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+       val builder = AlertDialog.Builder(requireActivity())
+        val inflater = requireActivity().layoutInflater
+        val dialogView = inflater.inflate(R.layout.appointment_timing_dialog,null)
+
+        builder.setView(dialogView)
+
         return builder.create()
     }
 }
