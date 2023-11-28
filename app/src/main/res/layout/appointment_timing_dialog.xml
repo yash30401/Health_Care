@@ -2,6 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     app:cardCornerRadius="20dp"
     app:strokeWidth="0dp"
     android:layout_height="match_parent">
@@ -16,7 +17,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="300dp">
 
             <TextView
                 android:id="@+id/textView5"
@@ -47,16 +48,31 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
             <TextView
+                android:id="@+id/textView12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Slot"
                 android:layout_marginTop="20dp"
-                android:textColor="#333333"
-                android:textSize="20sp"
                 android:fontFamily="@font/poppins"
                 android:includeFontPadding="false"
+                android:text="Select Slot"
+                android:textColor="#333333"
+                android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@+id/materialDivider"
                 app:layout_constraintTop_toBottomOf="@+id/materialDivider" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/appointmentTimeRecylerView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                tools:listitem="@layout/appointment_time_chips"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/materialDivider"
+                app:layout_constraintStart_toStartOf="@+id/textView12"
+                app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
