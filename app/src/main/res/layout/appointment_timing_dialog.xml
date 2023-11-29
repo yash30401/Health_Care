@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:cardCornerRadius="20dp"
     app:strokeWidth="0dp"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
@@ -17,7 +17,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp">
+            android:layout_marginBottom="10dp"
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/textView5"
@@ -63,12 +64,12 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/appointmentTimeRecylerView"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 tools:listitem="@layout/appointment_time_chips"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:spanCount="2"
                 app:layout_constraintEnd_toEndOf="@+id/materialDivider"
                 app:layout_constraintStart_toStartOf="@+id/textView12"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />

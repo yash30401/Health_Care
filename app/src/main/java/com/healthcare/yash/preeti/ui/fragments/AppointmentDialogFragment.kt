@@ -4,11 +4,14 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
+import android.view.Display
 import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.adapters.AppointmentTimeAdapter
 import com.healthcare.yash.preeti.networking.NetworkResult
@@ -95,11 +98,7 @@ class AppointmentTimingDialogFragment(
                             recylerView.apply {
                                 adapter = slotAdapter
                                 layoutManager =
-                                    LinearLayoutManager(
-                                        requireContext(),
-                                        LinearLayoutManager.HORIZONTAL,
-                                        false
-                                    )
+                              StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.HORIZONTAL)
                             }
                         }
                     }
