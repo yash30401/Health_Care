@@ -5,7 +5,8 @@ import android.os.Parcelable
 import com.google.firebase.auth.PhoneAuthProvider
 import java.io.Serializable
 
-data class Doctor(   val About: String = "",
+data class Doctor(   val Id:String ="",
+                     val About: String = "",
                          val Address: String = "",
                          val City: String = "",
                          val video_consult: Int? = 0,

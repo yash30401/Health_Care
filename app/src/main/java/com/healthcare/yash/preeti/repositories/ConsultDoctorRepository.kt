@@ -36,6 +36,7 @@ class ConsultDoctorRepository @Inject constructor(
             for (document in querySnapshot) {
                 if (document.exists()) {
                     val doctor = Doctor(
+                        Id= document.getString("Id")?:"",
                         Name = document.getString("Name") ?: "",
                         About = document.getString("About") ?: "",
                         clinic_visit = document.getLong("clinic_visit")?.toInt() ?: 0,

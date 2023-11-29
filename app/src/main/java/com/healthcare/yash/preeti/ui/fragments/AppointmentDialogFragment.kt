@@ -3,12 +3,26 @@ package com.healthcare.yash.preeti.ui.fragments
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
-import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.healthcare.yash.preeti.R
+import com.healthcare.yash.preeti.adapters.AppointmentTimeAdapter
+import com.healthcare.yash.preeti.networking.NetworkResult
+import com.healthcare.yash.preeti.other.Constants.APPOINTMENTTIMINGSLOT
+import com.healthcare.yash.preeti.viewmodels.SlotViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class AppointmentDialogFragment:DialogFragment() {
+class AppointmentDialogFragment(
+    private val slotViewModel: SlotViewModel,
+    private val args: DoctorDetailedViewArgs
+) :DialogFragment() {
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity())
         val inflater = requireActivity().layoutInflater
@@ -20,12 +34,17 @@ class AppointmentDialogFragment:DialogFragment() {
         builder.setView(dialogView)
 
         btnBookVideoConsult.setOnClickListener {
-            Toast.makeText(requireContext(), "Video Consult", Toast.LENGTH_SHORT).show()
+            val fragmentManager = activity?.supportFragmentManager
+            val dialogFragment = AppointmentTimingDialogFragment(slotViewModel,args)
+
+            if(fragmentManager!=null){
+                dialogFragment.show(fragmentManager,"Appointment Timings")
+            }
         }
 
         btnBookClinicVisit.setOnClickListener {
             val fragmentManager = activity?.supportFragmentManager
-            val dialogFragment = AppointmentTimingDialogFragment()
+            val dialogFragment = AppointmentTimingDialogFragment(slotViewModel,args)
 
             if(fragmentManager!=null){
                 dialogFragment.show(fragmentManager,"Appointment Timings")
@@ -36,8 +55,12 @@ class AppointmentDialogFragment:DialogFragment() {
     }
 }
 
-class AppointmentTimingDialogFragment():DialogFragment(){
+class AppointmentTimingDialogFragment(
+    private val slotViewModel: SlotViewModel,
+    private val args: DoctorDetailedViewArgs
+) :DialogFragment(){
 
+    private lateinit var slotAdapter: AppointmentTimeAdapter
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
        val builder = AlertDialog.Builder(requireActivity())
         val inflater = requireActivity().layoutInflater
@@ -45,6 +68,46 @@ class AppointmentTimingDialogFragment():DialogFragment(){
 
         builder.setView(dialogView)
 
+        setupAppointmentTimingsRecylerView(dialogView.findViewById<RecyclerView>(R.id.appointmentTimeRecylerView))
+
         return builder.create()
+    }
+
+    private fun setupAppointmentTimingsRecylerView(recylerView: RecyclerView) {
+        slotViewModel.getAllSlots(args)
+        slotAdapter = AppointmentTimeAdapter()
+        lifecycleScope.launch(Dispatchers.IO){
+            slotViewModel.allSlotFlow.collect{
+                when(it){
+                    is NetworkResult.Error -> {
+                        Log.d(APPOINTMENTTIMINGSLOT, "Error Block:- ${it?.message.toString()}")
+                    }
+                    is NetworkResult.Loading -> Log.d(
+                        APPOINTMENTTIMINGSLOT,
+                        "Loading Block:- ${it?.message.toString()}"
+                    )
+                    is NetworkResult.Success -> {
+                        Log.d(APPOINTMENTTIMINGSLOT, "Success Block:- ${it?.data.toString()}")
+                        withContext(Dispatchers.Main) {
+
+                            slotAdapter.setData(it.data?.toList()!!)
+
+                            recylerView.apply {
+                                adapter = slotAdapter
+                                layoutManager =
+                                    LinearLayoutManager(
+                                        requireContext(),
+                                        LinearLayoutManager.HORIZONTAL,
+                                        false
+                                    )
+                            }
+                        }
+                    }
+                        else -> {
+                            Log.d(APPOINTMENTTIMINGSLOT, "Else Block:- ${it?.message.toString()}")
+                        }
+                    }
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -20,6 +21,7 @@ import com.healthcare.yash.preeti.adapters.ServicesChipAdatpter
 import com.healthcare.yash.preeti.databinding.FragmentDoctorDetailedViewBinding
 import com.healthcare.yash.preeti.utils.averageRating
 import com.healthcare.yash.preeti.utils.setResizableText
+import com.healthcare.yash.preeti.viewmodels.SlotViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,6 +37,8 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
 
     // GoogleMap instance
     private lateinit var map: GoogleMap
+
+    private val slotViewModel by viewModels<SlotViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,7 +64,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
 
         binding.btnBookAppointment.setOnClickListener {
            val fragmentManager = activity?.supportFragmentManager
-            val dialogFragment = AppointmentDialogFragment()
+            val dialogFragment = AppointmentDialogFragment(slotViewModel,args)
 
             if (fragmentManager != null) {
                 dialogFragment.show(fragmentManager,"Appointment Dialog")
