@@ -5,13 +5,10 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
-import android.view.Display
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.healthcare.yash.preeti.R
@@ -46,7 +43,7 @@ class AppointmentDialogFragment(
 
         btnBookVideoConsult.setOnClickListener {
             val fragmentManager = activity?.supportFragmentManager
-            val dialogFragment = AppointmentTimingDialogFragment(slotViewModel,args)
+            val dialogFragment = AppointmentTimingDialogFragment(slotViewModel,args,args.doctor.video_consult,"Video Consult")
 
             if(fragmentManager!=null){
                 dialogFragment.show(fragmentManager,"Appointment Timings")
@@ -55,7 +52,12 @@ class AppointmentDialogFragment(
 
         btnBookClinicVisit.setOnClickListener {
             val fragmentManager = activity?.supportFragmentManager
-            val dialogFragment = AppointmentTimingDialogFragment(slotViewModel,args)
+            val dialogFragment = AppointmentTimingDialogFragment(
+                slotViewModel,
+                args,
+                args.doctor.clinic_visit,
+                "Clinic Visit"
+            )
 
             if(fragmentManager!=null){
                 dialogFragment.show(fragmentManager,"Appointment Timings")
@@ -68,14 +70,23 @@ class AppointmentDialogFragment(
 
 class AppointmentTimingDialogFragment(
     private val slotViewModel: SlotViewModel,
-    private val args: DoctorDetailedViewArgs
+    private val args: DoctorDetailedViewArgs,
+    private val consultPrice: Int?,
+    private val consultText: String
 ) :DialogFragment(){
 
     private lateinit var slotAdapter: AppointmentTimeAdapter
+    @SuppressLint("MissingInflatedId")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
        val builder = AlertDialog.Builder(requireActivity())
         val inflater = requireActivity().layoutInflater
         val dialogView = inflater.inflate(R.layout.appointment_timing_dialog,null)
+
+        val tvPrice = dialogView.findViewById<TextView>(R.id.tvPrice)
+        val tvConsultText = dialogView.findViewById<TextView>(R.id.tvConsultText)
+
+        tvPrice.setText("₹"+consultPrice.toString())
+        tvConsultText.setText(consultText)
 
         builder.setView(dialogView)
 

@@ -75,7 +75,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/tvConsultText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -90,9 +90,9 @@
                 android:layout_height="wrap_content"
                 android:text="₹200"
                 android:textColor="#989898"
-                app:layout_constraintBottom_toBottomOf="@+id/textView10"
+                app:layout_constraintBottom_toBottomOf="@+id/tvConsultText"
                 app:layout_constraintEnd_toEndOf="@+id/appointmentTimeRecylerView"
-                app:layout_constraintTop_toTopOf="@+id/textView10" />
+                app:layout_constraintTop_toTopOf="@+id/tvConsultText" />
 
             <View
                 android:id="@+id/divider"
