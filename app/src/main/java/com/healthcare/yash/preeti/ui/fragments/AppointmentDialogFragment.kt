@@ -78,7 +78,7 @@ class AppointmentTimingDialogFragment(
 
     private fun setupAppointmentTimingsRecylerView(recylerView: RecyclerView) {
         slotViewModel.getAllSlots(args)
-        slotAdapter = AppointmentTimeAdapter()
+        slotAdapter = AppointmentTimeAdapter(requireActivity())
         lifecycleScope.launch(Dispatchers.IO){
             slotViewModel.allSlotFlow.collect{
                 when(it){
