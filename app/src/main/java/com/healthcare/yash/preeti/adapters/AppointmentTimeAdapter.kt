@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +12,7 @@ import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.AppointmentTimeChipsBinding
 import com.healthcare.yash.preeti.utils.ConsultDoctorDiffUtil
 
-class AppointmentTimeAdapter(private val requireActivity: FragmentActivity):RecyclerView.Adapter<AppointmentTimeAdapter.AppointmentTimeViewHolder>() {
+class AppointmentTimeAdapter(private val requireActivity: FragmentActivity,private val recyclerView: RecyclerView):RecyclerView.Adapter<AppointmentTimeAdapter.AppointmentTimeViewHolder>() {
 
     private val timingChipList = emptyList<String>()
     private val asynListDiffer = AsyncListDiffer<String>(this,ConsultDoctorDiffUtil())
@@ -49,14 +50,14 @@ class AppointmentTimeAdapter(private val requireActivity: FragmentActivity):Recy
         if(singleSelection==false){
             singleSelection = true
                 holder.binding.chip.chipStrokeWidth = 4f
-                holder.binding.chip.setTextColor(R.color.white)
                 holder.binding.chip.setChipStrokeColorResource(R.color.primaryColor)
                 holder.binding.chip.setChipBackgroundColorResource(R.color.specialistCardBackgroundColor)
-                lastPosition = holder.position
+                lastPosition = holder.adapterPosition
         }else{
             if(holder.position != lastPosition){
-                changeAppearanceOfLastPositionChipToDefault(holder)
+                changeAppearanceOfLastPositionChipToDefault(lastPosition)
                 changeAppearanceOfNewChipToNew(holder)
+                lastPosition = holder.adapterPosition
             }
         }
 
@@ -65,18 +66,20 @@ class AppointmentTimeAdapter(private val requireActivity: FragmentActivity):Recy
     @SuppressLint("ResourceAsColor")
     private fun changeAppearanceOfNewChipToNew(holder: AppointmentTimeViewHolder) {
         holder.binding.chip.chipStrokeWidth = 4f
-        holder.binding.chip.setTextColor(R.color.white)
         holder.binding.chip.setChipStrokeColorResource(R.color.primaryColor)
         holder.binding.chip.setChipBackgroundColorResource(R.color.specialistCardBackgroundColor)
-        lastPosition = holder.position
     }
 
     @SuppressLint("ResourceAsColor")
-    private fun changeAppearanceOfLastPositionChipToDefault(holder: AppointmentTimeViewHolder) {
-        holder.binding.chip.chipStrokeWidth = 4f
-        holder.binding.chip.setTextColor(R.color.white)
-        holder.binding.chip.setChipStrokeColorResource(R.color.primaryColor)
-        holder.binding.chip.setChipBackgroundColorResource(R.color.specialistCardBackgroundColor)
+    private fun changeAppearanceOfLastPositionChipToDefault(position: Int) {
+        if(position!=RecyclerView.NO_POSITION){
+            val lastSelectedHolder = recyclerView.findViewHolderForAdapterPosition(position) as? AppointmentTimeViewHolder
+            lastSelectedHolder?.let {
+                it.binding.chip.chipStrokeWidth = 3f
+                it.binding.chip.setChipStrokeColorResource(R.color.cardStrokeColor)
+                it.binding.chip.setChipBackgroundColorResource(R.color.white)
+            }
+        }
     }
 
     fun setData(newList:List<String>){
