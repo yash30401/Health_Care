@@ -104,7 +104,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/btnBookVideoConsult" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/tvVideoConsultPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -118,7 +118,7 @@
                 app:layout_constraintTop_toTopOf="@+id/textView8" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/tvClinicVisitPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_medium"
@@ -126,8 +126,8 @@
                 android:text="₹400"
                 android:textColor="@color/black"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="@+id/textView10"
-                app:layout_constraintStart_toStartOf="@+id/textView10"
+                app:layout_constraintEnd_toEndOf="@+id/tvVideoConsultPrice"
+                app:layout_constraintStart_toStartOf="@+id/tvVideoConsultPrice"
                 app:layout_constraintTop_toTopOf="@+id/textView9" />
 
 

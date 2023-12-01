@@ -1,11 +1,13 @@
 package com.healthcare.yash.preeti.ui.fragments
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.Display
 import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -26,6 +28,7 @@ class AppointmentDialogFragment(
     private val args: DoctorDetailedViewArgs
 ) :DialogFragment() {
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity())
         val inflater = requireActivity().layoutInflater
@@ -33,6 +36,11 @@ class AppointmentDialogFragment(
 
         val btnBookVideoConsult = dialogView.findViewById<Button>(R.id.btnBookVideoConsult)
         val btnBookClinicVisit = dialogView.findViewById<Button>(R.id.btnBookClinicVisit)
+        val tvVideoConsultPrice = dialogView.findViewById<TextView>(R.id.tvVideoConsultPrice)
+        val tvClinicVisitPrice = dialogView.findViewById<TextView>(R.id.tvClinicVisitPrice)
+
+        tvVideoConsultPrice.setText("₹"+args.doctor.video_consult.toString())
+        tvClinicVisitPrice.setText("₹"+args.doctor.clinic_visit.toString())
 
         builder.setView(dialogView)
 
