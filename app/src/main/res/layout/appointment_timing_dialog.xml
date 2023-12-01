@@ -74,6 +74,48 @@
                 app:layout_constraintStart_toStartOf="@+id/textView12"
                 app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Video Consult"
+                android:textColor="#989898"
+                app:layout_constraintStart_toStartOf="@+id/appointmentTimeRecylerView"
+                app:layout_constraintTop_toBottomOf="@+id/appointmentTimeRecylerView" />
+
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹200"
+                android:textColor="#989898"
+                app:layout_constraintBottom_toBottomOf="@+id/textView10"
+                app:layout_constraintEnd_toEndOf="@+id/appointmentTimeRecylerView"
+                app:layout_constraintTop_toTopOf="@+id/textView10" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="0dp"
+                android:layout_marginTop="2dp"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="@+id/appointmentTimeRecylerView"
+                app:layout_constraintStart_toStartOf="@+id/appointmentTimeRecylerView"
+                app:layout_constraintTop_toBottomOf="@id/tvPrice" />
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Book"
+                android:fontFamily="@font/poppins"
+                android:includeFontPadding="false"
+                android:layout_marginTop="5dp"
+                app:layout_constraintEnd_toEndOf="@+id/divider"
+                app:layout_constraintStart_toStartOf="@+id/divider"
+                app:layout_constraintTop_toBottomOf="@+id/divider" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
