@@ -18,10 +18,10 @@ class AppointmentTimeAdapter(private val requireActivity: FragmentActivity,priva
     private val timingChipList = emptyList<String>()
     private val asynListDiffer = AsyncListDiffer<String>(this,ConsultDoctorDiffUtil())
 
-    private var singleSelection = false
+    var singleSelection = false
     private var selectedTime = ArrayList<String>(1)
 
-    var lastPosition = RecyclerView.NO_POSITION
+    private var lastPosition = RecyclerView.NO_POSITION
 
     inner class AppointmentTimeViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         val binding = AppointmentTimeChipsBinding.bind(itemView)

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -102,8 +103,12 @@ class AppointmentTimingDialogFragment(
         setupAppointmentTimingsRecylerView(dialogView.findViewById<RecyclerView>(R.id.appointmentTimeRecylerView))
 
         btnBook.setOnClickListener {
-            dismiss()
-            startPayment.makePayment(consultPrice)
+            if(slotAdapter.singleSelection==false){
+                Toast.makeText(requireActivity(), "Please Select An Appointment Time", Toast.LENGTH_SHORT).show()
+            }else{
+                dismiss()
+                startPayment.makePayment(consultPrice)
+            }
         }
 
         return builder.create()
