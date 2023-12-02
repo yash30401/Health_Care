@@ -21,8 +21,13 @@ import com.google.firebase.ktx.app
 import com.google.firebase.ktx.initialize
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ActivityMainBinding
+import com.healthcare.yash.preeti.other.Constants
 import com.healthcare.yash.preeti.other.Constants.BACKSTACK
 import com.healthcare.yash.preeti.ui.fragments.ConsultDoctor
+import com.razorpay.Checkout
+import com.razorpay.ExternalWalletListener
+import com.razorpay.PaymentData
+import com.razorpay.PaymentResultWithDataListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -30,7 +35,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),PaymentResultWithDataListener,ExternalWalletListener {
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
@@ -52,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNav.setupWithNavController(navController)
         hideBottomNavOnAuthFragment()
 
+        Checkout.preload(applicationContext)
 
         Firebase.initialize(this)
         val firebaseAppCheck = FirebaseAppCheck.getInstance()
@@ -110,7 +116,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
     private fun showExitConfirmationDialog() {
         val dialog = MaterialAlertDialogBuilder(this)
             .setTitle("Exit Confirmation")
@@ -120,6 +125,18 @@ class MainActivity : AppCompatActivity() {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    override fun onPaymentSuccess(s: String?, paymentData: PaymentData?) {
+        Log.d(Constants.PAYMENTTESTING,"Success Block:- "+s.toString())
+    }
+
+    override fun onPaymentError(code: Int, s: String?, paymentData: PaymentData?) {
+        Log.d(Constants.PAYMENTTESTING,"Error Block:- "+s.toString())
+    }
+
+    override fun onExternalWalletSelected(s: String?, paymentData: PaymentData?) {
+        Log.d(Constants.PAYMENTTESTING,"External Wallet Block:- "+s.toString())
     }
 
     override fun onDestroy() {

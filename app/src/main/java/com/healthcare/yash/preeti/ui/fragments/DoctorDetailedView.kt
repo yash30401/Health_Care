@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -15,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.firebase.auth.FirebaseAuth
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.adapters.ReviewsAndRatingsAdapter
 import com.healthcare.yash.preeti.adapters.ServicesChipAdatpter
@@ -28,9 +30,11 @@ import com.razorpay.ExternalWalletListener
 import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
 import dagger.hilt.android.AndroidEntryPoint
+import org.json.JSONObject
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnMapReadyCallback, PaymentResultWithDataListener, ExternalWalletListener{
+class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnMapReadyCallback,AppointmentTimingDialogFragment.StartPayment{
 
     private var _binding: FragmentDoctorDetailedViewBinding? = null
     private val binding get() = _binding!!
@@ -39,6 +43,9 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
     private val args: DoctorDetailedViewArgs by navArgs()
     private lateinit var reviewsAndRatingsAdapter: ReviewsAndRatingsAdapter
     private lateinit var servicesChipAdatpter: ServicesChipAdatpter
+
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
 
     // GoogleMap instance
     private lateinit var map: GoogleMap
@@ -67,10 +74,9 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
             this.state = BottomSheetBehavior.STATE_DRAGGING
         }
 
-
         binding.btnBookAppointment.setOnClickListener {
            val fragmentManager = activity?.supportFragmentManager
-            val dialogFragment = AppointmentDialogFragment(slotViewModel,args)
+            val dialogFragment = AppointmentDialogFragment(slotViewModel,args,this)
 
             if (fragmentManager != null) {
                 dialogFragment.show(fragmentManager,"Appointment Dialog")
@@ -160,9 +166,41 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
     }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+    override fun makePayment(consultPrice: Int?) {
+        val co = Checkout()
+        co.setKeyID("rzp_test_wv1GchOQB2x3CE")
+
+        try {
+            val options = JSONObject()
+            options.put("name","Health Care")
+            options.put("description","Consultation Charges")
+            //You can omit the image option to fetch the image from the dashboard
+            options.put("image","https://s3.amazonaws.com/rzp-mobile/images/rzp.jpg")
+            options.put("theme.color", "#6750A4");
+            options.put("currency","INR");
+//            options.put("order_id", "order_DBJOWzybf0sJbb");
+            options.put("amount","${consultPrice?.times(100).toString()}")//pass amount in currency subunits
+
+            val retryObj = JSONObject()
+            retryObj.put("enabled", true);
+            retryObj.put("max_count", 4);
+            options.put("retry", retryObj);
+
+            val prefill = JSONObject()
+
+            val email = firebaseAuth.currentUser?.email ?: ""
+            val phoneNumber = firebaseAuth.currentUser?.phoneNumber ?: ""
+
+            prefill.put("email",email)
+            prefill.put("contact",phoneNumber)
+
+            options.put("prefill",prefill)
+            co.open(activity,options)
+        }catch (e: Exception){
+            Toast.makeText(activity,"Error in payment: "+ e.message, Toast.LENGTH_LONG).show()
+            e.printStackTrace()
+        }
+
     }
 
     // GoogleMap's onMapReady callback
@@ -170,15 +208,10 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         map = googleMap
     }
 
-    override fun onPaymentSuccess(s: String?, paymentData: PaymentData?) {
-        Log.d(Constants.PAYMENTTESTING,"Success Block:- "+s.toString())
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
-    override fun onPaymentError(code: Int, s: String?, paymentData: PaymentData?) {
-        Log.d(Constants.PAYMENTTESTING,"Error Block:- "+s.toString())
-    }
-
-    override fun onExternalWalletSelected(s: String?, paymentData: PaymentData?) {
-        Log.d(Constants.PAYMENTTESTING,"External Wallet Block:- "+s.toString())
-    }
 }
