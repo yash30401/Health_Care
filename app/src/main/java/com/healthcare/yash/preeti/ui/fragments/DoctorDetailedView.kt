@@ -22,10 +22,13 @@ import com.healthcare.yash.preeti.databinding.FragmentDoctorDetailedViewBinding
 import com.healthcare.yash.preeti.utils.averageRating
 import com.healthcare.yash.preeti.utils.setResizableText
 import com.healthcare.yash.preeti.viewmodels.SlotViewModel
+import com.razorpay.Checkout
+import com.razorpay.ExternalWalletListener
+import com.razorpay.PaymentResultWithDataListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnMapReadyCallback {
+class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnMapReadyCallback{
 
     private var _binding: FragmentDoctorDetailedViewBinding? = null
     private val binding get() = _binding!!
@@ -61,6 +64,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         BottomSheetBehavior.from(binding.bottomSheet).apply {
             this.state = BottomSheetBehavior.STATE_DRAGGING
         }
+
 
         binding.btnBookAppointment.setOnClickListener {
            val fragmentManager = activity?.supportFragmentManager

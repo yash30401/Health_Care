@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -16,9 +17,14 @@ import com.healthcare.yash.preeti.adapters.AppointmentTimeAdapter
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.APPOINTMENTTIMINGSLOT
 import com.healthcare.yash.preeti.viewmodels.SlotViewModel
+import com.razorpay.Checkout
+import com.razorpay.ExternalWalletListener
+import com.razorpay.PaymentData
+import com.razorpay.PaymentResultWithDataListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 class AppointmentDialogFragment(
     private val slotViewModel: SlotViewModel,
@@ -73,9 +79,14 @@ class AppointmentTimingDialogFragment(
     private val args: DoctorDetailedViewArgs,
     private val consultPrice: Int?,
     private val consultText: String
-) :DialogFragment(){
+) :DialogFragment(), PaymentResultWithDataListener, ExternalWalletListener{
 
     private lateinit var slotAdapter: AppointmentTimeAdapter
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Checkout.preload(requireActivity().applicationContext)
+    }
+
     @SuppressLint("MissingInflatedId")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
        val builder = AlertDialog.Builder(requireActivity())
@@ -85,12 +96,18 @@ class AppointmentTimingDialogFragment(
         val tvPrice = dialogView.findViewById<TextView>(R.id.tvPrice)
         val tvConsultText = dialogView.findViewById<TextView>(R.id.tvConsultText)
 
+        val btnBook = dialogView.findViewById<Button>(R.id.btnBook)
+
         tvPrice.setText("₹"+consultPrice.toString())
         tvConsultText.setText(consultText)
 
         builder.setView(dialogView)
 
         setupAppointmentTimingsRecylerView(dialogView.findViewById<RecyclerView>(R.id.appointmentTimeRecylerView))
+
+        btnBook.setOnClickListener {
+            startPayment()
+        }
 
         return builder.create()
     }
@@ -127,5 +144,50 @@ class AppointmentTimingDialogFragment(
                     }
             }
         }
+    }
+
+    private fun startPayment() {
+        val co = Checkout()
+        co.setKeyID("rzp_test_wv1GchOQB2x3CE")
+
+
+        try {
+            val options = JSONObject()
+            options.put("name","Razorpay Corp")
+            options.put("description","Demoing Charges")
+            //You can omit the image option to fetch the image from the dashboard
+            options.put("image","https://s3.amazonaws.com/rzp-mobile/images/rzp.jpg")
+            options.put("theme.color", "#3399cc");
+            options.put("currency","INR");
+            options.put("order_id", "order_DBJOWzybf0sJbb");
+            options.put("amount","50000")//pass amount in currency subunits
+
+            val retryObj = JSONObject()
+            retryObj.put("enabled", true);
+            retryObj.put("max_count", 4);
+            options.put("retry", retryObj);
+
+            val prefill = JSONObject()
+            prefill.put("email","gaurav.kumar@example.com")
+            prefill.put("contact","9876543210")
+
+            options.put("prefill",prefill)
+            co.open(activity,options)
+        }catch (e: Exception){
+            Toast.makeText(activity,"Error in payment: "+ e.message,Toast.LENGTH_LONG).show()
+            e.printStackTrace()
+        }
+    }
+
+    override fun onPaymentSuccess(p0: String?, p1: PaymentData?) {
+
+    }
+
+    override fun onPaymentError(p0: Int, p1: String?, p2: PaymentData?) {
+
+    }
+
+    override fun onExternalWalletSelected(p0: String?, p1: PaymentData?) {
+
     }
 }
