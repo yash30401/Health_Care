@@ -169,6 +169,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
     override fun makePayment(consultPrice: Int?) {
         val co = Checkout()
         co.setKeyID("rzp_test_wv1GchOQB2x3CE")
+        co.setImage(R.mipmap.ic_launcher)
 
         try {
             val options = JSONObject()
@@ -202,6 +203,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         }
 
     }
+
 
     // GoogleMap's onMapReady callback
     override fun onMapReady(googleMap: GoogleMap) {
