@@ -61,7 +61,7 @@
 
         <receiver
             android:name="com.razorpay.RzpTokenReceiver"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="rzp.device_token.share" />
             </intent-filter>

@@ -16,6 +16,7 @@ import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.adapters.AppointmentTimeAdapter
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.APPOINTMENTTIMINGSLOT
+import com.healthcare.yash.preeti.other.Constants.PAYMENTTESTING
 import com.healthcare.yash.preeti.viewmodels.SlotViewModel
 import com.razorpay.Checkout
 import com.razorpay.ExternalWalletListener
@@ -79,7 +80,7 @@ class AppointmentTimingDialogFragment(
     private val args: DoctorDetailedViewArgs,
     private val consultPrice: Int?,
     private val consultText: String
-) :DialogFragment(), PaymentResultWithDataListener, ExternalWalletListener{
+) :DialogFragment(){
 
     private lateinit var slotAdapter: AppointmentTimeAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -153,14 +154,14 @@ class AppointmentTimingDialogFragment(
 
         try {
             val options = JSONObject()
-            options.put("name","Razorpay Corp")
-            options.put("description","Demoing Charges")
+            options.put("name","Health Care")
+            options.put("description","Consultation Charges")
             //You can omit the image option to fetch the image from the dashboard
             options.put("image","https://s3.amazonaws.com/rzp-mobile/images/rzp.jpg")
-            options.put("theme.color", "#3399cc");
+            options.put("theme.color", "#6750A4");
             options.put("currency","INR");
-            options.put("order_id", "order_DBJOWzybf0sJbb");
-            options.put("amount","50000")//pass amount in currency subunits
+//            options.put("order_id", "order_DBJOWzybf0sJbb");
+            options.put("amount","${consultPrice?.times(100).toString()}")//pass amount in currency subunits
 
             val retryObj = JSONObject()
             retryObj.put("enabled", true);
@@ -177,17 +178,5 @@ class AppointmentTimingDialogFragment(
             Toast.makeText(activity,"Error in payment: "+ e.message,Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
-    }
-
-    override fun onPaymentSuccess(p0: String?, p1: PaymentData?) {
-
-    }
-
-    override fun onPaymentError(p0: Int, p1: String?, p2: PaymentData?) {
-
-    }
-
-    override fun onExternalWalletSelected(p0: String?, p1: PaymentData?) {
-
     }
 }

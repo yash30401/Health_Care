@@ -19,16 +19,18 @@ import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.adapters.ReviewsAndRatingsAdapter
 import com.healthcare.yash.preeti.adapters.ServicesChipAdatpter
 import com.healthcare.yash.preeti.databinding.FragmentDoctorDetailedViewBinding
+import com.healthcare.yash.preeti.other.Constants
 import com.healthcare.yash.preeti.utils.averageRating
 import com.healthcare.yash.preeti.utils.setResizableText
 import com.healthcare.yash.preeti.viewmodels.SlotViewModel
 import com.razorpay.Checkout
 import com.razorpay.ExternalWalletListener
+import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnMapReadyCallback{
+class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnMapReadyCallback, PaymentResultWithDataListener, ExternalWalletListener{
 
     private var _binding: FragmentDoctorDetailedViewBinding? = null
     private val binding get() = _binding!!
@@ -168,4 +170,15 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         map = googleMap
     }
 
+    override fun onPaymentSuccess(s: String?, paymentData: PaymentData?) {
+        Log.d(Constants.PAYMENTTESTING,"Success Block:- "+s.toString())
+    }
+
+    override fun onPaymentError(code: Int, s: String?, paymentData: PaymentData?) {
+        Log.d(Constants.PAYMENTTESTING,"Error Block:- "+s.toString())
+    }
+
+    override fun onExternalWalletSelected(s: String?, paymentData: PaymentData?) {
+        Log.d(Constants.PAYMENTTESTING,"External Wallet Block:- "+s.toString())
+    }
 }

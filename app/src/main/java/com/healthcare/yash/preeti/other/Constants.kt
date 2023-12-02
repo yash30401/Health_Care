@@ -21,4 +21,7 @@ object Constants {
     const val BACKSTACK = "BACKSTACK"
 
     const val CONSULTDOCTORFRAGTESTTAG = "CONSULTDOCTORFRAGTESTTAG"
+
+    // Payment Tags
+    const val PAYMENTTESTING = "PAYMENTTESTING"
 }
