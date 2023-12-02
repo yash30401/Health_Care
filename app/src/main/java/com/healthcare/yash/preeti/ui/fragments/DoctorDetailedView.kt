@@ -86,6 +86,8 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
 
     }
 
+    // Setting Up Payments
+
     // Method to set up the bottom sheet content
     private fun setupBottomSheet() {
         // Set up expandable text view for doctor's about information
