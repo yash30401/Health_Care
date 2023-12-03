@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// Class for displaying appointment dialog
 class AppointmentDialogFragment(
     private val slotViewModel: SlotViewModel,
     private val args: DoctorDetailedViewArgs,
@@ -33,6 +34,7 @@ class AppointmentDialogFragment(
         val inflater = requireActivity().layoutInflater
         val dialogView = inflater.inflate(R.layout.appointment_dialog_layout,null)
 
+        // Find views in the dialog layout
         val btnBookVideoConsult = dialogView.findViewById<Button>(R.id.btnBookVideoConsult)
         val btnBookClinicVisit = dialogView.findViewById<Button>(R.id.btnBookClinicVisit)
         val tvVideoConsultPrice = dialogView.findViewById<TextView>(R.id.tvVideoConsultPrice)
@@ -74,6 +76,7 @@ class AppointmentDialogFragment(
     }
 }
 
+// Class for displaying appointment timing dialog
 class AppointmentTimingDialogFragment(
     private val slotViewModel: SlotViewModel,
     private val args: DoctorDetailedViewArgs,
@@ -114,6 +117,7 @@ class AppointmentTimingDialogFragment(
         return builder.create()
     }
 
+    // Method to set up appointment timings recycler view
     private fun setupAppointmentTimingsRecylerView(recylerView: RecyclerView) {
         slotViewModel.getAllSlots(args)
         slotAdapter = AppointmentTimeAdapter(requireActivity(), recylerView)
@@ -154,6 +158,7 @@ class AppointmentTimingDialogFragment(
         }
     }
 
+    // Interface to communicate with the calling class for starting payment
     interface StartPayment {
         fun makePayment(consultPrice: Int?)
     }

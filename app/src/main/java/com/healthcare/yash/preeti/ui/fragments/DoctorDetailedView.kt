@@ -74,6 +74,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
             this.state = BottomSheetBehavior.STATE_DRAGGING
         }
 
+        // Set click listener for booking appointment
         binding.btnBookAppointment.setOnClickListener {
            val fragmentManager = activity?.supportFragmentManager
             val dialogFragment = AppointmentDialogFragment(slotViewModel,args,this)
@@ -97,8 +98,6 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         binding.tvSpecializationDetailedView.text = args.doctor.Specialization
 
     }
-
-    // Setting Up Payments
 
     // Method to set up the bottom sheet content
     private fun setupBottomSheet() {
@@ -165,7 +164,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         }
     }
 
-
+    // Method to initiate the payment process using Razorpay
     override fun makePayment(consultPrice: Int?) {
         val co = Checkout()
         co.setKeyID("rzp_test_wv1GchOQB2x3CE")
