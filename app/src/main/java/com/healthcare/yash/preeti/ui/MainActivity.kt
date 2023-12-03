@@ -22,7 +22,6 @@ import com.google.firebase.ktx.initialize
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ActivityMainBinding
 import com.healthcare.yash.preeti.other.Constants
-import com.healthcare.yash.preeti.other.Constants.BACKSTACK
 import com.healthcare.yash.preeti.ui.fragments.ConsultDoctor
 import com.razorpay.Checkout
 import com.razorpay.ExternalWalletListener
@@ -57,8 +56,11 @@ class MainActivity : AppCompatActivity(),PaymentResultWithDataListener,ExternalW
         binding.bottomNav.setupWithNavController(navController)
         hideBottomNavOnAuthFragment()
 
+        // Preload Razorpay Checkout for better performance
         Checkout.preload(applicationContext)
 
+
+        // Configure Firebase App Check with Play Integrity provider
         Firebase.initialize(this)
         val firebaseAppCheck = FirebaseAppCheck.getInstance()
         firebaseAppCheck.installAppCheckProviderFactory(
@@ -89,6 +91,7 @@ class MainActivity : AppCompatActivity(),PaymentResultWithDataListener,ExternalW
         }
     }
 
+    // Method to hide bottom navigation on specific fragments
     private fun hideBottomNavOnAuthFragment() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
 
@@ -100,6 +103,7 @@ class MainActivity : AppCompatActivity(),PaymentResultWithDataListener,ExternalW
         }
     }
 
+    // Handle back button press
     override fun onBackPressed() {
         val currentDestination = navController.currentDestination
         val isLoggedIn = firebaseAuth.currentUser != null
@@ -107,6 +111,7 @@ class MainActivity : AppCompatActivity(),PaymentResultWithDataListener,ExternalW
         Log.d("FragTesting", isLoggedIn.toString())
         Log.d("FragTesting", currentDestination.toString())
 
+        // Check if the user is logged in and on specific fragments
         if (isLoggedIn && currentDestination?.id == R.id.mainFragment || isLoggedIn && currentDestination?.id == R.id.chatFragment || isLoggedIn && currentDestination?.id == R.id.profileFrament) {
             showExitConfirmationDialog()
         } else {
@@ -127,16 +132,19 @@ class MainActivity : AppCompatActivity(),PaymentResultWithDataListener,ExternalW
             .show()
     }
 
+    // Implementation of PaymentResultWithDataListener
     override fun onPaymentSuccess(s: String?, paymentData: PaymentData?) {
-        Log.d(Constants.PAYMENTTESTING,"Success Block:- "+s.toString())
+        Log.d(Constants.PAYMENTTESTING, "Success Block:- " + s.toString())
     }
 
+    // Implementation of PaymentResultWithDataListener
     override fun onPaymentError(code: Int, s: String?, paymentData: PaymentData?) {
-        Log.d(Constants.PAYMENTTESTING,"Error Block:- "+s.toString())
+        Log.d(Constants.PAYMENTTESTING, "Error Block:- " + s.toString())
     }
 
+    // Implementation of ExternalWalletListener
     override fun onExternalWalletSelected(s: String?, paymentData: PaymentData?) {
-        Log.d(Constants.PAYMENTTESTING,"External Wallet Block:- "+s.toString())
+        Log.d(Constants.PAYMENTTESTING, "External Wallet Block:- " + s.toString())
     }
 
     override fun onDestroy() {
