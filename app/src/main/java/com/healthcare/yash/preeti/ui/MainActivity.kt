@@ -1,11 +1,13 @@
 package com.healthcare.yash.preeti.ui
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -22,6 +24,7 @@ import com.google.firebase.ktx.initialize
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ActivityMainBinding
 import com.healthcare.yash.preeti.other.Constants
+import com.healthcare.yash.preeti.other.Constants.PAYMENTLISTNER
 import com.healthcare.yash.preeti.ui.fragments.ConsultDoctor
 import com.razorpay.Checkout
 import com.razorpay.ExternalWalletListener
@@ -135,11 +138,13 @@ class MainActivity : AppCompatActivity(),PaymentResultWithDataListener,ExternalW
     // Implementation of PaymentResultWithDataListener
     override fun onPaymentSuccess(s: String?, paymentData: PaymentData?) {
         Log.d(Constants.PAYMENTTESTING, "Success Block:- " + s.toString())
+
     }
 
     // Implementation of PaymentResultWithDataListener
     override fun onPaymentError(code: Int, s: String?, paymentData: PaymentData?) {
         Log.d(Constants.PAYMENTTESTING, "Error Block:- " + s.toString())
+        Toast.makeText(this, "Something Went Wrong:- ${s.toString()}", Toast.LENGTH_SHORT).show()
     }
 
     // Implementation of ExternalWalletListener

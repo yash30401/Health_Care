@@ -24,4 +24,7 @@ object Constants {
 
     // Payment Tags
     const val PAYMENTTESTING = "PAYMENTTESTING"
+
+    // Payment Bundle KEY
+    const val PAYMENTLISTNER = "PAYMENTLISTNER"
 }

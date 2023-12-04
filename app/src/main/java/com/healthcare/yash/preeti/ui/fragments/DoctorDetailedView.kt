@@ -22,12 +22,15 @@ import com.healthcare.yash.preeti.adapters.ReviewsAndRatingsAdapter
 import com.healthcare.yash.preeti.adapters.ServicesChipAdatpter
 import com.healthcare.yash.preeti.databinding.FragmentDoctorDetailedViewBinding
 import com.healthcare.yash.preeti.other.Constants
+import com.healthcare.yash.preeti.other.Constants.PAYMENTLISTNER
+import com.healthcare.yash.preeti.other.Constants.PAYMENTTESTING
 import com.healthcare.yash.preeti.utils.averageRating
 import com.healthcare.yash.preeti.utils.setResizableText
 import com.healthcare.yash.preeti.viewmodels.SlotViewModel
 import com.razorpay.Checkout
 import com.razorpay.ExternalWalletListener
 import com.razorpay.PaymentData
+import com.razorpay.PaymentResultListener
 import com.razorpay.PaymentResultWithDataListener
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
@@ -196,12 +199,15 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
 
             options.put("prefill",prefill)
             co.open(activity,options)
+
         }catch (e: Exception){
             Toast.makeText(activity,"Error in payment: "+ e.message, Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
 
     }
+
+
 
 
     // GoogleMap's onMapReady callback
@@ -214,5 +220,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         super.onDestroy()
         _binding = null
     }
+
+
 
 }
