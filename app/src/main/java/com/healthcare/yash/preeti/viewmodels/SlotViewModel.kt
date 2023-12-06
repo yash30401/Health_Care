@@ -16,8 +16,8 @@ class SlotViewModel @Inject constructor(
     private var slotsRepository: SlotsRepository
 ):ViewModel(){
 
-    private val _allSlotFlow = MutableStateFlow<NetworkResult<List<String>>?>(null)
-    val allSlotFlow:StateFlow<NetworkResult<List<String>>?> = _allSlotFlow
+    private val _allSlotFlow = MutableStateFlow<NetworkResult<List<Long>>?>(null)
+    val allSlotFlow:StateFlow<NetworkResult<List<Long>>?> = _allSlotFlow
 
     fun getAllSlots(args: DoctorDetailedViewArgs) = viewModelScope.launch {
 _allSlotFlow.value = NetworkResult.Loading()

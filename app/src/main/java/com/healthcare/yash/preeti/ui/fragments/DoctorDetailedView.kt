@@ -21,17 +21,10 @@ import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.adapters.ReviewsAndRatingsAdapter
 import com.healthcare.yash.preeti.adapters.ServicesChipAdatpter
 import com.healthcare.yash.preeti.databinding.FragmentDoctorDetailedViewBinding
-import com.healthcare.yash.preeti.other.Constants
-import com.healthcare.yash.preeti.other.Constants.PAYMENTLISTNER
-import com.healthcare.yash.preeti.other.Constants.PAYMENTTESTING
 import com.healthcare.yash.preeti.utils.averageRating
 import com.healthcare.yash.preeti.utils.setResizableText
 import com.healthcare.yash.preeti.viewmodels.SlotViewModel
 import com.razorpay.Checkout
-import com.razorpay.ExternalWalletListener
-import com.razorpay.PaymentData
-import com.razorpay.PaymentResultListener
-import com.razorpay.PaymentResultWithDataListener
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
 import javax.inject.Inject
@@ -61,7 +54,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_doctor_detailed_view, container, false)
-
+        Log.d("LIFECYCLEOFFRAG","OnCreateView")
         return rootView
     }
 
@@ -79,11 +72,11 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
 
         // Set click listener for booking appointment
         binding.btnBookAppointment.setOnClickListener {
-           val fragmentManager = activity?.supportFragmentManager
-            val dialogFragment = AppointmentDialogFragment(slotViewModel,args,this)
+            val fragmentManager = activity?.supportFragmentManager
+            val dialogFragment = AppointmentDialogFragment(slotViewModel, args,this)
 
             if (fragmentManager != null) {
-                dialogFragment.show(fragmentManager,"Appointment Dialog")
+                dialogFragment.show(fragmentManager, "Appointment Dialog")
             }
         }
 
@@ -91,6 +84,10 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         setupHeaderView()
         // Set up bottom sheet content
         setupBottomSheet()
+
+        Log.d("LIFECYCLEOFFRAG","OnViewCreated")
+
+
     }
 
     // Method to set up the header view
@@ -108,10 +105,10 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         binding.tvAboutDoctorDetailedView.setResizableText(args.doctor.About, 4, true)
 
         // Set up RecyclerView for reviews and ratings
-        if(!args.doctor.Reviews_And_Ratings?.get(0)?.date.equals("")){
-            Log.d("DATATESTING",args.doctor.Reviews_And_Ratings?.get(0)?.date.toString())
+        if (!args.doctor.Reviews_And_Ratings?.get(0)?.date.equals("")) {
+            Log.d("DATATESTING", args.doctor.Reviews_And_Ratings?.get(0)?.date.toString())
             setupRatingsRecylerView()
-        }else{
+        } else {
             binding.textView4.apply {
                 visibility = View.GONE
             }
@@ -139,9 +136,9 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
             args.doctor.Reviews_And_Ratings?.averageRating() // Extension function for calculating the average rating of a list of ReviewsAndRatings
         val formattedRating =
             String.format("%.1f", averageRating)
-        if(formattedRating == "0.0") {
+        if (formattedRating == "0.0") {
             averageRatingTextView.text = "No Reviews"
-        }else{
+        } else {
             averageRatingTextView.text = formattedRating
         }
         // Display number of ratings
@@ -167,22 +164,25 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         }
     }
 
-    // Method to initiate the payment process using Razorpay
+
+
     override fun makePayment(consultPrice: Int?) {
         val co = Checkout()
         co.setKeyID("rzp_test_wv1GchOQB2x3CE")
         co.setImage(R.mipmap.ic_launcher)
-
         try {
             val options = JSONObject()
-            options.put("name","Health Care")
-            options.put("description","Consultation Charges")
+            options.put("name", "Health Care")
+            options.put("description", "Consultation Charges")
             //You can omit the image option to fetch the image from the dashboard
-            options.put("image","https://s3.amazonaws.com/rzp-mobile/images/rzp.jpg")
+            options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.jpg")
             options.put("theme.color", "#6750A4");
-            options.put("currency","INR");
+            options.put("currency", "INR");
 //            options.put("order_id", "order_DBJOWzybf0sJbb");
-            options.put("amount","${consultPrice?.times(100).toString()}")//pass amount in currency subunits
+            options.put(
+                "amount",
+                "${consultPrice?.times(100).toString()}"
+            )//pass amount in currency subunits
 
             val retryObj = JSONObject()
             retryObj.put("enabled", true);
@@ -194,20 +194,17 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
             val email = firebaseAuth.currentUser?.email ?: ""
             val phoneNumber = firebaseAuth.currentUser?.phoneNumber ?: ""
 
-            prefill.put("email",email)
-            prefill.put("contact",phoneNumber)
+            prefill.put("email", email)
+            prefill.put("contact", phoneNumber)
 
-            options.put("prefill",prefill)
-            co.open(activity,options)
+            options.put("prefill", prefill)
+            co.open(activity, options)
 
-        }catch (e: Exception){
-            Toast.makeText(activity,"Error in payment: "+ e.message, Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            Toast.makeText(requireActivity(), "Error in payment: " + e.message, Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
-
     }
-
-
 
 
     // GoogleMap's onMapReady callback
@@ -215,12 +212,10 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         map = googleMap
     }
 
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
-
 
 
 }

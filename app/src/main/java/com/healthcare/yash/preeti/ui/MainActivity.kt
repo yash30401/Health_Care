@@ -1,16 +1,10 @@
 package com.healthcare.yash.preeti.ui
 
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.content.pm.PackageManager.NameNotFoundException
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -19,25 +13,22 @@ import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.ktx.app
 import com.google.firebase.ktx.initialize
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ActivityMainBinding
 import com.healthcare.yash.preeti.other.Constants
-import com.healthcare.yash.preeti.other.Constants.PAYMENTLISTNER
-import com.healthcare.yash.preeti.ui.fragments.ConsultDoctor
+import com.healthcare.yash.preeti.ui.fragments.DoctorDetailedViewArgs
 import com.razorpay.Checkout
 import com.razorpay.ExternalWalletListener
 import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
 import dagger.hilt.android.AndroidEntryPoint
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
+import org.json.JSONObject
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(),PaymentResultWithDataListener,ExternalWalletListener {
+class MainActivity : AppCompatActivity(), PaymentResultWithDataListener, ExternalWalletListener {
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
@@ -138,13 +129,13 @@ class MainActivity : AppCompatActivity(),PaymentResultWithDataListener,ExternalW
     // Implementation of PaymentResultWithDataListener
     override fun onPaymentSuccess(s: String?, paymentData: PaymentData?) {
         Log.d(Constants.PAYMENTTESTING, "Success Block:- " + s.toString())
-
     }
 
     // Implementation of PaymentResultWithDataListener
     override fun onPaymentError(code: Int, s: String?, paymentData: PaymentData?) {
         Log.d(Constants.PAYMENTTESTING, "Error Block:- " + s.toString())
         Toast.makeText(this, "Something Went Wrong:- ${s.toString()}", Toast.LENGTH_SHORT).show()
+
     }
 
     // Implementation of ExternalWalletListener
@@ -156,4 +147,5 @@ class MainActivity : AppCompatActivity(),PaymentResultWithDataListener,ExternalW
         super.onDestroy()
         _binding = null
     }
+
 }

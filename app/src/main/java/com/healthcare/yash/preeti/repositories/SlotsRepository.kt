@@ -17,20 +17,21 @@ private val firebaseAuth: FirebaseAuth,
     private val firestore:FirebaseFirestore
 ) {
 
-    suspend fun getAllSlots(args: DoctorDetailedViewArgs): Flow<NetworkResult<MutableList<String>>> {
+    suspend fun getAllSlots(args: DoctorDetailedViewArgs): Flow<NetworkResult<MutableList<Long>>> {
         return flow {
             val slotCollectionRef =
                 firestore.collection("Doctors").document(args.doctor.Id.toString())
                     .collection("Slots")
 
             val querySnapshot = slotCollectionRef.get().await()
-            val listOfSlots = mutableListOf<String>()
+            val listOfSlots = mutableListOf<Long>()
 
             for (document in querySnapshot) {
                 if (document.exists()) {
-                    val slotList = document.getString("timings") ?: ""
+                    val timestamp = document.getTimestamp("timings")
+                    val timestampInMillis = timestamp?.toDate()?.time ?: 0L
 
-                    listOfSlots.add(slotList)
+                    listOfSlots.add(timestampInMillis)
                 }
             }
             emit(NetworkResult.Success(listOfSlots))

@@ -12,16 +12,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.AppointmentTimeChipsBinding
 import com.healthcare.yash.preeti.utils.ConsultDoctorDiffUtil
+import java.text.SimpleDateFormat
 
 class AppointmentTimeAdapter(private val requireActivity: FragmentActivity,private val recyclerView: RecyclerView):RecyclerView.Adapter<AppointmentTimeAdapter.AppointmentTimeViewHolder>() {
 
-    private val timingChipList = emptyList<String>()
-    private val asynListDiffer = AsyncListDiffer<String>(this,ConsultDoctorDiffUtil())
+
+    val asynListDiffer = AsyncListDiffer<Long>(this,ConsultDoctorDiffUtil())
 
     var singleSelection = false
-    private var selectedTime = ArrayList<String>(1)
 
-    private var lastPosition = RecyclerView.NO_POSITION
+    var lastPosition = RecyclerView.NO_POSITION
 
     inner class AppointmentTimeViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
         val binding = AppointmentTimeChipsBinding.bind(itemView)
@@ -39,10 +39,13 @@ class AppointmentTimeAdapter(private val requireActivity: FragmentActivity,priva
     override fun onBindViewHolder(holder: AppointmentTimeViewHolder, position: Int) {
         val currentTimingChip = asynListDiffer.currentList[position]
 
-        holder.binding.chip.chipText = currentTimingChip
+        val simpleDateFormat = SimpleDateFormat("dd,MMMM yyyy HH:mm a")
+        val formattedDate = simpleDateFormat.format(currentTimingChip)
+
+        holder.binding.chip.chipText = formattedDate.toString()
 
         holder.binding.chip.setOnClickListener {
-                applySelection(holder,currentTimingChip)
+                applySelection(holder,formattedDate)
         }
     }
 
@@ -84,7 +87,7 @@ class AppointmentTimeAdapter(private val requireActivity: FragmentActivity,priva
         }
     }
 
-    fun setData(newList:List<String>){
+    fun setData(newList:List<Long>){
         asynListDiffer.submitList(newList)
     }
 }

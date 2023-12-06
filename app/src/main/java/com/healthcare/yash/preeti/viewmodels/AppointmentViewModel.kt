@@ -1,16 +1,20 @@
 package com.healthcare.yash.preeti.viewmodels
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.healthcare.yash.preeti.models.DoctorAppointment
 import com.healthcare.yash.preeti.models.UserAppointment
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.repositories.AppointmentRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class AppointmentViewModel @Inject constructor(private val appointmentRepository: AppointmentRepository):
     ViewModel() {
 
@@ -34,4 +38,5 @@ class AppointmentViewModel @Inject constructor(private val appointmentRepository
         }
 
     }
+
 }

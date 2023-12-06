@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -16,10 +17,12 @@ import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.adapters.AppointmentTimeAdapter
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.APPOINTMENTTIMINGSLOT
+import com.healthcare.yash.preeti.viewmodels.AppointmentViewModel
 import com.healthcare.yash.preeti.viewmodels.SlotViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Date
 
 // Class for displaying appointment dialog
 class AppointmentDialogFragment(
@@ -86,7 +89,7 @@ class AppointmentTimingDialogFragment(
 ) :DialogFragment() {
 
     private lateinit var slotAdapter: AppointmentTimeAdapter
-
+    private val appointmentViewModel by viewModels<AppointmentViewModel>()
     @SuppressLint("MissingInflatedId")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity())
