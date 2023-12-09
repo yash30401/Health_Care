@@ -18,6 +18,7 @@ import javax.inject.Inject
 class AppointmentViewModel @Inject constructor(private val appointmentRepository: AppointmentRepository):
     ViewModel() {
 
+
     private val _addAppointment = MutableStateFlow<NetworkResult<String>?>(null)
     val addAppointment: StateFlow<NetworkResult<String>?> = _addAppointment
 

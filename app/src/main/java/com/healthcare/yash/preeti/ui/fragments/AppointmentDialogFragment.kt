@@ -11,6 +11,8 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.healthcare.yash.preeti.R
@@ -22,20 +24,19 @@ import com.healthcare.yash.preeti.viewmodels.SlotViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.Date
 
 // Class for displaying appointment dialog
 class AppointmentDialogFragment(
     private val slotViewModel: SlotViewModel,
     private val args: DoctorDetailedViewArgs,
     private val startPayment: AppointmentTimingDialogFragment.StartPayment
-) :DialogFragment() {
+) : DialogFragment() {
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity())
         val inflater = requireActivity().layoutInflater
-        val dialogView = inflater.inflate(R.layout.appointment_dialog_layout,null)
+        val dialogView = inflater.inflate(R.layout.appointment_dialog_layout, null)
 
         // Find views in the dialog layout
         val btnBookVideoConsult = dialogView.findViewById<Button>(R.id.btnBookVideoConsult)
@@ -43,25 +44,29 @@ class AppointmentDialogFragment(
         val tvVideoConsultPrice = dialogView.findViewById<TextView>(R.id.tvVideoConsultPrice)
         val tvClinicVisitPrice = dialogView.findViewById<TextView>(R.id.tvClinicVisitPrice)
 
-        tvVideoConsultPrice.setText("₹"+args.doctor.video_consult.toString())
-        tvClinicVisitPrice.setText("₹"+args.doctor.clinic_visit.toString())
+        tvVideoConsultPrice.setText("₹" + args.doctor.video_consult.toString())
+        tvClinicVisitPrice.setText("₹" + args.doctor.clinic_visit.toString())
 
         builder.setView(dialogView)
 
         btnBookVideoConsult.setOnClickListener {
             dismiss()
 
-            val fragmentManager = activity?.supportFragmentManager
-            val dialogFragment = AppointmentTimingDialogFragment(slotViewModel,args,args.doctor.video_consult,"Video Consult",startPayment)
+            val fragmentManager = parentFragmentManager  // Use childFragmentManager
+            val dialogFragment = AppointmentTimingDialogFragment(
+                slotViewModel,
+                args,
+                args.doctor.video_consult,
+                "Video Consult",
+                startPayment
+            )
 
-            if(fragmentManager!=null){
-                dialogFragment.show(fragmentManager,"Appointment Timings")
-            }
+            dialogFragment.show(fragmentManager, "Appointment Timings")
         }
 
         btnBookClinicVisit.setOnClickListener {
             dismiss()
-            val fragmentManager = activity?.supportFragmentManager
+            val fragmentManager = parentFragmentManager  // Use childFragmentManager
             val dialogFragment = AppointmentTimingDialogFragment(
                 slotViewModel,
                 args,
@@ -70,9 +75,7 @@ class AppointmentDialogFragment(
                 startPayment
             )
 
-            if(fragmentManager!=null){
-                dialogFragment.show(fragmentManager,"Appointment Timings")
-            }
+            dialogFragment.show(fragmentManager, "Appointment Timings")
         }
 
         return builder.create()
@@ -86,10 +89,11 @@ class AppointmentTimingDialogFragment(
     private val consultPrice: Int?,
     private val consultText: String,
     private val startPayment: StartPayment
-) :DialogFragment() {
+) : DialogFragment() {
 
     private lateinit var slotAdapter: AppointmentTimeAdapter
     private val appointmentViewModel by viewModels<AppointmentViewModel>()
+
     @SuppressLint("MissingInflatedId")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireActivity())
@@ -106,14 +110,29 @@ class AppointmentTimingDialogFragment(
 
         builder.setView(dialogView)
 
+        val fragmentManager = childFragmentManager
         setupAppointmentTimingsRecylerView(dialogView.findViewById<RecyclerView>(R.id.appointmentTimeRecylerView))
 
         btnBook.setOnClickListener {
-            if(slotAdapter.singleSelection==false){
-                Toast.makeText(requireActivity(), "Please Select An Appointment Time", Toast.LENGTH_SHORT).show()
-            }else{
+            if (slotAdapter.singleSelection == false) {
+                Toast.makeText(
+                    requireActivity(),
+                    "Please Select An Appointment Time",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
                 dismiss()
-                startPayment.makePayment(consultPrice)
+                val selectedDoctor = args.doctor ?: return@setOnClickListener
+                val action =
+                    AppointmentTimingDialogFragmentDirections.actionAppointmentTimingDialogFragmentToDoctorDetailedView(
+                       selectedDoctor
+                    )
+                findNavController().navigate(action)
+                startPayment.makePayment(
+                    consultPrice,
+                    consultText,
+                    slotAdapter.asynListDiffer.currentList[slotAdapter.lastPosition]
+                )
             }
         }
 
@@ -163,6 +182,10 @@ class AppointmentTimingDialogFragment(
 
     // Interface to communicate with the calling class for starting payment
     interface StartPayment {
-        fun makePayment(consultPrice: Int?)
+        fun makePayment(
+            consultPrice: Int?,
+            consultText: String,
+            l: Long
+        )
     }
 }

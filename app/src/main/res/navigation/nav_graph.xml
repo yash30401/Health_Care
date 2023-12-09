@@ -99,4 +99,12 @@
             android:name="doctor"
             app:argType="com.healthcare.yash.preeti.models.Doctor" />
     </fragment>
+    <dialog
+        android:id="@+id/appointmentTimingDialogFragment"
+        android:name="com.healthcare.yash.preeti.ui.fragments.AppointmentTimingDialogFragment"
+        android:label="AppointmentTimingDialogFragment" >
+        <action
+            android:id="@+id/action_appointmentTimingDialogFragment_to_doctorDetailedView"
+            app:destination="@id/doctorDetailedView" />
+    </dialog>
 </navigation>

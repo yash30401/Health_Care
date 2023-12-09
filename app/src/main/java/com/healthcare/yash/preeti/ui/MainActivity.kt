@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -17,7 +18,9 @@ import com.google.firebase.ktx.initialize
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ActivityMainBinding
 import com.healthcare.yash.preeti.other.Constants
+import com.healthcare.yash.preeti.ui.fragments.DoctorDetailedView
 import com.healthcare.yash.preeti.ui.fragments.DoctorDetailedViewArgs
+import com.healthcare.yash.preeti.viewmodels.AppointmentViewModel
 import com.razorpay.Checkout
 import com.razorpay.ExternalWalletListener
 import com.razorpay.PaymentData
@@ -28,7 +31,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), PaymentResultWithDataListener, ExternalWalletListener {
+class MainActivity : AppCompatActivity() {
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
@@ -127,21 +130,6 @@ class MainActivity : AppCompatActivity(), PaymentResultWithDataListener, Externa
     }
 
     // Implementation of PaymentResultWithDataListener
-    override fun onPaymentSuccess(s: String?, paymentData: PaymentData?) {
-        Log.d(Constants.PAYMENTTESTING, "Success Block:- " + s.toString())
-    }
-
-    // Implementation of PaymentResultWithDataListener
-    override fun onPaymentError(code: Int, s: String?, paymentData: PaymentData?) {
-        Log.d(Constants.PAYMENTTESTING, "Error Block:- " + s.toString())
-        Toast.makeText(this, "Something Went Wrong:- ${s.toString()}", Toast.LENGTH_SHORT).show()
-
-    }
-
-    // Implementation of ExternalWalletListener
-    override fun onExternalWalletSelected(s: String?, paymentData: PaymentData?) {
-        Log.d(Constants.PAYMENTTESTING, "External Wallet Block:- " + s.toString())
-    }
 
     override fun onDestroy() {
         super.onDestroy()
