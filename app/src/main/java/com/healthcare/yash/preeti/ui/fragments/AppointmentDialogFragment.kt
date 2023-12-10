@@ -122,12 +122,6 @@ class AppointmentTimingDialogFragment(
                 ).show()
             } else {
                 dismiss()
-                val selectedDoctor = args.doctor ?: return@setOnClickListener
-                val action =
-                    AppointmentTimingDialogFragmentDirections.actionAppointmentTimingDialogFragmentToDoctorDetailedView(
-                       selectedDoctor
-                    )
-                findNavController().navigate(action)
                 startPayment.makePayment(
                     consultPrice,
                     consultText,

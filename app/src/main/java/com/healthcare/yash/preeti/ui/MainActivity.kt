@@ -1,5 +1,7 @@
 package com.healthcare.yash.preeti.ui
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -31,7 +33,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),PaymentResultWithDataListener,ExternalWalletListener {
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
@@ -86,6 +88,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        firebaseAuth = FirebaseAuth.getInstance()
     }
 
     // Method to hide bottom navigation on specific fragments
@@ -134,6 +137,26 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onPaymentSuccess(p0: String?, p1: PaymentData?) {
+        Log.d("PAYMENTRESULT","SUCCESS:- ${p0}")
+        val frag = DoctorDetailedView()
+        try {
+            frag.paymentStatus("Success")
+        }catch (e:Exception){
+            Log.d("PAYMENTERROR","SUCCESS BLOCK:- "+e.message.toString())
+        }
+
+    }
+
+    override fun onPaymentError(p0: Int, p1: String?, p2: PaymentData?) {
+        Log.d("PAYMENTRESULT","ERROR:- ${p0}")
+        val frag = DoctorDetailedView()
+        frag.paymentStatus("Error")
+    }
+
+    override fun onExternalWalletSelected(p0: String?, p1: PaymentData?) {
     }
 
 }

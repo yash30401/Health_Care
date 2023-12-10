@@ -33,7 +33,7 @@ import com.healthcare.yash.preeti.models.DoctorAppointment
 import com.healthcare.yash.preeti.models.UserAppointment
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.APPOINTMENTADDED
-import com.healthcare.yash.preeti.ui.PaymentActivity
+import com.healthcare.yash.preeti.ui.MainActivity
 import com.healthcare.yash.preeti.utils.averageRating
 import com.healthcare.yash.preeti.utils.setResizableText
 import com.healthcare.yash.preeti.viewmodels.AppointmentViewModel
@@ -73,15 +73,8 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
     var storeConsultText: String = ""
     var storeTime: Long = 0L
 
-    private val startPaymentForResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data: Intent? = result.data
-                val resultText = data?.getStringExtra("PAYMENTSTATUSKEY")
-
-                Log.d("PAYMENTRESULT",resultText.toString())
-            }
-        }
+    var doctorName:String = ""
+    var doctorId:String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -95,13 +88,6 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentDoctorDetailedViewBinding.bind(view)
-
-        val args: DoctorDetailedViewArgs = arguments?.let { DoctorDetailedViewArgs.fromBundle(it) }
-            ?: run {
-                // Handle null arguments, e.g., show an error message or navigate back
-                findNavController().popBackStack()
-                return
-            }
 
         // Initialize Google Maps fragment
         val mapFragment =
@@ -120,10 +106,20 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
             dialogFragment.show(fragmentManager, "Appointment Dialog")
         }
 
+        Log.d("ARGUMENTSNULLLCHECK",args.doctor.Name)
+
         // Set up header view
         setupHeaderView()
         // Set up bottom sheet content
         setupBottomSheet()
+
+        doctorName = args.doctor.Name
+        doctorId = args.doctor.Id
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("ARGUMENTSNULLLCHECK","RESUME:- "+args.doctor.Name)
 
     }
 
@@ -241,6 +237,11 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
                 options.put("prefill", prefill)
                 co.open(activity, options)
 
+//                val paymentIntent = Intent(requireContext(), PaymentActivity::class.java)
+//
+//                // Start PaymentActivity with startActivityForResult
+//                startPaymentForResult.launch(paymentIntent)
+
             } catch (e: Exception) {
                 Toast.makeText(
                     requireActivity(),
@@ -252,6 +253,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
 
             storeConsultText = consultText
             storeTime = l
+
         } else {
             Toast.makeText(
                 requireActivity(),
@@ -259,19 +261,31 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
 
-        startPaymentForResult.launch(Intent(requireContext(),PaymentActivity::class.java))
+    fun paymentStatus(paymentStatus:String){
+        Log.d("PAYMENTRESULT","Doctor View Data:- ${paymentStatus}")
+
+        if(paymentStatus == "Success"){
+            try {
+                addAppointmentToTheFirebase()
+            }catch (e:Exception){
+                Log.d("PAYMENTERROR","Calling Func:- "+e.message.toString())
+            }
+        }else{
+            Toast.makeText(requireContext(), "Payment Error Occured", Toast.LENGTH_SHORT).show()
+        }
     }
 
 
     fun addAppointmentToTheFirebase() {
         Log.d("PAYMENTSTATUS", "makepayment")
 
-        Log.d("PARAMETERCHECKING", args.doctor.Name)
+        Log.d("PARAMETERCHECKING", doctorName)
         Log.d("PARAMETERCHECKING", storeConsultText)
 
         val timestampObject = Timestamp(Date(storeTime))
-        val doctorsRef = "/Doctors/${args.doctor.Id}"
+        val doctorsRef = "/Doctors/${doctorId}"
         val userRef = "/Users/${firebaseAuth.currentUser?.uid.toString()}"
 
         val userAppointment =
@@ -280,7 +294,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
             DoctorAppointment("Scheduled", storeConsultText, timestampObject, userRef)
         appointmentViewModel.addAppointmentToTheFirebase(
             userAppointment,
-            args.doctor.Id,
+            doctorId,
             doctorAppointment
         )
 
@@ -311,6 +325,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
                             APPOINTMENTADDED,
                             "Success Block:- ${it?.message.toString()}"
                         )
+                        Toast.makeText(requireContext(), "Appointment Booked", Toast.LENGTH_SHORT).show()
                     }
 
                     else -> {}
