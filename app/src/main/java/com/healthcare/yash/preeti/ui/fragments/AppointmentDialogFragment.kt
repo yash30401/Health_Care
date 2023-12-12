@@ -11,8 +11,6 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.healthcare.yash.preeti.R
@@ -21,15 +19,18 @@ import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.APPOINTMENTTIMINGSLOT
 import com.healthcare.yash.preeti.viewmodels.AppointmentViewModel
 import com.healthcare.yash.preeti.viewmodels.SlotViewModel
+import com.razorpay.Checkout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 // Class for displaying appointment dialog
 class AppointmentDialogFragment(
     private val slotViewModel: SlotViewModel,
     private val args: DoctorDetailedViewArgs,
-    private val startPayment: AppointmentTimingDialogFragment.StartPayment
+    private val email:String,
+    private val phoneNumber:String
 ) : DialogFragment() {
 
     @SuppressLint("MissingInflatedId")
@@ -58,7 +59,8 @@ class AppointmentDialogFragment(
                 args,
                 args.doctor.video_consult,
                 "Video Consult",
-                startPayment
+                email,
+                phoneNumber
             )
 
             dialogFragment.show(fragmentManager, "Appointment Timings")
@@ -72,7 +74,8 @@ class AppointmentDialogFragment(
                 args,
                 args.doctor.clinic_visit,
                 "Clinic Visit",
-                startPayment
+                email,
+                phoneNumber
             )
 
             dialogFragment.show(fragmentManager, "Appointment Timings")
@@ -88,7 +91,8 @@ class AppointmentTimingDialogFragment(
     private val args: DoctorDetailedViewArgs,
     private val consultPrice: Int?,
     private val consultText: String,
-    private val startPayment: StartPayment
+    private val email: String,
+    private val phoneNumber: String,
 ) : DialogFragment() {
 
     private lateinit var slotAdapter: AppointmentTimeAdapter
@@ -122,10 +126,12 @@ class AppointmentTimingDialogFragment(
                 ).show()
             } else {
                 dismiss()
-                startPayment.makePayment(
+                makePayment(
                     consultPrice,
                     consultText,
-                    slotAdapter.asynListDiffer.currentList[slotAdapter.lastPosition]
+                    slotAdapter.asynListDiffer.currentList[slotAdapter.lastPosition],
+                    email,
+                    phoneNumber
                 )
             }
         }
@@ -175,11 +181,74 @@ class AppointmentTimingDialogFragment(
     }
 
     // Interface to communicate with the calling class for starting payment
-    interface StartPayment {
-        fun makePayment(
-            consultPrice: Int?,
-            consultText: String,
-            l: Long
-        )
+//    interface StartPayment {
+//        fun makePayment(
+//            consultPrice: Int?,
+//            consultText: String,
+//            l: Long
+//        )
+//    }
+
+    fun makePayment(
+        consultPrice: Int?,
+        consultText: String,
+        position: Long,
+        email: String,
+        phoneNumber: String
+    ){
+        if (args != null) {
+            val co = Checkout()
+            co.setKeyID("rzp_test_wv1GchOQB2x3CE")
+            co.setImage(R.mipmap.ic_launcher)
+            try {
+                val options = JSONObject()
+                options.put("name", "Health Care")
+                options.put("description", "Consultation Charges")
+                //You can omit the image option to fetch the image from the dashboard
+                options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.jpg")
+                options.put("theme.color", "#6750A4");
+                options.put("currency", "INR");
+                options.put(
+                    "amount",
+                    "${consultPrice?.times(100).toString()}"
+                )//pass amount in currency subunits
+
+                val retryObj = JSONObject()
+                retryObj.put("enabled", true);
+                retryObj.put("max_count", 4);
+                options.put("retry", retryObj);
+
+                val prefill = JSONObject()
+
+                val email =   email
+                val phoneNumber = phoneNumber
+
+                prefill.put("email", email)
+                prefill.put("contact", phoneNumber)
+
+                options.put("prefill", prefill)
+                co.open(activity, options)
+
+//                val paymentIntent = Intent(requireContext(), PaymentActivity::class.java)
+//
+//                // Start PaymentActivity with startActivityForResult
+//                startPaymentForResult.launch(paymentIntent)
+
+            } catch (e: Exception) {
+                Toast.makeText(
+                    requireActivity(),
+                    "Error in payment: " + e.message,
+                    Toast.LENGTH_LONG
+                ).show()
+                e.printStackTrace()
+            }
+
+        } else {
+            Toast.makeText(
+                requireActivity(),
+                "Error: Doctor details are null",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 }
