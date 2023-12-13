@@ -1,5 +1,6 @@
 package com.healthcare.yash.preeti.repositories
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.healthcare.yash.preeti.models.Doctor
@@ -19,20 +20,32 @@ class AppointmentRepository @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
 
-    suspend fun addAppointmentToTheFirebase(userAppointment: UserAppointment,doctorUid:String,
-                                            doctorAppointment: DoctorAppointment): Flow<NetworkResult<String>>{
+    suspend fun addAppointmentToTheFirebase(
+        userAppointment: UserAppointment, doctorUid: String,
+        doctorAppointment: DoctorAppointment
+    ): Flow<NetworkResult<out String>> {
         return flow {
 
-            firestore.collection("Users").document(firebaseAuth.currentUser?.uid.toString())
-                .collection("Appointments").add(userAppointment).await()
 
-            firestore.collection("Doctors").document(doctorUid).collection("Appointments").add(doctorAppointment)
-                .await()
+            try {
+                firestore.collection("Users").document(firebaseAuth.currentUser?.uid.toString())
+                    .collection("Appointments").add(userAppointment).await()
 
-            emit(NetworkResult.Success("Data Added"))
+                firestore.collection("Doctors").document(doctorUid).collection("Appointments")
+                    .add(doctorAppointment)
+                    .await()
+
+                emit(NetworkResult.Success("Data Added"))
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(e.message.toString(), null))
+            } finally {
+                Log.d("Repository", "Exiting addAppointmentToTheFirebase")
+            }
+
         }.catch {
-            NetworkResult.Error(it.message,null)
+            Log.e("Repository", "Error in addAppointmentToTheFirebase: ${it.message}")
+            emit(NetworkResult.Error(it.message.toString(), null))
         }.flowOn(Dispatchers.IO)
-    }
 
+    }
 }

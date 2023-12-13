@@ -1,5 +1,6 @@
 package com.healthcare.yash.preeti.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,13 +29,19 @@ class AppointmentViewModel @Inject constructor(private val appointmentRepository
         doctorAppointment: DoctorAppointment
     ) = viewModelScope.launch {
         _addAppointment.value = NetworkResult.Loading()
-
+        Log.d("BLOCKCHECK","Function Calling")
         val result = appointmentRepository.addAppointmentToTheFirebase(userAppointment,doctorUid,doctorAppointment)
         result.collect{
             when(it){
-                is NetworkResult.Error -> _addAppointment.value = NetworkResult.Error(it.message.toString())
-                is NetworkResult.Loading -> _addAppointment.value = NetworkResult.Loading()
-                is NetworkResult.Success -> _addAppointment.value = NetworkResult.Success(it.data.toString())
+                is NetworkResult.Error -> {_addAppointment.value = NetworkResult.Error(it.message.toString())
+                Log.d("BLOCKCHECK","ViewModel:- Error")
+                }
+                is NetworkResult.Loading -> {_addAppointment.value = NetworkResult.Loading()
+                    Log.d("BLOCKCHECK","ViewModel:- Loading")
+                }
+                is NetworkResult.Success -> {_addAppointment.value = NetworkResult.Success(it.data.toString())
+                    Log.d("BLOCKCHECK","ViewModel:- Success     ")
+                }
             }
         }
 

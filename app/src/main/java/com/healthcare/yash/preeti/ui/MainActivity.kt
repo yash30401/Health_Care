@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -33,7 +34,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(),PaymentResultWithDataListener,ExternalWalletListener {
+class MainActivity : AppCompatActivity(){
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
@@ -139,24 +140,24 @@ class MainActivity : AppCompatActivity(),PaymentResultWithDataListener,ExternalW
         _binding = null
     }
 
-    override fun onPaymentSuccess(p0: String?, p1: PaymentData?) {
-        Log.d("PAYMENTRESULT","SUCCESS:- ${p0}")
-        val frag = DoctorDetailedView()
-        try {
-            frag.paymentStatus("Success")
-        }catch (e:Exception){
-            Log.d("PAYMENTERROR","SUCCESS BLOCK:- "+e.message.toString())
-        }
-
-    }
-
-    override fun onPaymentError(p0: Int, p1: String?, p2: PaymentData?) {
-        Log.d("PAYMENTRESULT","ERROR:- ${p0}")
-        val frag = DoctorDetailedView()
-        frag.paymentStatus("Error")
-    }
-
-    override fun onExternalWalletSelected(p0: String?, p1: PaymentData?) {
-    }
+//    override fun onPaymentSuccess(p0: String?, p1: PaymentData?) {
+//        Log.d("PAYMENTRESULT","SUCCESS:- ${p0}")
+//        val frag = DoctorDetailedView()
+//        try {
+//            frag.paymentStatus("Success")
+//        }catch (e:Exception){
+//            Log.d("PAYMENTERROR","SUCCESS BLOCK:- "+e.message.toString())
+//        }
+//
+//    }
+//
+//    override fun onPaymentError(p0: Int, p1: String?, p2: PaymentData?) {
+//        Log.d("PAYMENTRESULT","ERROR:- ${p0}")
+//        val frag = DoctorDetailedView()
+//        frag.paymentStatus("Error")
+//    }
+//
+//    override fun onExternalWalletSelected(p0: String?, p1: PaymentData?) {
+//    }
 
 }
