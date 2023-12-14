@@ -1,22 +1,18 @@
 package com.healthcare.yash.preeti.ui
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.google.firebase.Timestamp
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.models.Doctor
 import com.healthcare.yash.preeti.models.DoctorAppointment
 import com.healthcare.yash.preeti.models.UserAppointment
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants
-import com.healthcare.yash.preeti.ui.fragments.DoctorDetailedView
 import com.healthcare.yash.preeti.viewmodels.AppointmentViewModel
 import com.razorpay.Checkout
 import com.razorpay.ExternalWalletListener
@@ -25,12 +21,11 @@ import com.razorpay.PaymentResultWithDataListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.util.Date
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PaymentActivity : AppCompatActivity(), PaymentResultWithDataListener, ExternalWalletListener {
@@ -43,6 +38,9 @@ class PaymentActivity : AppCompatActivity(), PaymentResultWithDataListener, Exte
     lateinit var firebaseCurrentUserId: String
     lateinit var email: String
     lateinit var phoneNumber: String
+
+    @Inject
+    lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,8 +142,8 @@ class PaymentActivity : AppCompatActivity(), PaymentResultWithDataListener, Exte
 
 
         val timestampObject = Timestamp(Date(slotTime!!))
-        val doctorsRef = "/Doctors/${doctor.Id}"
-        val userRef = "/Users/${firebaseCurrentUserId}"
+        val doctorsRef = firestore.document("/Doctors/${doctor.Id}")
+        val userRef = firestore.document("/Users/${firebaseCurrentUserId}")
 
         Log.d("PARAMETERCHECKING", doctor!!.Name)
         Log.d("PARAMETERCHECKING", doctor!!.Id)

@@ -51,14 +51,17 @@ class UpcomingAppointmentsAdapter:RecyclerView.Adapter<UpcomingAppointmentsAdapt
         holder.binding.tvAppointmentStatus.text = "Status - ${userAppointment.status}"
         holder.binding.tvAppointmentConsultText.text = userAppointment.typeOfConsultation
 
-        val timeStampDate = userAppointment.dateTime.toDate().date
+        val timeStampDate = userAppointment.dateTime.toDate()
         val simpleDateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
         val formattedDate = simpleDateFormat.format(timeStampDate)
 
         val timeStampTime = userAppointment.dateTime.toDate().time
         val simpleDateFormatTime = SimpleDateFormat("h a", Locale.getDefault())
         val formattedTime = simpleDateFormatTime.format(timeStampTime)
-        holder.binding.tvAppointmentDate.text = formattedTime.toString()
+
+        holder.binding.tvAppointmentDate.text = formattedDate.toString()
+        holder.binding.tvAppointmentTime.text = formattedTime.toString()
+
     }
 
     fun setData(newList:List<DetailedUserAppointment>){
