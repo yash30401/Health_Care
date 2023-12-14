@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -20,19 +21,29 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.healthcare.yash.preeti.R
+import com.healthcare.yash.preeti.adapters.UpcomingAppointmentsAdapter
 import com.healthcare.yash.preeti.databinding.FragmentMainBinding
+import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants
+import com.healthcare.yash.preeti.other.Constants.FETCHAPPOINTMENTS
 import com.healthcare.yash.preeti.other.Constants.HEADERLAYOUTTAG
 import com.healthcare.yash.preeti.other.Constants.MAINFRAGMENTTAG
+import com.healthcare.yash.preeti.viewmodels.AppointmentViewModel
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -46,6 +57,8 @@ class MainFragment : Fragment() {
     private lateinit var navigationView: NavigationView
 
     private val viewModel by viewModels<AuthViewModel>()
+    private val appointmentViewModel by viewModels<AppointmentViewModel>()
+    lateinit var upcomingAppointmentsAdapter: UpcomingAppointmentsAdapter
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
@@ -124,6 +137,48 @@ class MainFragment : Fragment() {
 
         binding.btnConsult.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_consultDoctor)
+        }
+
+        setupUpcomingAppointmentsRecylerView()
+    }
+
+    private fun setupUpcomingAppointmentsRecylerView() {
+        upcomingAppointmentsAdapter = UpcomingAppointmentsAdapter()
+        binding.rvUpcomingAppointments.apply {
+            adapter = upcomingAppointmentsAdapter
+            layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        }
+        fetchUpcomingAppointments()
+    }
+
+    private fun fetchUpcomingAppointments() {
+        lifecycleScope.launch {
+            appointmentViewModel.upcomingAppointments.collect {
+                when (it) {
+                    is NetworkResult.Error -> {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Problem in fetching Upcoming Appointments",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            Log.d(FETCHAPPOINTMENTS, "Error:- "+it.message.toString())
+                        }
+                    }
+
+                    is NetworkResult.Loading -> {
+                        Log.d(FETCHAPPOINTMENTS, "Loading:- "+it.message.toString())
+                    }
+
+                    is NetworkResult.Success -> withContext(Dispatchers.Main) {
+                        upcomingAppointmentsAdapter.setData(it.data?.toList()!!)
+                        Log.d(FETCHAPPOINTMENTS, "Success")
+                    }
+
+                    else -> {}
+                }
+            }
         }
     }
 

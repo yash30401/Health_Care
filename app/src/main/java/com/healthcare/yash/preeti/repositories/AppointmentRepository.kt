@@ -50,41 +50,50 @@ class AppointmentRepository @Inject constructor(
 
     }
 
-    suspend fun getAllUpcomingAppointments():Flow<NetworkResult<MutableList<DetailedUserAppointment>>>{
+    suspend fun getAllUpcomingAppointments(): Flow<NetworkResult<out MutableList<DetailedUserAppointment>>> {
         return flow {
-            val appointmentCollectionRef =firestore.collection("Users").document(firebaseAuth.currentUser?.uid.toString())
-                .collection("Appointments")
+            val appointmentCollectionRef =
+                firestore.collection("Users").document(firebaseAuth.currentUser?.uid.toString())
+                    .collection("Appointments")
 
-            val querySnapshot =appointmentCollectionRef.get().await()
-            val listOfAppointments = mutableListOf<DetailedUserAppointment>()
+            try {
+                val querySnapshot = appointmentCollectionRef.get().await()
+                val listOfAppointments = mutableListOf<DetailedUserAppointment>()
 
-            for(document in querySnapshot){
-                if(document.exists()){
-                    val status = document.getString("status") ?: ""
-                    val typeOfConsultation = document.getString("typeOfConsultation") ?: ""
-                    val dateTime = document.getTimestamp("dateTime")!!
-                    val doctorsReference = document.getDocumentReference("doctorsReference").toString() ?: ""
+                for (document in querySnapshot) {
+                    if (document.exists()) {
+                        val status = document.getString("status") ?: ""
+                        val typeOfConsultation = document.getString("typeOfConsultation") ?: ""
+                        val dateTime = document.getTimestamp("dateTime")!!
+                        val doctorsReference =
+                            document.getDocumentReference("doctorsReference")
 
-                    val docRef= firestore.document(doctorsReference)
 
-                    val docRefQuerySnapshot = docRef.get().await()
-                    if(docRefQuerySnapshot.exists()){
-                        val detailedUserAppointment = DetailedUserAppointment(
-                            profileImage = docRefQuerySnapshot.getString("Profile_Pic") ?: "",
-                            name = docRefQuerySnapshot.getString("Name") ?: "",
-                            specialization = docRefQuerySnapshot.getString("Specialization") ?: "",
-                            status,
-                            typeOfConsultation,
-                            dateTime
-                        )
+                        val docRefQuerySnapshot = doctorsReference!!.get().await()
+                        if (docRefQuerySnapshot.exists()) {
+                            val detailedUserAppointment = DetailedUserAppointment(
+                                profileImage = docRefQuerySnapshot.getString("Profile_Pic") ?: "",
+                                name = docRefQuerySnapshot.getString("Name") ?: "",
+                                specialization = docRefQuerySnapshot.getString("Specialization") ?: "",
+                                status,
+                                typeOfConsultation,
+                                dateTime
+                            )
 
-                        listOfAppointments.add(detailedUserAppointment)
+                            listOfAppointments.add(detailedUserAppointment)
+                        }
                     }
                 }
+                // Ensure that the loading state emits a non-null value
+                emit(NetworkResult.Success(listOfAppointments))
+            } catch (e: Exception) {
+                // Ensure that the loading state emits a non-null value
+                emit(NetworkResult.Error(e.message.toString(), null))
             }
-            emit(NetworkResult.Success(listOfAppointments))
         }.catch {
-            NetworkResult.Error(it.message.toString(),null)
+            // Ensure that the loading state emits a non-null value
+            emit(NetworkResult.Error(it.message.toString(), null))
         }.flowOn(Dispatchers.IO)
     }
+
 }

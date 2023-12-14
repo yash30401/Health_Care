@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.Timestamp
+import com.google.firebase.ktx.Firebase
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.models.Doctor
 import com.healthcare.yash.preeti.models.DoctorAppointment

@@ -13,6 +13,8 @@ import com.healthcare.yash.preeti.databinding.AppointmentItemLayoutBinding
 import com.healthcare.yash.preeti.models.DetailedUserAppointment
 import com.healthcare.yash.preeti.models.UserAppointment
 import com.healthcare.yash.preeti.utils.ConsultDoctorDiffUtil
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class UpcomingAppointmentsAdapter:RecyclerView.Adapter<UpcomingAppointmentsAdapter.UpcomingAppointmentsViewHolder>() {
 
@@ -43,7 +45,20 @@ class UpcomingAppointmentsAdapter:RecyclerView.Adapter<UpcomingAppointmentsAdapt
             DiskCacheStrategy.DATA
         ).into(holder.binding.ivDoctorImageInAppointment)
 
-        holder.binding.tvDoctorNameInAppointment = us
+        holder.binding.tvDoctorNameInAppointment.text = userAppointment.name
+        holder.binding.tvDoctorSpecializationInAppointment.text = userAppointment.specialization
+
+        holder.binding.tvAppointmentStatus.text = "Status - ${userAppointment.status}"
+        holder.binding.tvAppointmentConsultText.text = userAppointment.typeOfConsultation
+
+        val timeStampDate = userAppointment.dateTime.toDate().date
+        val simpleDateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
+        val formattedDate = simpleDateFormat.format(timeStampDate)
+
+        val timeStampTime = userAppointment.dateTime.toDate().time
+        val simpleDateFormatTime = SimpleDateFormat("h a", Locale.getDefault())
+        val formattedTime = simpleDateFormatTime.format(timeStampTime)
+        holder.binding.tvAppointmentDate.text = formattedTime.toString()
     }
 
     fun setData(newList:List<DetailedUserAppointment>){
