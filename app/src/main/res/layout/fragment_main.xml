@@ -128,13 +128,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Upcoming Appointments"
-                android:textColor="#333333"
                 android:fontFamily="@font/poppins_semibold"
                 android:includeFontPadding="false"
+                android:text="Upcoming Appointments"
+                android:textColor="#333333"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@+id/materialCardView5"
                 app:layout_constraintTop_toBottomOf="@+id/materialCardView5" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvUpcomingAppointments"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="@+id/materialCardView5"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/textView10"
+                app:layout_constraintTop_toBottomOf="@+id/textView10"
+                tools:listitem="@layout/appointment_item_layout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
