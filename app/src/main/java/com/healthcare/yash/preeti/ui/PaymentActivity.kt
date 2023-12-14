@@ -178,6 +178,7 @@ class PaymentActivity : AppCompatActivity(), PaymentResultWithDataListener, Exte
                                 Toast.LENGTH_SHORT
                             )
                                 .show()
+                            onBackPressed()
                         }
                         Log.d(
                             Constants.APPOINTMENTADDED,
@@ -205,6 +206,7 @@ class PaymentActivity : AppCompatActivity(), PaymentResultWithDataListener, Exte
                                 Toast.LENGTH_SHORT
                             )
                                 .show()
+                            onBackPressed()
                         }
                     }
 
