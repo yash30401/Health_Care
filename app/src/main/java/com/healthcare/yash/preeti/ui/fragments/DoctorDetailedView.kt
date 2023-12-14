@@ -68,11 +68,6 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
     private lateinit var slotAdapter: AppointmentTimeAdapter
 
 
-//    var storeConsultText: String = ""
-//    var storeTime: Long = 0L
-
-//    var doctor:Doctor?=null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("LIFECYCLERFRAG", "onCreate")
@@ -102,15 +97,8 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
 
         // Set click listener for booking appointment
         binding.btnBookAppointment.setOnClickListener {
-//            val fragmentManager = childFragmentManager  // Use childFragmentManager
-//            val dialogFragment = AppointmentDialogFragment(
-//                slotViewModel,
-//                args,
-//                firebaseAuth.currentUser?.email.toString(),
-//                firebaseAuth.currentUser?.phoneNumber.toString()
-//            )
-
             val dialog = Dialog(requireContext())
+
             dialog.setContentView(R.layout.appointment_dialog_layout)
             val btnBookVideoConsult = dialog.findViewById<Button>(R.id.btnBookVideoConsult)
             val btnBookClinicVisit = dialog.findViewById<Button>(R.id.btnBookClinicVisit)
@@ -147,13 +135,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
                         ).show()
                     } else {
                         dialogTiming.dismiss()
-//                        makePayment(
-//                            args?.doctor?.video_consult,
-//                            firebaseAuth.currentUser?.email.toString(),
-//                            firebaseAuth.currentUser?.phoneNumber.toString(),
-//                            slotAdapter.asynListDiffer.currentList[slotAdapter.lastPosition],
-//                            "Video Consult"
-//                        )
+
                         val intent = Intent(requireContext(),PaymentActivity::class.java)
                         intent.putExtra("DOCTOR",args.doctor)
                         intent.putExtra("SLOTTIME",slotAdapter.asynListDiffer.currentList[slotAdapter.lastPosition])
@@ -163,8 +145,6 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
                         intent.putExtra("PHONENUMBER",firebaseAuth.currentUser?.phoneNumber.toString())
                         startActivity(intent)
                     }
-//                    storeTime = slotAdapter.asynListDiffer.currentList[slotAdapter.lastPosition]
-//                    storeConsultText = "Video Consult"
                 }
             }
 
@@ -186,13 +166,7 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
                         ).show()
                     } else {
                         dialogTiming.dismiss()
-//                        makePayment(
-//                            args?.doctor?.clinic_visit,
-//                            firebaseAuth.currentUser?.email.toString(),
-//                            firebaseAuth.currentUser?.phoneNumber.toString(),
-//                            slotAdapter.asynListDiffer.currentList[slotAdapter.lastPosition],
-//                            "Clinic Visit"
-//                        )
+
                         val intent = Intent(requireContext(),PaymentActivity::class.java)
                         intent.putExtra("DOCTOR",args.doctor)
                         intent.putExtra("SLOTTIME",slotAdapter.asynListDiffer.currentList[slotAdapter.lastPosition])
@@ -203,17 +177,14 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
                         startActivity(intent)
 
                     }
-//                    storeTime = slotAdapter.asynListDiffer.currentList[slotAdapter.lastPosition]
-//                    storeConsultText = "Clinic Visit"
                 }
             }
 
 
 
-//            dialogFragment.show(fragmentManager, "Appointment Dialog")
+
         }
 
-//        args?.doctor?.let { Log.d("ARGUMENTSNULLLCHECK", it.Name) }
 
         // Set up header view
         setupHeaderView()
@@ -341,103 +312,6 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
     }
 
 
-//    fun paymentStatus(paymentStatus: String) {
-//        Log.d("PAYMENTRESULT", "Doctor View Data:- ${paymentStatus}")
-//
-//        if (paymentStatus == "Success") {
-//            try {
-//                    addAppointmentToTheFirebase()
-//            } catch (e: Exception) {
-//                Log.d("PAYMENTERROR", "Calling Func:- " + e.message.toString())
-//            }
-//        } else {
-//            Toast.makeText(requireContext(), "Payment Error Occured", Toast.LENGTH_SHORT).show()
-//        }
-//    }
-
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        if (outState != null) {
-//            val data = outState.getBundle("bundle") ?: Bundle()
-//            data.putSerializable("DOCTOR", doctor)
-//            outState.putBundle("bundle", data)
-//            Log.d("LIFECYCLERFRAG", "onSaveInstanceState")
-//        }
-//    }
-
-//    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-//        super.onViewStateRestored(savedInstanceState)
-//        savedInstanceState?.let {
-//            val bundle = it.getBundle("bundle")
-//            bundle?.let {
-//                doctor = it.getSerializable("DOCTOR") as Doctor
-//            }
-//        }
-//        Log.d("LIFECYCLERFRAG", "onViewStateRestored")
-//    }
-
-//    fun addAppointmentToTheFirebase() {
-//        Log.d("LIFECYCLERFRAG","Now in addApp")
-//        Log.d("PAYMENTSTATUS", "makepayment")
-////
-////        Log.d("PARAMETERCHECKING", doctorName)
-////        Log.d("PARAMETERCHECKING", storeConsultText)
-//
-//      Log.d("PARAMETERCHECKING", doctor!!.Name)
-//         Log.d("PARAMETERCHECKING", doctor!!.Id)
-//
-//        val timestampObject = Timestamp(Date(storeTime))
-//        val doctorsRef = "/Doctors/${doctor.Id}"
-//        val userRef = "/Users/${firebaseAuth.currentUser?.uid.toString()}"
-//
-//        val userAppointment =
-//            UserAppointment("Scheduled", storeConsultText, timestampObject, doctorsRef)
-//        val doctorAppointment =
-//            DoctorAppointment("Scheduled", storeConsultText, timestampObject, userRef)
-//        args?.doctor?.let {
-//            appointmentViewModel.addAppointmentToTheFirebase(
-//                userAppointment,
-//                it.Id,
-//                doctorAppointment
-//            )
-//        }
-//
-//
-//
-//        lifecycleScope.launch(Dispatchers.IO) {
-//
-//            appointmentViewModel.addAppointment.collect {
-//                when (it) {
-//                    is NetworkResult.Error -> {
-//                        Toast.makeText(requireContext(), it.message.toString(), Toast.LENGTH_SHORT)
-//                            .show()
-//                        Log.d(
-//                            APPOINTMENTADDED,
-//                            "Error Block:- ${it?.message.toString()}"
-//                        )
-//                    }
-//
-//                    is NetworkResult.Loading -> {
-//                        Log.d(
-//                            APPOINTMENTADDED,
-//                            "Loading Block:- ${it?.message.toString()}"
-//                        )
-//                    }
-//
-//                    is NetworkResult.Success -> {
-//                        Log.d(
-//                            APPOINTMENTADDED,
-//                            "Success Block:- ${it?.message.toString()}"
-//                        )
-//                        Toast.makeText(requireContext(), "Appointment Booked", Toast.LENGTH_SHORT)
-//                            .show()
-//                    }
-//
-//                    else -> {}
-//                }
-//            }
-//        }
-//    }
 
     // GoogleMap's onMapReady callback
     override fun onMapReady(googleMap: GoogleMap) {
@@ -448,33 +322,6 @@ class DoctorDetailedView : Fragment(R.layout.fragment_doctor_detailed_view), OnM
         super.onDestroy()
         Log.d("LIFECYCLERFRAG","OnDestroy")
         _binding = null
-    }
-
-    override fun onResume() {
-        super.onResume()
-//        doctorName = args.doctor.Name
-//        doctorId = args.doctor.Id
-        Log.d("LIFECYCLERFRAG", "RESUME:- " + (args?.doctor?.Name ?: ""))
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Log.d("LIFECYCLERFRAG", "onAttach")
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        Log.d("LIFECYCLERFRAG", "onAttach")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d("LIFECYCLERFRAG", "onAttach")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("LIFECYCLERFRAG", "onAttach")
     }
 
 

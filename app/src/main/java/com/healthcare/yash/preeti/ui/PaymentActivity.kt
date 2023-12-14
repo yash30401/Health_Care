@@ -100,18 +100,6 @@ class PaymentActivity : AppCompatActivity(), PaymentResultWithDataListener, Exte
             options.put("prefill", prefill)
             co.open(this@PaymentActivity, options)
 
-//                val paymentIntent = Intent(requireContext(), PaymentActivity::class.java)
-//
-//                // Start PaymentActivity with startActivityForResult
-//                startPaymentForResult.launch(paymentIntent)
-
-//                val intent = Intent(requireContext(),PaymentActivity::class.java)
-//                intent.putExtra("DOCTOR",args.doctor)
-//                intent.putExtra("SLOTTIME",slotTime)
-//                intent.putExtra("CONSULTTEXT",consultText)
-//                intent.putExtra("FIREBASEUSER",firebaseAuth.currentUser?.uid.toString())
-//
-////                startActivity(intent)
 
 
         } catch (e: Exception) {

@@ -133,31 +133,11 @@ class MainActivity : AppCompatActivity(){
             .show()
     }
 
-    // Implementation of PaymentResultWithDataListener
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
 
-//    override fun onPaymentSuccess(p0: String?, p1: PaymentData?) {
-//        Log.d("PAYMENTRESULT","SUCCESS:- ${p0}")
-//        val frag = DoctorDetailedView()
-//        try {
-//            frag.paymentStatus("Success")
-//        }catch (e:Exception){
-//            Log.d("PAYMENTERROR","SUCCESS BLOCK:- "+e.message.toString())
-//        }
-//
-//    }
-//
-//    override fun onPaymentError(p0: Int, p1: String?, p2: PaymentData?) {
-//        Log.d("PAYMENTRESULT","ERROR:- ${p0}")
-//        val frag = DoctorDetailedView()
-//        frag.paymentStatus("Error")
-//    }
-//
-//    override fun onExternalWalletSelected(p0: String?, p1: PaymentData?) {
-//    }
 
 }
