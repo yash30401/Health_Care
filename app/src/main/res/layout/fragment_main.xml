@@ -51,6 +51,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvHello" />
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/materialCardView5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -121,6 +122,19 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Upcoming Appointments"
+                android:textColor="#333333"
+                android:fontFamily="@font/poppins_semibold"
+                android:includeFontPadding="false"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/materialCardView5"
+                app:layout_constraintTop_toBottomOf="@+id/materialCardView5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
