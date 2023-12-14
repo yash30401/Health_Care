@@ -48,4 +48,31 @@ class AppointmentRepository @Inject constructor(
         }.flowOn(Dispatchers.IO)
 
     }
+
+    suspend fun getAllUpcomingAppointments():Flow<NetworkResult<MutableList<UserAppointment>>>{
+        return flow {
+            val appointmentCollectionRef =firestore.collection("Users").document(firebaseAuth.currentUser?.uid.toString())
+                .collection("Appointments")
+
+            val querySnapshot =appointmentCollectionRef.get().await()
+            val listOfAppointments = mutableListOf<UserAppointment>()
+
+            for(document in querySnapshot){
+                if(document.exists()){
+                    val userAppointment = UserAppointment(
+                        status = document.getString("status") ?: "",
+                        typeOfConsultation = document.getString("typeOfConsultation") ?: "",
+                        dateTime = document.getTimestamp("dateTime")!!,
+                        doctorsReference = document.getDocumentReference("usersReference").toString() ?: ""
+                    )
+
+                    listOfAppointments.add(userAppointment)
+
+                }
+            }
+            emit(NetworkResult.Success(listOfAppointments))
+        }.catch {
+            NetworkResult.Error(it.message.toString(),null)
+        }.flowOn(Dispatchers.IO)
+    }
 }

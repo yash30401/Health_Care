@@ -23,6 +23,8 @@ class AppointmentViewModel @Inject constructor(private val appointmentRepository
     private val _addAppointment = MutableStateFlow<NetworkResult<String>?>(null)
     val addAppointment: StateFlow<NetworkResult<String>?> = _addAppointment
 
+
+
     fun addAppointmentToTheFirebase(
         userAppointment: UserAppointment,
         doctorUid:String,
