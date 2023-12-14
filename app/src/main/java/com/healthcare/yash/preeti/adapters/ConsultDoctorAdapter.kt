@@ -20,7 +20,6 @@ import com.healthcare.yash.preeti.utils.averageRating
 class ConsultDoctorAdapter(val doctorClickListner: OnConsultDoctorClickListner) :
     RecyclerView.Adapter<ConsultDoctorAdapter.ConsultDoctorViewHolder>() {
 
-    private val doctorsList = emptyList<Doctor>()
     private val asyncListDiffer = AsyncListDiffer<Doctor>(this, ConsultDoctorDiffUtil())
 
     inner class ConsultDoctorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

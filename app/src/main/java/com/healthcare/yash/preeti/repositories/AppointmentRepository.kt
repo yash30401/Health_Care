@@ -3,6 +3,7 @@ package com.healthcare.yash.preeti.repositories
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.healthcare.yash.preeti.models.DetailedUserAppointment
 import com.healthcare.yash.preeti.models.Doctor
 import com.healthcare.yash.preeti.models.DoctorAppointment
 import com.healthcare.yash.preeti.models.UserAppointment
@@ -49,25 +50,36 @@ class AppointmentRepository @Inject constructor(
 
     }
 
-    suspend fun getAllUpcomingAppointments():Flow<NetworkResult<MutableList<UserAppointment>>>{
+    suspend fun getAllUpcomingAppointments():Flow<NetworkResult<MutableList<DetailedUserAppointment>>>{
         return flow {
             val appointmentCollectionRef =firestore.collection("Users").document(firebaseAuth.currentUser?.uid.toString())
                 .collection("Appointments")
 
             val querySnapshot =appointmentCollectionRef.get().await()
-            val listOfAppointments = mutableListOf<UserAppointment>()
+            val listOfAppointments = mutableListOf<DetailedUserAppointment>()
 
             for(document in querySnapshot){
                 if(document.exists()){
-                    val userAppointment = UserAppointment(
-                        status = document.getString("status") ?: "",
-                        typeOfConsultation = document.getString("typeOfConsultation") ?: "",
-                        dateTime = document.getTimestamp("dateTime")!!,
-                        doctorsReference = document.getDocumentReference("usersReference").toString() ?: ""
-                    )
+                    val status = document.getString("status") ?: ""
+                    val typeOfConsultation = document.getString("typeOfConsultation") ?: ""
+                    val dateTime = document.getTimestamp("dateTime")!!
+                    val doctorsReference = document.getDocumentReference("doctorsReference").toString() ?: ""
 
-                    listOfAppointments.add(userAppointment)
+                    val docRef= firestore.document(doctorsReference)
 
+                    val docRefQuerySnapshot = docRef.get().await()
+                    if(docRefQuerySnapshot.exists()){
+                        val detailedUserAppointment = DetailedUserAppointment(
+                            profileImage = docRefQuerySnapshot.getString("Profile_Pic") ?: "",
+                            name = docRefQuerySnapshot.getString("Name") ?: "",
+                            specialization = docRefQuerySnapshot.getString("Specialization") ?: "",
+                            status,
+                            typeOfConsultation,
+                            dateTime
+                        )
+
+                        listOfAppointments.add(detailedUserAppointment)
+                    }
                 }
             }
             emit(NetworkResult.Success(listOfAppointments))
