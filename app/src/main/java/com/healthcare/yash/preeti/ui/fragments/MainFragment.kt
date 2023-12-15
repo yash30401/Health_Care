@@ -163,15 +163,20 @@ class MainFragment : Fragment() {
                                 "Problem in fetching Upcoming Appointments",
                                 Toast.LENGTH_LONG
                             ).show()
+                            binding.pbAppointment.visibility = View.GONE
                             Log.d(FETCHAPPOINTMENTS, "Error:- "+it.message.toString())
                         }
                     }
 
                     is NetworkResult.Loading -> {
+                        withContext(Dispatchers.Main){
+                            binding.pbAppointment.visibility = View.VISIBLE
+                        }
                         Log.d(FETCHAPPOINTMENTS, "Loading:- "+it.message.toString())
                     }
 
                     is NetworkResult.Success -> withContext(Dispatchers.Main) {
+                        binding.pbAppointment.visibility = View.GONE
                         upcomingAppointmentsAdapter.setData(it.data?.toList()!!)
                         Log.d(FETCHAPPOINTMENTS, "Success")
                     }

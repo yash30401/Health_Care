@@ -149,6 +149,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView10"
                 tools:listitem="@layout/appointment_item_layout" />
 
+            <ProgressBar
+                android:id="@+id/pbAppointment"
+                android:visibility="gone"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/rvUpcomingAppointments"
+                app:layout_constraintEnd_toEndOf="@+id/rvUpcomingAppointments"
+                app:layout_constraintStart_toStartOf="@+id/rvUpcomingAppointments"
+                app:layout_constraintTop_toTopOf="@+id/rvUpcomingAppointments" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
