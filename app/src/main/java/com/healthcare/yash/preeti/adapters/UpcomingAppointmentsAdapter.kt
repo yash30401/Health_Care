@@ -1,5 +1,6 @@
 package com.healthcare.yash.preeti.adapters
 
+import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,6 +51,10 @@ class UpcomingAppointmentsAdapter:RecyclerView.Adapter<UpcomingAppointmentsAdapt
 
         holder.binding.tvAppointmentStatus.text = "Status - ${userAppointment.status}"
         holder.binding.tvAppointmentConsultText.text = userAppointment.typeOfConsultation
+
+        if(userAppointment.typeOfConsultation == "Clinic Visit"){
+            holder.binding.cvVideoCall.visibility = View.GONE
+        }
 
         val timeStampDate = userAppointment.dateTime.toDate()
         val simpleDateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())

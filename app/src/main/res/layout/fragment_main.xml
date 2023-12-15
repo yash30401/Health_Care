@@ -151,14 +151,14 @@
 
             <ProgressBar
                 android:id="@+id/pbAppointment"
-                android:visibility="gone"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="wrap_content"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/rvUpcomingAppointments"
-                app:layout_constraintEnd_toEndOf="@+id/rvUpcomingAppointments"
-                app:layout_constraintStart_toStartOf="@+id/rvUpcomingAppointments"
-                app:layout_constraintTop_toTopOf="@+id/rvUpcomingAppointments" />
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="60dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

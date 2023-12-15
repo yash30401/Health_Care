@@ -156,6 +156,7 @@
 
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvVideoCall"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
                 android:layout_marginTop="10dp"
