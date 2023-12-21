@@ -122,6 +122,12 @@ dependencies {
     // Payment Gateway
     implementation 'com.razorpay:checkout:1.6.33'
 
+    //WebRTC
+    implementation 'com.mesibo.api:webrtc:1.0.5'
+
+    //Easy Permissions
+    implementation 'com.guolindev.permissionx:permissionx:1.6.1'
+
 }
 
 kapt {
