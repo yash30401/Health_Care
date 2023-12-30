@@ -1,12 +1,9 @@
 package com.healthcare.yash.preeti.ui.fragments
 
 
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -27,13 +24,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.adapters.UpcomingAppointmentsAdapter
 import com.healthcare.yash.preeti.databinding.FragmentMainBinding
+import com.healthcare.yash.preeti.models.DetailedUserAppointment
 import com.healthcare.yash.preeti.networking.NetworkResult
-import com.healthcare.yash.preeti.other.Constants
+import com.healthcare.yash.preeti.other.ChatClickListner
 import com.healthcare.yash.preeti.other.Constants.FETCHAPPOINTMENTS
 import com.healthcare.yash.preeti.other.Constants.HEADERLAYOUTTAG
 import com.healthcare.yash.preeti.other.Constants.MAINFRAGMENTTAG
@@ -41,14 +38,13 @@ import com.healthcare.yash.preeti.viewmodels.AppointmentViewModel
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainFragment : Fragment() {
+class MainFragment : Fragment(),ChatClickListner {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
@@ -143,7 +139,7 @@ class MainFragment : Fragment() {
     }
 
     private fun setupUpcomingAppointmentsRecylerView() {
-        upcomingAppointmentsAdapter = UpcomingAppointmentsAdapter()
+        upcomingAppointmentsAdapter = UpcomingAppointmentsAdapter(this)
         binding.rvUpcomingAppointments.apply {
             adapter = upcomingAppointmentsAdapter
             layoutManager =
@@ -248,5 +244,10 @@ class MainFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onClick(userAppointment: DetailedUserAppointment) {
+        val action = MainFragmentDirections.actionMainFragmentToChattingFragment(userAppointment)
+        findNavController().navigate(action)
     }
 }

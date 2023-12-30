@@ -1,6 +1,5 @@
 package com.healthcare.yash.preeti.adapters
 
-import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +11,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.AppointmentItemLayoutBinding
 import com.healthcare.yash.preeti.models.DetailedUserAppointment
-import com.healthcare.yash.preeti.models.UserAppointment
+import com.healthcare.yash.preeti.other.ChatClickListner
 import com.healthcare.yash.preeti.utils.ConsultDoctorDiffUtil
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class UpcomingAppointmentsAdapter:RecyclerView.Adapter<UpcomingAppointmentsAdapter.UpcomingAppointmentsViewHolder>() {
+class UpcomingAppointmentsAdapter(private val chatClickListner: ChatClickListner):RecyclerView.Adapter<UpcomingAppointmentsAdapter.UpcomingAppointmentsViewHolder>() {
 
     private val asyncListDiffer = AsyncListDiffer<DetailedUserAppointment>(this,ConsultDoctorDiffUtil())
 
@@ -57,20 +56,24 @@ class UpcomingAppointmentsAdapter:RecyclerView.Adapter<UpcomingAppointmentsAdapt
             holder.binding.cvChat.visibility = View.VISIBLE
         }
 
-        val timeStampDate = userAppointment.dateTime.toDate()
+        val timeStampDate = userAppointment.dateTime?.toDate()
         val simpleDateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
         val formattedDate = simpleDateFormat.format(timeStampDate)
 
-        val timeStampTime = userAppointment.dateTime.toDate().time
+        val timeStampTime = userAppointment.dateTime?.toDate()?.time
         val simpleDateFormatTime = SimpleDateFormat("h a", Locale.getDefault())
         val formattedTime = simpleDateFormatTime.format(timeStampTime)
 
         holder.binding.tvAppointmentDate.text = formattedDate.toString()
         holder.binding.tvAppointmentTime.text = formattedTime.toString()
 
+        holder.binding.cvChat.setOnClickListener {
+            chatClickListner.onClick(userAppointment)
+        }
     }
 
     fun setData(newList:List<DetailedUserAppointment>){
         asyncListDiffer.submitList(newList)
     }
 }
+

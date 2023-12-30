@@ -4,7 +4,6 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.healthcare.yash.preeti.models.DetailedUserAppointment
-import com.healthcare.yash.preeti.models.Doctor
 import com.healthcare.yash.preeti.models.DoctorAppointment
 import com.healthcare.yash.preeti.models.UserAppointment
 import com.healthcare.yash.preeti.networking.NetworkResult

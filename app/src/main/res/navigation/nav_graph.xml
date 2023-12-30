@@ -61,6 +61,9 @@
         <action
             android:id="@+id/action_mainFragment_to_consultDoctor"
             app:destination="@id/consultDoctor" />
+        <action
+            android:id="@+id/action_mainFragment_to_chattingFragment"
+            app:destination="@id/chattingFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
@@ -107,4 +110,13 @@
             android:id="@+id/action_appointmentTimingDialogFragment_to_doctorDetailedView"
             app:destination="@id/doctorDetailedView" />
     </dialog>
+    <fragment
+        android:id="@+id/chattingFragment"
+        android:name="com.healthcare.yash.preeti.ui.fragments.ChattingFragment"
+        android:label="fragment_chatting"
+        tools:layout="@layout/fragment_chatting" >
+        <argument
+            android:name="detailedUserAppointment"
+            app:argType="com.healthcare.yash.preeti.models.DetailedUserAppointment" />
+    </fragment>
 </navigation>
