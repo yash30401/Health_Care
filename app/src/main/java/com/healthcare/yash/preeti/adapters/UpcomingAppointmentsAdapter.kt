@@ -52,8 +52,9 @@ class UpcomingAppointmentsAdapter:RecyclerView.Adapter<UpcomingAppointmentsAdapt
         holder.binding.tvAppointmentStatus.text = "Status - ${userAppointment.status}"
         holder.binding.tvAppointmentConsultText.text = userAppointment.typeOfConsultation
 
-        if(userAppointment.typeOfConsultation == "Clinic Visit"){
+        if(userAppointment.typeOfConsultation == "Clinic Visit") {
             holder.binding.cvVideoCall.visibility = View.GONE
+            holder.binding.cvChat.visibility = View.VISIBLE
         }
 
         val timeStampDate = userAppointment.dateTime.toDate()
