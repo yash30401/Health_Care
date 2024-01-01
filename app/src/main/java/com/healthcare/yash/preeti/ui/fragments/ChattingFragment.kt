@@ -3,27 +3,21 @@ package com.healthcare.yash.preeti.ui.fragments
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import android.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavArgs
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.google.android.material.appbar.MaterialToolbar
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentChattingBinding
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.CHATROOMTESTING
 import com.healthcare.yash.preeti.viewmodels.ChatViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -60,7 +54,17 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
        }
 
         getOrCreateChatRoom()
+
+        binding.ibSend.setOnClickListener {
+            val message = binding.tilSendMessage.editText?.text.toString()
+            if(message.isEmpty()){
+                Toast.makeText(requireContext(), "Please Write Message!", Toast.LENGTH_SHORT).show()
+            }else{
+                sendMessageToTheUser(message)
+            }
+        }
     }
+
     private fun getOrCreateChatRoom() {
         lifecycleScope.launch {
             chatViewModel.getOrCreateChatRoom(args.detailedUserAppointment.doctorId)
@@ -80,6 +84,11 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
             }
         }
     }
+
+    private fun sendMessageToTheUser(message: String) {
+
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
