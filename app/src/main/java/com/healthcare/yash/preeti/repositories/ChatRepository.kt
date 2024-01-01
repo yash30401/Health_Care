@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.healthcare.yash.preeti.models.ChatMessage
 import com.healthcare.yash.preeti.models.ChatRoom
 import com.healthcare.yash.preeti.networking.NetworkResult
@@ -80,8 +81,8 @@ class ChatRepository @Inject constructor(
         }
     }
 
-    suspend fun sendMessageToTheUser(message: String): Flow<NetworkResult<String>> {
-        return flow<NetworkResult<String>> {
+    suspend fun sendMessageToTheUser(message: String): Flow<NetworkResult<ChatMessage>> {
+        return flow<NetworkResult<ChatMessage>> {
             try {
                 chatRoom.lastMessageTimestamp = Timestamp.now()
                 chatRoom.lastMessageSenderId = firebaseAuth.currentUser?.uid.toString()
@@ -97,12 +98,41 @@ class ChatRepository @Inject constructor(
 
                 chatRoomMessageReference.add(chatMessage).await()
 
-                emit(NetworkResult.Success("Message Send"))
+                emit(NetworkResult.Success(chatMessage))
             } catch (e: Exception) {
                 emit(NetworkResult.Error(e.message.toString()))
             }
         }.catch {
             NetworkResult.Error(it.message.toString(), null)
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getChatMessages():Flow<NetworkResult<List<ChatMessage>>>{
+        return flow<NetworkResult<List<ChatMessage>>> {
+            try {
+
+                val chatRoomMessageReference =
+                    firestore.collection("ChatRoom").document(chatRoomId).collection("Chats")
+                        .orderBy("timestamp",Query.Direction.DESCENDING).get().await()
+                    val listOfMessages = mutableListOf<ChatMessage>()
+
+                for(document in chatRoomMessageReference){
+                    if(document.exists()){
+                        val chatMessage = ChatMessage(
+                            message = document.getString("message") ?: "",
+                            senderId = document.getString("senderId") ?: "",
+                            timestamp = document.getTimestamp("timestamp")!!
+                        )
+                        listOfMessages.add(chatMessage)
+                    }
+                }
+                emit(NetworkResult.Success(listOfMessages))
+
+            }catch (e:Exception){
+                emit(NetworkResult.Error(e.message.toString()))
+            }
+        }.catch {
+            NetworkResult.Error(it.message.toString(),null)
         }.flowOn(Dispatchers.IO)
     }
 }

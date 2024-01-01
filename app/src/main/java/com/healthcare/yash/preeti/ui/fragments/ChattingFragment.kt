@@ -11,8 +11,11 @@ import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.healthcare.yash.preeti.R
+import com.healthcare.yash.preeti.adapters.ChatAdapter
 import com.healthcare.yash.preeti.databinding.FragmentChattingBinding
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.CHATMESSAGE
@@ -22,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChattingFragment : Fragment(R.layout.fragment_chatting) {
@@ -33,6 +37,10 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
 
     private val chatViewModel by viewModels<ChatViewModel>()
 
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
+
+    private lateinit var chatAdapter: ChatAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,6 +66,7 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
 
         getOrCreateChatRoom()
 
+        setupChatRecylerView()
         binding.ibSend.setOnClickListener {
             val message = binding.tilSendMessage.editText?.text.toString()
             if(message.isEmpty()){
@@ -104,6 +113,7 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
                     is NetworkResult.Success -> {
                         withContext(Dispatchers.Main) {
                             binding.tilSendMessage.editText?.text?.clear()
+                            chatViewModel.getChatMessages()
                         }
                         Log.d(CHATMESSAGE, "Success Block:- ${it.data.toString()}")
                     }
@@ -114,6 +124,34 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
         }
     }
 
+    private fun setupChatRecylerView() {
+        chatAdapter = ChatAdapter(firebaseAuth.currentUser?.uid.toString())
+        binding.recyclerView.apply {
+            adapter = chatAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+
+        lifecycleScope.launch{
+            chatViewModel.getChatMessages()
+            chatViewModel.chatMessages.collect{
+                when(it){
+                    is NetworkResult.Error -> {
+                        Log.d(CHATMESSAGE, "Error Block:- ${it.message.toString()}")
+                    }
+                    is NetworkResult.Loading -> {
+                        Log.d(CHATMESSAGE, "Loading Block:- ${it.message.toString()}")
+                    }
+                    is NetworkResult.Success -> {
+                        withContext(Dispatchers.Main) {
+                            chatAdapter.setMessage(it.data!!)
+                        }
+                        Log.d(CHATMESSAGE, "Success Block:- ${it.data.toString()}")
+                    }
+                    else -> {}
+                }
+            }
+        }
+    }
 
     override fun onDestroy() {
         super.onDestroy()
