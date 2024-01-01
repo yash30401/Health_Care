@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.healthcare.yash.preeti.models.ChatMessage
 import com.healthcare.yash.preeti.models.ChatRoom
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants
@@ -20,16 +21,14 @@ class ChatRepository @Inject constructor(
     private val firestore: FirebaseFirestore
 ) {
 
+    lateinit var chatRoom: ChatRoom
+    lateinit var chatRoomId:String
     suspend fun getOrCreateChatRoom(doctorId: String): Flow<NetworkResult<ChatRoom>> {
         return flow {
-            val chatRoomId = getChatRoomId(firebaseAuth.currentUser?.uid!!, doctorId)
-
-
+            chatRoomId =  getChatRoomId(firebaseAuth.currentUser?.uid!!, doctorId)
             try {
                 val getChatRoomReference =
                     firestore.collection("ChatRoom").document(chatRoomId).get().await()
-
-                var chatRoom: ChatRoom? = null
 
                 if (!getChatRoomReference.exists()) {
                     chatRoom = ChatRoom(
@@ -79,5 +78,31 @@ class ChatRepository @Inject constructor(
         } else {
             return doctorId + "_" + currentUserId
         }
+    }
+
+    suspend fun sendMessageToTheUser(message: String): Flow<NetworkResult<String>> {
+        return flow<NetworkResult<String>> {
+            try {
+                chatRoom.lastMessageTimestamp = Timestamp.now()
+                chatRoom.lastMessageSenderId = firebaseAuth.currentUser?.uid.toString()
+                firestore.collection("ChatRoom").document(chatRoomId).set(chatRoom).await()
+
+                val chatMessage = ChatMessage(
+                    message, firebaseAuth.currentUser?.uid.toString(),
+                    Timestamp.now()
+                )
+
+                val chatRoomMessageReference =
+                    firestore.collection("ChatRoom").document(chatRoomId).collection("Chats")
+
+                chatRoomMessageReference.add(chatMessage).await()
+
+                emit(NetworkResult.Success("Message Send"))
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(e.message.toString()))
+            }
+        }.catch {
+            NetworkResult.Error(it.message.toString(), null)
+        }.flowOn(Dispatchers.IO)
     }
 }

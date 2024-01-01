@@ -15,10 +15,13 @@ import com.bumptech.glide.Glide
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.FragmentChattingBinding
 import com.healthcare.yash.preeti.networking.NetworkResult
+import com.healthcare.yash.preeti.other.Constants.CHATMESSAGE
 import com.healthcare.yash.preeti.other.Constants.CHATROOMTESTING
 import com.healthcare.yash.preeti.viewmodels.ChatViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class ChattingFragment : Fragment(R.layout.fragment_chatting) {
@@ -86,7 +89,29 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
     }
 
     private fun sendMessageToTheUser(message: String) {
+        lifecycleScope.launch {
+            chatViewModel.sendMessageToTheUser(message)
+            chatViewModel.sendMessage.collect {
+                when (it) {
+                    is NetworkResult.Error -> {
+                        Log.d(CHATMESSAGE, "Error Block:- ${it.message.toString()}")
+                    }
 
+                    is NetworkResult.Loading -> {
+                        Log.d(CHATMESSAGE, "Loading Block:- ${it.message.toString()}")
+                    }
+
+                    is NetworkResult.Success -> {
+                        withContext(Dispatchers.Main) {
+                            binding.tilSendMessage.editText?.text?.clear()
+                        }
+                        Log.d(CHATMESSAGE, "Success Block:- ${it.data.toString()}")
+                    }
+
+                    else -> {}
+                }
+            }
+        }
     }
 
 

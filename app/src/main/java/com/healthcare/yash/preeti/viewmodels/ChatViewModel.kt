@@ -18,6 +18,9 @@ class ChatViewModel @Inject constructor(private val chatRepository: ChatReposito
     private val _getOrCreateChatRoom = MutableStateFlow<NetworkResult<ChatRoom>?>(null)
     val getOrCreateChatRoom:StateFlow<NetworkResult<ChatRoom>?> = _getOrCreateChatRoom
 
+    private val _sendMessage = MutableStateFlow<NetworkResult<String>?>(null)
+    val sendMessage:StateFlow<NetworkResult<String>?> = _sendMessage
+
     fun getOrCreateChatRoom(doctorId:String) = viewModelScope.launch {
         _getOrCreateChatRoom.value = NetworkResult.Loading()
 
@@ -32,6 +35,23 @@ class ChatViewModel @Inject constructor(private val chatRepository: ChatReposito
             }
         }catch (e:Exception){
             _getOrCreateChatRoom.value = NetworkResult.Error(e.message)
+        }
+    }
+
+    fun sendMessageToTheUser(message:String) = viewModelScope.launch {
+        _sendMessage.value = NetworkResult.Loading()
+
+        try {
+            val result = chatRepository.sendMessageToTheUser(message)
+            result.collect{
+                when(it){
+                    is NetworkResult.Error ->  _sendMessage.value = NetworkResult.Error(it.message)
+                    is NetworkResult.Loading -> _sendMessage.value = NetworkResult.Loading()
+                    is NetworkResult.Success -> _sendMessage.value = NetworkResult.Success(it.data!!)
+                }
+            }
+        }catch (e:Exception){
+            _sendMessage.value = NetworkResult.Error(e.message)
         }
     }
 }

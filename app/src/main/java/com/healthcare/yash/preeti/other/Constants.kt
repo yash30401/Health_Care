@@ -13,6 +13,7 @@ object Constants {
     const val APPOINTMENTADDED = "APPOINTMENTADDED"
     const val FETCHAPPOINTMENTS ="FETCHAPPOINTMENTS"
     const val CHATROOMTESTING = "CHATROOMTESTING"
+    const val CHATMESSAGE = "CHATMESSAGE"
 
     // Coundown Time
     const val COUNTDOWNTIMEINMINUTE = 1
