@@ -8,7 +8,8 @@ data class DetailedUserAppointment(
     val profileImage:String, val name:String,
     val specialization:String,
     val status:String, val typeOfConsultation:String,
-    val dateTime: Timestamp?
+    val dateTime: Timestamp?,
+    val doctorId:String,
 ):Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),
@@ -16,7 +17,8 @@ data class DetailedUserAppointment(
         parcel.readString().toString(),
         parcel.readString().toString(),
         parcel.readString().toString(),
-        parcel.readParcelable(Timestamp::class.java.classLoader)
+        parcel.readParcelable(Timestamp::class.java.classLoader),
+        parcel.readString().toString()
     ) {
     }
 
@@ -27,6 +29,7 @@ data class DetailedUserAppointment(
         parcel.writeString(status)
         parcel.writeString(typeOfConsultation)
         parcel.writeParcelable(dateTime, flags)
+        parcel.writeString(doctorId)
     }
 
     override fun describeContents(): Int {
