@@ -34,6 +34,7 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
         activity?.setActionBar(toolbar)
         activity?.actionBar?.setDisplayShowTitleEnabled(false)
         activity?.actionBar?.setDisplayHomeAsUpEnabled(true)
+        activity?.actionBar?.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_24)
 
         val ivProfilePicture:ImageView = toolbarLayout.ivProfilePicture
         Glide.with(this).load(args.detailedUserAppointment.profileImage.toUri()).into(ivProfilePicture)
