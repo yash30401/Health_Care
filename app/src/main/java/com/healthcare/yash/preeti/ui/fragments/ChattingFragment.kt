@@ -3,9 +3,11 @@ package com.healthcare.yash.preeti.ui.fragments
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import android.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.navigation.NavArgs
@@ -41,7 +43,12 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
 
         toolbarLayout.tvDoctoreName.text = args.detailedUserAppointment.name
 
+       toolbar.setNavigationOnClickListener {
+           activity?.onBackPressed()
+       }
+
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
