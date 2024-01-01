@@ -22,10 +22,11 @@ import com.healthcare.yash.preeti.databinding.FragmentChattingBinding
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.CHATROOMTESTING
 import com.healthcare.yash.preeti.viewmodels.ChatViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class ChattingFragment : Fragment(R.layout.fragment_chatting) {
 
     private var _binding:FragmentChattingBinding?=null
@@ -61,8 +62,8 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
         getOrCreateChatRoom()
     }
     private fun getOrCreateChatRoom() {
-        chatViewModel.getOrCreateChatRoom(args.detailedUserAppointment.doctorId)
         lifecycleScope.launch {
+            chatViewModel.getOrCreateChatRoom(args.detailedUserAppointment.doctorId)
             chatViewModel.getOrCreateChatRoom.collect{
                 when(it){
                     is NetworkResult.Error -> {
