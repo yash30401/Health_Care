@@ -23,7 +23,7 @@
             android:fontFamily="@font/poppins"
             android:includeFontPadding="false"
             android:textColor="@color/black"
-            android:textSize="25sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvLeftTimestamp"
@@ -43,8 +43,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
+        app:layout_constraintWidth_max="300dp"
+        android:maxWidth="300dp"
         android:background="@drawable/right_message_background"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -57,12 +59,13 @@
             android:fontFamily="@font/poppins"
             android:includeFontPadding="false"
             android:textColor="@color/white"
-            android:textSize="25sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvRightTimestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/poppins"
             android:includeFontPadding="false"

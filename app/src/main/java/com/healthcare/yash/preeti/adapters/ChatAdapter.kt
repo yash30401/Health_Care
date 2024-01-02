@@ -9,6 +9,9 @@ import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ChatMessageItemLayoutBinding
 import com.healthcare.yash.preeti.models.ChatMessage
 import com.healthcare.yash.preeti.utils.ConsultDoctorDiffUtil
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ChatAdapter(private val currentUserId:String) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
@@ -39,16 +42,28 @@ class ChatAdapter(private val currentUserId:String) : RecyclerView.Adapter<ChatA
             holder.binding.llLeft.visibility = View.GONE
             holder.binding.llRight.visibility = View.VISIBLE
             holder.binding.tvRightMessage.text = currentChat.message
-            holder.binding.tvRightTimestamp.text = currentChat.timestamp.toDate().toString()
+
+            val timestamp = currentChat.timestamp.toDate().time
+            val formattedTime = convertTimestampToTimeString(timestamp)
+            holder.binding.tvRightTimestamp.text = formattedTime
         }else{
             holder.binding.llRight.visibility = View.GONE
             holder.binding.llLeft.visibility = View.VISIBLE
             holder.binding.tvLeftMessage.text = currentChat.message
-            holder.binding.tvLeftTimestamp.text = currentChat.timestamp.toDate().toString()
+
+            val timestamp = currentChat.timestamp.toDate().time
+            val formattedTime = convertTimestampToTimeString(timestamp)
+            holder.binding.tvLeftTimestamp.text = formattedTime
         }
     }
 
     fun setMessage(newMessage:List<ChatMessage>){
         asynListDiffer.submitList(newMessage)
+    }
+
+    fun convertTimestampToTimeString(timestamp: Long): String {
+        val dateFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
+        val date = Date(timestamp)
+        return dateFormat.format(date)
     }
 }
