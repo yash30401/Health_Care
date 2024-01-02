@@ -81,6 +81,36 @@ class ChatRepository @Inject constructor(
         }
     }
 
+
+    suspend fun getChatMessages():Flow<NetworkResult<List<ChatMessage>>>{
+        return flow<NetworkResult<List<ChatMessage>>> {
+            try {
+
+                val chatRoomMessageReference =
+                    firestore.collection("ChatRoom").document(chatRoomId).collection("Chats")
+                        .orderBy("timestamp",Query.Direction.DESCENDING).get().await()
+                val listOfMessages = mutableListOf<ChatMessage>()
+
+                for(document in chatRoomMessageReference){
+                    if(document.exists()){
+                        val chatMessage = ChatMessage(
+                            message = document.getString("message") ?: "",
+                            senderId = document.getString("senderId") ?: "",
+                            timestamp = document.getTimestamp("timestamp")!!
+                        )
+                        listOfMessages.add(chatMessage)
+                    }
+                }
+                emit(NetworkResult.Success(listOfMessages))
+
+            }catch (e:Exception){
+                emit(NetworkResult.Error(e.message.toString()))
+            }
+        }.catch {
+            NetworkResult.Error(it.message.toString(),null)
+        }.flowOn(Dispatchers.IO)
+    }
+
     suspend fun sendMessageToTheUser(message: String): Flow<NetworkResult<ChatMessage>> {
         return flow<NetworkResult<ChatMessage>> {
             try {
@@ -107,32 +137,4 @@ class ChatRepository @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun getChatMessages():Flow<NetworkResult<List<ChatMessage>>>{
-        return flow<NetworkResult<List<ChatMessage>>> {
-            try {
-
-                val chatRoomMessageReference =
-                    firestore.collection("ChatRoom").document(chatRoomId).collection("Chats")
-                        .orderBy("timestamp",Query.Direction.DESCENDING).get().await()
-                    val listOfMessages = mutableListOf<ChatMessage>()
-
-                for(document in chatRoomMessageReference){
-                    if(document.exists()){
-                        val chatMessage = ChatMessage(
-                            message = document.getString("message") ?: "",
-                            senderId = document.getString("senderId") ?: "",
-                            timestamp = document.getTimestamp("timestamp")!!
-                        )
-                        listOfMessages.add(chatMessage)
-                    }
-                }
-                emit(NetworkResult.Success(listOfMessages))
-
-            }catch (e:Exception){
-                emit(NetworkResult.Error(e.message.toString()))
-            }
-        }.catch {
-            NetworkResult.Error(it.message.toString(),null)
-        }.flowOn(Dispatchers.IO)
-    }
 }

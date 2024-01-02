@@ -10,8 +10,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
+        app:layout_constraintWidth_max="300dp"
+        android:maxWidth="300dp"
         android:background="@drawable/left_message_background"
         android:padding="8dp"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -31,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:fontFamily="@font/poppins"
+            android:layout_gravity="end"
             android:includeFontPadding="false"
             android:textColor="@color/black"
             android:textSize="12sp" />
