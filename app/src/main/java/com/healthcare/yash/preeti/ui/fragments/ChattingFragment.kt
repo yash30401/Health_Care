@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.healthcare.yash.preeti.R
@@ -128,8 +129,15 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
         chatAdapter = ChatAdapter(firebaseAuth.currentUser?.uid.toString())
         binding.recyclerView.apply {
             adapter = chatAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,true)
         }
+
+        chatAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                super.onItemRangeInserted(positionStart, itemCount)
+                binding.recyclerView.smoothScrollToPosition(0)
+            }
+        })
 
         lifecycleScope.launch{
             chatViewModel.getChatMessages()

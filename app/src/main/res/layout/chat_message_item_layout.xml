@@ -33,7 +33,7 @@
             android:fontFamily="@font/poppins"
             android:includeFontPadding="false"
             android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
 
@@ -57,6 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:fontFamily="@font/poppins"
+
             android:includeFontPadding="false"
             android:textColor="@color/white"
             android:textSize="18sp" />
@@ -70,7 +71,7 @@
             android:fontFamily="@font/poppins"
             android:includeFontPadding="false"
             android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
     </LinearLayout>
 
 
