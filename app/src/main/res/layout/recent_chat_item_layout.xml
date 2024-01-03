@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="3dp"
+    android:background="@color/screenBackgroundColor">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/itemCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="10dp"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/cardStrokeColor">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="15dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivDoctor"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/doctor_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearance="@style/RoundImageShape" />
+
+            <TextView
+                android:id="@+id/tvDoctorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="2dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins"
+                android:includeFontPadding="false"
+                android:letterSpacing="0.02"
+                android:text="Dr.Michael Rodriguez"
+                android:textColor="#2B2B2B"
+                android:textSize="17sp"
+                app:layout_constraintStart_toEndOf="@+id/ivDoctor"
+                app:layout_constraintTop_toTopOf="@+id/ivDoctor" />
+
+            <TextView
+                android:id="@+id/tvDoctorSpecialization"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:includeFontPadding="false"
+                android:textColor="#707070"
+                android:text="Radilogist"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="@+id/tvDoctorName"
+                app:layout_constraintTop_toBottomOf="@+id/tvDoctorName" />
+
+            <TextView
+                android:id="@+id/tvLastMesaage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:textSize="15sp"
+                android:layout_marginTop="5dp"
+                android:textColor="#707070"
+                android:text="Hi, Sir"
+                app:layout_constrainedWidth="true"
+                app:layout_constraintStart_toStartOf="@+id/tvDoctorName"
+                app:layout_constraintTop_toBottomOf="@+id/tvDoctorSpecialization" />
+
+
+            <TextView
+                android:id="@+id/tvLastTimeStamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="15dp"
+                android:includeFontPadding="false"
+                android:text="10:42 PM"
+                android:textColor="#707070"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
