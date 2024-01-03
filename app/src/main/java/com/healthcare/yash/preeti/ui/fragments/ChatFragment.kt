@@ -17,11 +17,13 @@ import com.healthcare.yash.preeti.models.ChatRoom
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.RECENTCHATS
 import com.healthcare.yash.preeti.viewmodels.ChatViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+@AndroidEntryPoint
 class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private var _binding: FragmentChatBinding? = null
@@ -48,8 +50,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     private fun getRecentChats() {
+        Log.d(RECENTCHATS,"Entering Function")
         lifecycleScope.launch {
-            chatViewModel.getChatMessages()
+            chatViewModel.getRecentChats()
             chatViewModel.recentChats.collect {
                 when (it) {
                     is NetworkResult.Error -> {

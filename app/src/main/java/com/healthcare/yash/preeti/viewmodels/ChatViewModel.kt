@@ -1,11 +1,13 @@
 package com.healthcare.yash.preeti.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.healthcare.yash.preeti.models.ChatMessage
 import com.healthcare.yash.preeti.models.ChatRoom
 import com.healthcare.yash.preeti.models.DoctorChatData
 import com.healthcare.yash.preeti.networking.NetworkResult
+import com.healthcare.yash.preeti.other.Constants.RECENTCHATS
 import com.healthcare.yash.preeti.repositories.ChatRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -82,13 +84,14 @@ class ChatViewModel @Inject constructor(private val chatRepository: ChatReposito
                 }
             }
         } catch (e: Exception) {
+
             _chatMessages.value = NetworkResult.Error(e.message)
         }
     }
 
     fun getRecentChats() = viewModelScope.launch {
         _recentChats.value = NetworkResult.Loading()
-
+        Log.d(RECENTCHATS,"Entering Viewmodel")
         try {
             val result = chatRepository.getRecentChats()
             result.collect {
@@ -101,6 +104,7 @@ class ChatViewModel @Inject constructor(private val chatRepository: ChatReposito
             }
 
         } catch (e: Exception) {
+            Log.d(RECENTCHATS,"Viewmodel Catch block ${e.message.toString()}")
             _recentChats.value = NetworkResult.Error(e.message.toString())
         }
     }

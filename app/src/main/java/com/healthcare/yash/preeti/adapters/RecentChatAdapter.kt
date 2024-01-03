@@ -46,7 +46,7 @@ class RecentChatAdapter : RecyclerView.Adapter<RecentChatAdapter.RecentChatViewH
 
         holder.binding.tvDoctorName.text = recentChat.second.name
         holder.binding.tvDoctorSpecialization.text = recentChat.second.specialization
-        holder.binding.tvLastMesaage.text = recentChat.first.lastMessageSenderId
+        holder.binding.tvLastMesaage.text = recentChat.first.lastMessage
         holder.binding.tvLastTimeStamp.text =
             convertTimestampToTimeString(recentChat.first.lastMessageTimestamp.toDate().time)
 

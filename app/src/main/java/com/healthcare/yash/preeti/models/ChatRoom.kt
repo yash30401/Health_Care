@@ -7,5 +7,5 @@ data class ChatRoom(
     val userIds: Pair<String, String>,
     var lastMessageTimestamp: Timestamp,
     var lastMessageSenderId: String,
-    val lastMessage:String
+    var lastMessage:String
 )

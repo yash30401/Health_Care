@@ -12,6 +12,7 @@ import com.healthcare.yash.preeti.models.ChatRoom
 import com.healthcare.yash.preeti.models.DoctorChatData
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants
+import com.healthcare.yash.preeti.other.Constants.RECENTCHATS
 import com.healthcare.yash.preeti.utils.await
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -39,6 +40,7 @@ class ChatRepository @Inject constructor(
                         chatRoomId,
                         Pair(firebaseAuth.currentUser!!.uid, doctorId),
                         Timestamp.now(),
+                        "",
                         ""
                     )
                     firestore.collection("ChatRoom").document(chatRoomId).set(chatRoom).await()
@@ -61,7 +63,8 @@ class ChatRepository @Inject constructor(
                         userIds = userIds ?: Pair("", ""),
                         lastMessageTimestamp = getChatRoomReference.getTimestamp("lastMessageTimestamp")!!,
                         lastMessageSenderId = getChatRoomReference.getString("lastMessageSenderId")
-                            ?: ""
+                            ?: "",
+                        lastMessage = getChatRoomReference.getString("lastMessage")?:""
                     )
                 }
 
@@ -119,6 +122,7 @@ class ChatRepository @Inject constructor(
             try {
                 chatRoom.lastMessageTimestamp = Timestamp.now()
                 chatRoom.lastMessageSenderId = firebaseAuth.currentUser?.uid.toString()
+                chatRoom.lastMessage = message
                 firestore.collection("ChatRoom").document(chatRoomId).set(chatRoom).await()
 
                 val chatMessage = ChatMessage(
@@ -143,16 +147,24 @@ class ChatRepository @Inject constructor(
     suspend fun getRecentChats(): Flow<NetworkResult<List<Pair<ChatRoom, DoctorChatData>>>> {
         return flow<NetworkResult<List<Pair<ChatRoom, DoctorChatData>>>> {
             try {
-                val recentChatReference = firestore.collection("ChatRoom")
-                    .whereArrayContains("userIds", firebaseAuth.currentUser?.uid.toString())
+                val query1 = firestore.collection("ChatRoom")
+                    .whereEqualTo("userIds.first", firebaseAuth.currentUser?.uid.toString())
                     .orderBy("lastMessageTimestamp", Query.Direction.DESCENDING).get().await()
 
+                val query2 = firestore.collection("ChatRoom")
+                    .whereEqualTo("userIds.second", firebaseAuth.currentUser?.uid.toString())
+                    .orderBy("lastMessageTimestamp", Query.Direction.DESCENDING).get().await()
+
+                val recentChatReference = mutableListOf<DocumentSnapshot>()
+                recentChatReference.addAll(query1.documents)
+                recentChatReference.addAll(query2.documents)
 
                 val listOfRecentChats = mutableListOf<Pair<ChatRoom, DoctorChatData>>()
 
 
                 for (document in recentChatReference) {
                     if (document.exists()) {
+
                         val userIdsRaw = document.get("userIds")
                         var userIds: Pair<String, String>? = null
                         if (userIdsRaw is Map<*, *>) {
@@ -167,7 +179,8 @@ class ChatRepository @Inject constructor(
                             chatRoomId = document.getString("chatRoomId") ?: "",
                             userIds = userIds ?: Pair("", ""),
                             lastMessageTimestamp = document.getTimestamp("lastMessageTimestamp")!!,
-                            lastMessageSenderId = document.getString("lastMessageSenderId") ?: ""
+                            lastMessageSenderId = document.getString("lastMessageSenderId") ?: "",
+                            lastMessage = document.getString("lastMessage")?:""
                         )
 
                         var getDoctorReference: DocumentSnapshot? = null
@@ -181,7 +194,7 @@ class ChatRepository @Inject constructor(
                                     .await()
                         }
                         if (getDoctorReference.exists()) {
-                            val doctorChatData = DoctorChatData(
+                             val doctorChatData = DoctorChatData(
                                 profile = getDoctorReference.getString("Profile_Pic") ?: "",
                                 name = getDoctorReference.getString("Name") ?: "",
                                 specialization = getDoctorReference.getString("Specialization")
@@ -191,11 +204,14 @@ class ChatRepository @Inject constructor(
                         }
                     }
                 }
+
                 emit(NetworkResult.Success(listOfRecentChats))
             } catch (e: Exception) {
                 emit(NetworkResult.Error(e.message.toString()))
+                Log.d(RECENTCHATS,"try Cathc ${e.message.toString()}")
             }
         }.catch {
+            Log.d(RECENTCHATS,"try Cathc ${it.message.toString()}")
             NetworkResult.Error(it.message.toString(), null)
         }.flowOn(Dispatchers.IO)
     }
