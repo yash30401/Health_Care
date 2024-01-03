@@ -23,10 +23,10 @@ class ChatRepository @Inject constructor(
 ) {
 
     lateinit var chatRoom: ChatRoom
-    lateinit var chatRoomId:String
+    lateinit var chatRoomId: String
     suspend fun getOrCreateChatRoom(doctorId: String): Flow<NetworkResult<ChatRoom>> {
         return flow {
-            chatRoomId =  getChatRoomId(firebaseAuth.currentUser?.uid!!, doctorId)
+            chatRoomId = getChatRoomId(firebaseAuth.currentUser?.uid!!, doctorId)
             try {
                 val getChatRoomReference =
                     firestore.collection("ChatRoom").document(chatRoomId).get().await()
@@ -82,17 +82,17 @@ class ChatRepository @Inject constructor(
     }
 
 
-    suspend fun getChatMessages():Flow<NetworkResult<List<ChatMessage>>>{
+    suspend fun getChatMessages(): Flow<NetworkResult<List<ChatMessage>>> {
         return flow<NetworkResult<List<ChatMessage>>> {
             try {
 
                 val chatRoomMessageReference =
                     firestore.collection("ChatRoom").document(chatRoomId).collection("Chats")
-                        .orderBy("timestamp",Query.Direction.DESCENDING).get().await()
+                        .orderBy("timestamp", Query.Direction.DESCENDING).get().await()
                 val listOfMessages = mutableListOf<ChatMessage>()
 
-                for(document in chatRoomMessageReference){
-                    if(document.exists()){
+                for (document in chatRoomMessageReference) {
+                    if (document.exists()) {
                         val chatMessage = ChatMessage(
                             message = document.getString("message") ?: "",
                             senderId = document.getString("senderId") ?: "",
@@ -103,11 +103,11 @@ class ChatRepository @Inject constructor(
                 }
                 emit(NetworkResult.Success(listOfMessages))
 
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 emit(NetworkResult.Error(e.message.toString()))
             }
         }.catch {
-            NetworkResult.Error(it.message.toString(),null)
+            NetworkResult.Error(it.message.toString(), null)
         }.flowOn(Dispatchers.IO)
     }
 
@@ -129,6 +129,47 @@ class ChatRepository @Inject constructor(
                 chatRoomMessageReference.add(chatMessage).await()
 
                 emit(NetworkResult.Success(chatMessage))
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(e.message.toString()))
+            }
+        }.catch {
+            NetworkResult.Error(it.message.toString(), null)
+        }.flowOn(Dispatchers.IO)
+    }
+
+    suspend fun getRecentChats(): Flow<NetworkResult<List<ChatRoom>>> {
+        return flow<NetworkResult<List<ChatRoom>>> {
+            try {
+                val recentChatReference = firestore.collection("ChatRoom")
+                    .whereArrayContains("userIds", firebaseAuth.currentUser?.uid.toString())
+                    .orderBy("lastMessageTimestamp",Query.Direction.DESCENDING).get().await()
+
+                val listOfRecentChats = mutableListOf<ChatRoom>()
+
+
+                for(document in recentChatReference){
+                    if(document.exists()){
+                        val userIdsRaw = document.get("userIds")
+                        var userIds:Pair<String,String>?=null
+                        if(userIdsRaw is Map<*,*>){
+                            val firstUserId = userIdsRaw["first"] as String?
+                            val secondUserId = userIdsRaw["second"] as? String
+
+                            if (firstUserId != null && secondUserId != null) {
+                                userIds = Pair(firstUserId, secondUserId)
+                            }
+                        }
+                        val chatRoom = ChatRoom(
+                            chatRoomId = document.getString("chatRoomId") ?: "",
+                            userIds = userIds ?: Pair("",""),
+                            lastMessageTimestamp = document.getTimestamp("lastMessageTimestamp")!!,
+                            lastMessageSenderId = document.getString("lastMessageSenderId") ?: ""
+                        )
+
+                        listOfRecentChats.add(chatRoom)
+                    }
+                }
+                emit(NetworkResult.Success(listOfRecentChats))
             } catch (e: Exception) {
                 emit(NetworkResult.Error(e.message.toString()))
             }
