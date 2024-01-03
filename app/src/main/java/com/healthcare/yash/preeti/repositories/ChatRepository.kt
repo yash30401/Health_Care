@@ -3,10 +3,13 @@ package com.healthcare.yash.preeti.repositories
 import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.healthcare.yash.preeti.models.ChatMessage
 import com.healthcare.yash.preeti.models.ChatRoom
+import com.healthcare.yash.preeti.models.DoctorChatData
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants
 import com.healthcare.yash.preeti.utils.await
@@ -137,21 +140,22 @@ class ChatRepository @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
-    suspend fun getRecentChats(): Flow<NetworkResult<List<ChatRoom>>> {
-        return flow<NetworkResult<List<ChatRoom>>> {
+    suspend fun getRecentChats(): Flow<NetworkResult<List<Pair<ChatRoom, DoctorChatData>>>> {
+        return flow<NetworkResult<List<Pair<ChatRoom, DoctorChatData>>>> {
             try {
                 val recentChatReference = firestore.collection("ChatRoom")
                     .whereArrayContains("userIds", firebaseAuth.currentUser?.uid.toString())
-                    .orderBy("lastMessageTimestamp",Query.Direction.DESCENDING).get().await()
-
-                val listOfRecentChats = mutableListOf<ChatRoom>()
+                    .orderBy("lastMessageTimestamp", Query.Direction.DESCENDING).get().await()
 
 
-                for(document in recentChatReference){
-                    if(document.exists()){
+                val listOfRecentChats = mutableListOf<Pair<ChatRoom, DoctorChatData>>()
+
+
+                for (document in recentChatReference) {
+                    if (document.exists()) {
                         val userIdsRaw = document.get("userIds")
-                        var userIds:Pair<String,String>?=null
-                        if(userIdsRaw is Map<*,*>){
+                        var userIds: Pair<String, String>? = null
+                        if (userIdsRaw is Map<*, *>) {
                             val firstUserId = userIdsRaw["first"] as String?
                             val secondUserId = userIdsRaw["second"] as? String
 
@@ -161,12 +165,30 @@ class ChatRepository @Inject constructor(
                         }
                         val chatRoom = ChatRoom(
                             chatRoomId = document.getString("chatRoomId") ?: "",
-                            userIds = userIds ?: Pair("",""),
+                            userIds = userIds ?: Pair("", ""),
                             lastMessageTimestamp = document.getTimestamp("lastMessageTimestamp")!!,
                             lastMessageSenderId = document.getString("lastMessageSenderId") ?: ""
                         )
 
-                        listOfRecentChats.add(chatRoom)
+                        var getDoctorReference: DocumentSnapshot? = null
+                        if (userIds?.first == firebaseAuth.currentUser?.uid.toString()) {
+                            getDoctorReference =
+                                firestore.collection("Doctors").document(userIds.second).get()
+                                    .await()
+                        } else {
+                            getDoctorReference =
+                                firestore.collection("Doctors").document(userIds?.first!!).get()
+                                    .await()
+                        }
+                        if (getDoctorReference.exists()) {
+                            val doctorChatData = DoctorChatData(
+                                profile = getDoctorReference.getString("Profile_Pic") ?: "",
+                                name = getDoctorReference.getString("Name") ?: "",
+                                specialization = getDoctorReference.getString("Specialization")
+                                    ?: ""
+                            )
+                            listOfRecentChats.add(Pair(chatRoom, doctorChatData))
+                        }
                     }
                 }
                 emit(NetworkResult.Success(listOfRecentChats))

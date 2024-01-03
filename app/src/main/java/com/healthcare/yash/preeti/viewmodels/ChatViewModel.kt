@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.healthcare.yash.preeti.models.ChatMessage
 import com.healthcare.yash.preeti.models.ChatRoom
+import com.healthcare.yash.preeti.models.DoctorChatData
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.repositories.ChatRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,8 +27,8 @@ class ChatViewModel @Inject constructor(private val chatRepository: ChatReposito
     private val _chatMessages = MutableStateFlow<NetworkResult<List<ChatMessage>>?>(null)
     val chatMessages: StateFlow<NetworkResult<List<ChatMessage>>?> = _chatMessages
 
-    private val _recentChats = MutableStateFlow<NetworkResult<List<ChatRoom>>?>(null)
-    val recentChats: StateFlow<NetworkResult<List<ChatRoom>>?> = _recentChats
+    private val _recentChats = MutableStateFlow<NetworkResult<List<Pair<ChatRoom,DoctorChatData>>>?>(null)
+    val recentChats: StateFlow<NetworkResult<List<Pair<ChatRoom,DoctorChatData>>>?> = _recentChats
 
     fun getOrCreateChatRoom(doctorId: String) = viewModelScope.launch {
         _getOrCreateChatRoom.value = NetworkResult.Loading()
