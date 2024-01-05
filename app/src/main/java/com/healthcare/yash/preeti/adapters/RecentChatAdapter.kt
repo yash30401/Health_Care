@@ -7,16 +7,22 @@ import androidx.core.net.toUri
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.RecentChatItemLayoutBinding
 import com.healthcare.yash.preeti.models.ChatRoom
+import com.healthcare.yash.preeti.models.DetailedUserAppointment
 import com.healthcare.yash.preeti.models.DoctorChatData
+import com.healthcare.yash.preeti.other.OnRecentChatClickListner
 import com.healthcare.yash.preeti.utils.ConsultDoctorDiffUtil
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class RecentChatAdapter : RecyclerView.Adapter<RecentChatAdapter.RecentChatViewHolder>() {
+class RecentChatAdapter(
+    private val onRecentChatClickListner: OnRecentChatClickListner,
+    private val firebaseAuth: FirebaseAuth
+) : RecyclerView.Adapter<RecentChatAdapter.RecentChatViewHolder>() {
 
     private val asyncListDiffer =
         AsyncListDiffer<Pair<ChatRoom, DoctorChatData>>(this, ConsultDoctorDiffUtil())
@@ -49,6 +55,36 @@ class RecentChatAdapter : RecyclerView.Adapter<RecentChatAdapter.RecentChatViewH
         holder.binding.tvLastMesaage.text = recentChat.first.lastMessage
         holder.binding.tvLastTimeStamp.text =
             convertTimestampToTimeString(recentChat.first.lastMessageTimestamp.toDate().time)
+
+        if (firebaseAuth.currentUser?.uid.toString() == recentChat.first.userIds.first) {
+            holder.binding.itemCardView.setOnClickListener {
+                onRecentChatClickListner.onClick(
+                    DetailedUserAppointment(
+                        recentChat.second.profile,
+                        recentChat.second.name,
+                        "",
+                        "",
+                        "",
+                        null,
+                        recentChat.first.userIds.second
+                    )
+                )
+            }
+        } else {
+            holder.binding.itemCardView.setOnClickListener {
+                onRecentChatClickListner.onClick(
+                    DetailedUserAppointment(
+                        recentChat.second.profile,
+                        recentChat.second.name,
+                        "",
+                        "",
+                        "",
+                        null,
+                        recentChat.first.userIds.first
+                    )
+                )
+            }
+        }
 
     }
 

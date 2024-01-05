@@ -69,7 +69,11 @@
         android:id="@+id/chatFragment"
         android:name="com.healthcare.yash.preeti.ui.fragments.ChatFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
+        tools:layout="@layout/fragment_chat" >
+        <action
+            android:id="@+id/action_chatFragment_to_chattingFragment"
+            app:destination="@id/chattingFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFrament"
         android:name="com.healthcare.yash.preeti.ui.fragments.ProfileFrament"

@@ -3,28 +3,28 @@ package com.healthcare.yash.preeti.ui.fragments
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.adapters.RecentChatAdapter
 import com.healthcare.yash.preeti.databinding.FragmentChatBinding
-import com.healthcare.yash.preeti.models.ChatRoom
+import com.healthcare.yash.preeti.models.DetailedUserAppointment
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.RECENTCHATS
+import com.healthcare.yash.preeti.other.OnRecentChatClickListner
 import com.healthcare.yash.preeti.viewmodels.ChatViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChatFragment : Fragment(R.layout.fragment_chat) {
+class ChatFragment : Fragment(R.layout.fragment_chat),OnRecentChatClickListner {
 
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
@@ -32,6 +32,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     lateinit var recentChatAdapter: RecentChatAdapter
 
     private val chatViewModel by viewModels<ChatViewModel>()
+
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,7 +44,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     private fun setupRecentChatRecylerView() {
-        recentChatAdapter = RecentChatAdapter()
+        recentChatAdapter = RecentChatAdapter(this,firebaseAuth)
         binding.rvChats.apply {
             adapter = recentChatAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -79,5 +82,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onClick(detailedUserAppointment: DetailedUserAppointment?) {
+        val action = ChatFragmentDirections.actionChatFragmentToChattingFragment(detailedUserAppointment!!)
+        findNavController().navigate(action)
     }
 }
