@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -18,17 +19,23 @@ import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderF
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.initialize
+import com.google.firebase.messaging.FirebaseMessaging
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ActivityMainBinding
+import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants
 import com.healthcare.yash.preeti.ui.fragments.DoctorDetailedView
 import com.healthcare.yash.preeti.ui.fragments.DoctorDetailedViewArgs
+import com.healthcare.yash.preeti.utils.await
 import com.healthcare.yash.preeti.viewmodels.AppointmentViewModel
+import com.healthcare.yash.preeti.viewmodels.FirebaseMessagingViewModel
 import com.razorpay.Checkout
 import com.razorpay.ExternalWalletListener
 import com.razorpay.PaymentData
 import com.razorpay.PaymentResultWithDataListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -43,6 +50,8 @@ class MainActivity : AppCompatActivity(){
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+
+    private val firebaseMessagingViewModel by viewModels<FirebaseMessagingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +99,11 @@ class MainActivity : AppCompatActivity(){
             }
         }
         firebaseAuth = FirebaseAuth.getInstance()
+
+        getFCMToken()
     }
+
+
 
     // Method to hide bottom navigation on specific fragments
     private fun hideBottomNavOnAuthFragment() {
@@ -131,6 +144,23 @@ class MainActivity : AppCompatActivity(){
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    private fun getFCMToken() {
+        val token = firebaseMessagingViewModel.getFCMToken()
+
+        lifecycleScope.launch{
+            firebaseMessagingViewModel.token.collect{
+                when(it){
+                    is NetworkResult.Error -> {
+                        Log.d("FIR")
+                    }
+                    is NetworkResult.Loading -> TODO()
+                    is NetworkResult.Success -> TODO()
+                    else -> {}
+                }
+            }
+        }
     }
 
 

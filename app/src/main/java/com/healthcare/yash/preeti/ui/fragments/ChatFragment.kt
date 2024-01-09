@@ -41,6 +41,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat),OnRecentChatClickListner {
         _binding = FragmentChatBinding.bind(view)
 
         setupRecentChatRecylerView()
+
     }
 
     private fun setupRecentChatRecylerView() {

@@ -20,6 +20,9 @@ object Constants {
     const val CHATMESSAGE = "CHATMESSAGE"
     const val RECENTCHATS = "RECENTCHATS"
 
+    // FirebaseMessaging
+    const val FIREBASEMESSAGINTOKEN = "FIREBASEMESSAGINTOKEN"
+
     // Coundown Time
     const val COUNTDOWNTIMEINMINUTE = 1
 
