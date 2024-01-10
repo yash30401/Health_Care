@@ -13,11 +13,13 @@ import com.healthcare.yash.preeti.repositories.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val repository: AuthRepository) : ViewModel() {
+class AuthViewModel @Inject constructor(private val repository: AuthRepository,
+    ) : ViewModel() {
 
     private val _loginFlow = MutableStateFlow<NetworkResult<FirebaseUser>?>(null)
     val loginFlow: StateFlow<NetworkResult<FirebaseUser>?> = _loginFlow
@@ -59,7 +61,7 @@ class AuthViewModel @Inject constructor(private val repository: AuthRepository) 
         }
 
 
-    fun logout() {
+    fun logout()=viewModelScope.launch {
         repository.logout()
         _loginFlow.value = null
     }

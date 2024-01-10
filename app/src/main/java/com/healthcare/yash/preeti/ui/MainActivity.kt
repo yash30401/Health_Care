@@ -24,6 +24,7 @@ import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.databinding.ActivityMainBinding
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants
+import com.healthcare.yash.preeti.other.Constants.FIREBASEMESSAGINTOKEN
 import com.healthcare.yash.preeti.ui.fragments.DoctorDetailedView
 import com.healthcare.yash.preeti.ui.fragments.DoctorDetailedViewArgs
 import com.healthcare.yash.preeti.utils.await
@@ -153,10 +154,14 @@ class MainActivity : AppCompatActivity(){
             firebaseMessagingViewModel.token.collect{
                 when(it){
                     is NetworkResult.Error -> {
-                        Log.d("FIR")
+                        Log.d(FIREBASEMESSAGINTOKEN,"Error Block:- ${it.message}")
                     }
-                    is NetworkResult.Loading -> TODO()
-                    is NetworkResult.Success -> TODO()
+                    is NetworkResult.Loading -> {
+                        Log.d(FIREBASEMESSAGINTOKEN,"Loading Block:- ${it.message}")
+                    }
+                    is NetworkResult.Success -> {
+                        Log.d(FIREBASEMESSAGINTOKEN,"Success Block:- ${it.data.toString()}")
+                    }
                     else -> {}
                 }
             }

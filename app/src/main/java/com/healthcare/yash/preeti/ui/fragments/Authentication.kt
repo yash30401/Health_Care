@@ -70,6 +70,7 @@ class Authentication : Fragment() {
         if (firebaseAuth.currentUser != null) {
             findNavController().navigate(R.id.action_authentication2_to_mainFragment)
         }
+        
     }
 
     override fun onCreateView(

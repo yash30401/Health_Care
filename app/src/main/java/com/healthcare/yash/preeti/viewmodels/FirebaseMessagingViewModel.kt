@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.repositories.FirebaseMessagingRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class FirebaseMessagingViewModel @Inject constructor(
     private val firebaseMessagingRepository: FirebaseMessagingRepository
 ):ViewModel() {
