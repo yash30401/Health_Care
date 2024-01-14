@@ -22,6 +22,7 @@ object Constants {
 
     // FirebaseMessaging
     const val FIREBASEMESSAGINTOKEN = "FIREBASEMESSAGINTOKEN"
+    const val URL = "https://fcm.googleapis.com/fcm/send"
 
     // Coundown Time
     const val COUNTDOWNTIMEINMINUTE = 1
@@ -39,4 +40,5 @@ object Constants {
 
     // Payment Bundle KEY
     const val PAYMENTLISTNER = "PAYMENTLISTNER"
+
 }

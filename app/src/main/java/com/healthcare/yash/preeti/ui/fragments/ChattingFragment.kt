@@ -22,10 +22,12 @@ import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants.CHATMESSAGE
 import com.healthcare.yash.preeti.other.Constants.CHATROOMTESTING
 import com.healthcare.yash.preeti.viewmodels.ChatViewModel
+import com.healthcare.yash.preeti.viewmodels.FirebaseMessagingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -42,6 +44,8 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
     lateinit var firebaseAuth: FirebaseAuth
 
     private lateinit var chatAdapter: ChatAdapter
+
+    private val firebaseMessagingViewModel by viewModels<FirebaseMessagingViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -115,6 +119,7 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
                         withContext(Dispatchers.Main) {
                             binding.tilSendMessage.editText?.text?.clear()
                             chatViewModel.getChatMessages()
+                            sendNotification(message)
                         }
                         Log.d(CHATMESSAGE, "Success Block:- ${it.data.toString()}")
                     }
@@ -122,6 +127,44 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
                     else -> {}
                 }
             }
+        }
+    }
+
+    private fun sendNotification(message: String) {
+        try {
+          val jsonObject = JSONObject()
+
+          val notificationObj = JSONObject()
+          notificationObj.put("title",args.detailedUserAppointment.name)
+            notificationObj.put("body",message)
+
+            val dataObj = JSONObject()
+            dataObj.put("userId",firebaseAuth.currentUser?.uid.toString())
+
+            jsonObject.put("notifcation",notificationObj)
+            jsonObject.put("data",dataObj)
+            jsonObject.put("to","eL2VrJyaSlmoB-SilCFmAQ:APA91bEZwe0oOiPOLkepSpQ63fU-O-7ipIwVuCnW9-9j0T3dvz1gR07siFuxDaLtVb5cR8W8xb-EaeAClbv9mbS3YPQslNwQAYDoEafv3lFy7yLL9q3_7_3U3FZOKfSOCOYNAQK8MiGA")
+
+            firebaseMessagingViewModel.callApi(jsonObject)
+            lifecycleScope.launch {
+                firebaseMessagingViewModel.apiCall.collect{
+                    when(it){
+                        is NetworkResult.Error -> {
+                            Log.d("APICALLTESTING","Error Block:- ${it.message}")
+                        }
+                        is NetworkResult.Loading -> {
+                            Log.d("APICALLTESTING","Loading Block:- ${it.message}")
+                        }
+                        is NetworkResult.Success -> {
+                            Log.d("APICALLTESTING","Success Block:- ${it.data}")
+                        }
+                        else -> {}
+                    }
+                }
+            }
+
+        }catch (e:Exception){
+            Log.d("APICALLTESTING","JSON BLOCK:- ${e.message}")
         }
     }
 
