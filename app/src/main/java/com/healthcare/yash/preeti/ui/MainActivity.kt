@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun getFCMToken() {
-        val token = firebaseMessagingViewModel.getFCMToken()
+        firebaseMessagingViewModel.getFCMToken()
 
         lifecycleScope.launch{
             firebaseMessagingViewModel.token.collect{
