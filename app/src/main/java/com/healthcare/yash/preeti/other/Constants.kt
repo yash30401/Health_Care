@@ -24,6 +24,9 @@ object Constants {
     const val FIREBASEMESSAGINTOKEN = "FIREBASEMESSAGINTOKEN"
     const val URL = "https://fcm.googleapis.com/fcm/send"
 
+    //Video Calling
+    const val VIDEOCALLINGWEBRTC = "VIDEOCALLINGWEBRTC"
+
     // Coundown Time
     const val COUNTDOWNTIMEINMINUTE = 1
 

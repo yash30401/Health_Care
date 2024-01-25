@@ -16,7 +16,7 @@ import com.healthcare.yash.preeti.utils.ConsultDoctorDiffUtil
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class UpcomingAppointmentsAdapter(private val chatClickListner: ChatClickListner):RecyclerView.Adapter<UpcomingAppointmentsAdapter.UpcomingAppointmentsViewHolder>() {
+class UpcomingAppointmentsAdapter(private val chatClickListner: ChatClickListner, private val videoCallClickListner: VideoCallClickListner):RecyclerView.Adapter<UpcomingAppointmentsAdapter.UpcomingAppointmentsViewHolder>() {
 
     private val asyncListDiffer = AsyncListDiffer<DetailedUserAppointment>(this,ConsultDoctorDiffUtil())
 
@@ -70,10 +70,18 @@ class UpcomingAppointmentsAdapter(private val chatClickListner: ChatClickListner
         holder.binding.cvChat.setOnClickListener {
             chatClickListner.onClick(userAppointment)
         }
+
+        holder.binding.cvVideoCall.setOnClickListener {
+            videoCallClickListner.onclick(userAppointment.doctorUId)
+        }
     }
 
     fun setData(newList:List<DetailedUserAppointment>){
         asyncListDiffer.submitList(newList)
+    }
+
+    interface VideoCallClickListner{
+        fun onclick(doctorUid: String)
     }
 }
 

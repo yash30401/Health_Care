@@ -1,6 +1,8 @@
 package com.healthcare.yash.preeti.ui.fragments
 
 
+import android.Manifest
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,8 +36,10 @@ import com.healthcare.yash.preeti.other.ChatClickListner
 import com.healthcare.yash.preeti.other.Constants.FETCHAPPOINTMENTS
 import com.healthcare.yash.preeti.other.Constants.HEADERLAYOUTTAG
 import com.healthcare.yash.preeti.other.Constants.MAINFRAGMENTTAG
+import com.healthcare.yash.preeti.ui.CallActivity
 import com.healthcare.yash.preeti.viewmodels.AppointmentViewModel
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
+import com.permissionx.guolindev.PermissionX
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,7 +48,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainFragment : Fragment(),ChatClickListner {
+class MainFragment : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.VideoCallClickListner {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
@@ -139,7 +143,7 @@ class MainFragment : Fragment(),ChatClickListner {
     }
 
     private fun setupUpcomingAppointmentsRecylerView() {
-        upcomingAppointmentsAdapter = UpcomingAppointmentsAdapter(this)
+        upcomingAppointmentsAdapter = UpcomingAppointmentsAdapter(this,this)
         binding.rvUpcomingAppointments.apply {
             adapter = upcomingAppointmentsAdapter
             layoutManager =
@@ -249,5 +253,23 @@ class MainFragment : Fragment(),ChatClickListner {
     override fun onClick(userAppointment: DetailedUserAppointment) {
         val action = MainFragmentDirections.actionMainFragmentToChattingFragment(userAppointment)
         findNavController().navigate(action)
+    }
+
+    override fun onclick(doctorUid: String) {
+        PermissionX.init(this)
+            .permissions(
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.CAMERA
+            ).request{ allGranted, _ ,_ ->
+                if (allGranted){
+                    startActivity(
+                        Intent(requireContext(), CallActivity::class.java)
+                            .putExtra("useruid",firebaseAuth.currentUser?.uid.toString())
+                            .putExtra("doctorUid",doctorUid)
+                    )
+                } else {
+                    Toast.makeText(requireContext(),"you should accept all permissions",Toast.LENGTH_LONG).show()
+                }
+            }
     }
 }

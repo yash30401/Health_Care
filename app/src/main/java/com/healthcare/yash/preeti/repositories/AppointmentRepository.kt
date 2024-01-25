@@ -77,7 +77,7 @@ class AppointmentRepository @Inject constructor(
                                 status,
                                 typeOfConsultation,
                                 dateTime,
-                                doctorId = docRefQuerySnapshot.getString("Id") ?: ""
+                                doctorUId = docRefQuerySnapshot.getString("Id") ?: ""
                             )
 
                             listOfAppointments.add(detailedUserAppointment)

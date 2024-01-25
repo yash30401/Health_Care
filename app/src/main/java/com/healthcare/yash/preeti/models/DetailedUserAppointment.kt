@@ -9,7 +9,7 @@ data class DetailedUserAppointment(
     val specialization:String,
     val status:String, val typeOfConsultation:String,
     val dateTime: Timestamp?,
-    val doctorId:String,
+    val doctorUId:String,
 ):Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString().toString(),
@@ -29,7 +29,7 @@ data class DetailedUserAppointment(
         parcel.writeString(status)
         parcel.writeString(typeOfConsultation)
         parcel.writeParcelable(dateTime, flags)
-        parcel.writeString(doctorId)
+        parcel.writeString(doctorUId)
     }
 
     override fun describeContents(): Int {
