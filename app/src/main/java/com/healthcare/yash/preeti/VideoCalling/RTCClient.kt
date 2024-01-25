@@ -1,8 +1,10 @@
 package com.healthcare.yash.preeti.VideoCalling
 
 import android.app.Application
+import android.util.Log
 import com.healthcare.yash.preeti.VideoCalling.models.MessageModel
 import com.healthcare.yash.preeti.VideoCalling.repository.SocketRepository
+import com.healthcare.yash.preeti.other.Constants
 import org.webrtc.AudioTrack
 import org.webrtc.Camera2Enumerator
 import org.webrtc.CameraVideoCapturer
@@ -148,7 +150,7 @@ class RTCClient(
                             "sdp" to desc?.description,
                             "type" to desc?.type
                         )
-
+                        Log.d(Constants.VIDEOCALLINGWEBRTC,"RTCCLIENT:- ${uid}")
                         socketRepository.sendMessageToSocket(
                             MessageModel(
                                 "create_offer", uid, target, offer

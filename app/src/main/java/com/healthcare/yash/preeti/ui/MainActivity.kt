@@ -21,6 +21,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.ktx.initialize
 import com.google.firebase.messaging.FirebaseMessaging
 import com.healthcare.yash.preeti.R
+import com.healthcare.yash.preeti.VideoCalling.models.MessageModel
+import com.healthcare.yash.preeti.VideoCalling.repository.SocketRepository
+import com.healthcare.yash.preeti.VideoCalling.utils.NewMessageInterface
 import com.healthcare.yash.preeti.databinding.ActivityMainBinding
 import com.healthcare.yash.preeti.networking.NetworkResult
 import com.healthcare.yash.preeti.other.Constants
@@ -42,7 +45,7 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity(), NewMessageInterface{
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
@@ -53,6 +56,7 @@ class MainActivity : AppCompatActivity(){
     lateinit var firebaseAuth: FirebaseAuth
 
     private val firebaseMessagingViewModel by viewModels<FirebaseMessagingViewModel>()
+    lateinit var socketRepository: SocketRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +73,9 @@ class MainActivity : AppCompatActivity(){
         // Preload Razorpay Checkout for better performance
         Checkout.preload(applicationContext)
 
+        socketRepository = SocketRepository(this)
+        socketRepository.initSocket(firebaseAuth.currentUser?.uid.toString())
+        socketRepository.sendMessageToSocket(MessageModel("store_user",firebaseAuth.uid,null,null))
 
         // Configure Firebase App Check with Play Integrity provider
         Firebase.initialize(this)
@@ -172,6 +179,10 @@ class MainActivity : AppCompatActivity(){
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onNewMessage(message: MessageModel) {
+
     }
 
 

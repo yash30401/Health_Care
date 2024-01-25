@@ -23,7 +23,7 @@ import org.webrtc.SessionDescription
 class CallActivity : AppCompatActivity(),NewMessageInterface {
 
     private var _binding: ActivityCallBinding?=null
-    val binding get() = _binding
+    val binding get() = _binding!!
     private var uid:String?=null
     private var socketRepository: SocketRepository?=null
     private var rtcClient: RTCClient?=null
@@ -36,7 +36,7 @@ class CallActivity : AppCompatActivity(),NewMessageInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityCallBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        setContentView(binding.root)
 
         init()
     }
@@ -67,11 +67,13 @@ class CallActivity : AppCompatActivity(),NewMessageInterface {
                 Log.d(Constants.VIDEOCALLINGWEBRTC, "onAddStream: $p0")
             }
         })
+        rtcClient?.initializeSurfaceView(binding.localView)
+        rtcClient?.startLocalVideo(binding.localView)
         rtcAudioManager.setDefaultAudioDevice(RtcAudioManager.AudioDevice.SPEAKER_PHONE)
 
         socketRepository?.sendMessageToSocket(
             MessageModel(
-                "start_call","yash",targetUid,null
+                "start_call",uid,targetUid,null
             )
         )
         binding?.switchCameraButton?.setOnClickListener {

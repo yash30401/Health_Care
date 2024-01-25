@@ -84,7 +84,7 @@ class ChattingFragment : Fragment(R.layout.fragment_chatting) {
 
     private fun getOrCreateChatRoom() {
         lifecycleScope.launch {
-            chatViewModel.getOrCreateChatRoom(args.detailedUserAppointment.doctorId)
+            chatViewModel.getOrCreateChatRoom(args.detailedUserAppointment.doctorUId)
             chatViewModel.getOrCreateChatRoom.collect{
                 when(it){
                     is NetworkResult.Error -> {

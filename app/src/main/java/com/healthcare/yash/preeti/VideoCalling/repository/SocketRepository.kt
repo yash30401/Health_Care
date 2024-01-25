@@ -13,7 +13,6 @@ import java.net.URI
 class SocketRepository(private val messageInterface:NewMessageInterface) {
     private var webSocket:WebSocketClient?=null
     private var UID:String?=null
-    private val TAG = "SocketRepository"
     private val gson = Gson()
 
     fun initSocket(uid:String){
