@@ -25,14 +25,16 @@ class SocketRepository(private val messageInterface:NewMessageInterface) {
                         "store_user",uid,null,null
                     )
                 )
+                Log.d(VIDEOCALLINGWEBRTC,"HANDSHAKEDATA:- ${handshakedata.toString()}")
             }
 
             override fun onMessage(message: String?) {
                 try {
                     messageInterface.onNewMessage(gson.fromJson(message,MessageModel::class.java))
-
+                    Log.d(VIDEOCALLINGWEBRTC,"ONNEWMESSAGE:- ${message.toString()}")
                 }catch (e:Exception){
                     e.printStackTrace()
+                    Log.d(VIDEOCALLINGWEBRTC,"EXCEPTION:- ${e.message.toString()}")
                 }
             }
 
@@ -46,13 +48,14 @@ class SocketRepository(private val messageInterface:NewMessageInterface) {
 
         }
         webSocket?.connect()
-
+        Log.d(VIDEOCALLINGWEBRTC,"Connection:- ${webSocket?.socket?.isConnected.toString()}")
     }
 
     fun sendMessageToSocket(message: MessageModel) {
         try {
             Log.d(VIDEOCALLINGWEBRTC, "sendMessageToSocket: $message")
             webSocket?.send(Gson().toJson(message))
+            Log.d(VIDEOCALLINGWEBRTC, "sendMessageToSocket JSON FORMAT: ${Gson().toJson(message)}")
         } catch (e: Exception) {
             Log.d(VIDEOCALLINGWEBRTC, "sendMessageToSocket: $e")
         }

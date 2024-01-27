@@ -70,12 +70,11 @@ class MainActivity : AppCompatActivity(), NewMessageInterface{
         binding.bottomNav.setupWithNavController(navController)
         hideBottomNavOnAuthFragment()
 
+        socketRepository = SocketRepository(this)
+        socketRepository.initSocket(firebaseAuth.uid.toString())
+
         // Preload Razorpay Checkout for better performance
         Checkout.preload(applicationContext)
-
-        socketRepository = SocketRepository(this)
-        socketRepository.initSocket(firebaseAuth.currentUser?.uid.toString())
-        socketRepository.sendMessageToSocket(MessageModel("store_user",firebaseAuth.uid,null,null))
 
         // Configure Firebase App Check with Play Integrity provider
         Firebase.initialize(this)

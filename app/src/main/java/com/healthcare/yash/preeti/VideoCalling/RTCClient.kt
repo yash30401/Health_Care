@@ -97,7 +97,7 @@ class RTCClient(
         surface.run {
             setEnableHardwareScaler(true)
             setMirror(true)
-            init(eglContext.eglBaseContext, null)
+//            init(eglContext.eglBaseContext, null)
         }
     }
 

@@ -267,6 +267,8 @@ class MainFragment : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.Vid
                             .putExtra("useruid",firebaseAuth.currentUser?.uid.toString())
                             .putExtra("doctorUid",doctorUid)
                     )
+
+
                 } else {
                     Toast.makeText(requireContext(),"you should accept all permissions",Toast.LENGTH_LONG).show()
                 }
