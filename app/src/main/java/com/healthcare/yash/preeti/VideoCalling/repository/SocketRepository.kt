@@ -18,7 +18,7 @@ class SocketRepository(private val messageInterface:NewMessageInterface) {
     fun initSocket(uid:String){
         UID = uid
 
-        webSocket = object:WebSocketClient(URI("ws://192.168.29.194:3000")){
+        webSocket = object:WebSocketClient(URI("wss://webrtcdeploy-6f29016af3e8.herokuapp.com/")){
             override fun onOpen(handshakedata: ServerHandshake?) {
                 sendMessageToSocket(
                     MessageModel(
@@ -59,5 +59,10 @@ class SocketRepository(private val messageInterface:NewMessageInterface) {
         } catch (e: Exception) {
             Log.d(VIDEOCALLINGWEBRTC, "sendMessageToSocket: $e")
         }
+    }
+
+    fun closeConnection(){
+        webSocket?.connection?.closeConnection(0,"Close")
+        webSocket = null
     }
 }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.VideoCalling.RTCClient
@@ -16,8 +17,13 @@ import com.healthcare.yash.preeti.VideoCalling.utils.PeerConnectionObserver
 import com.healthcare.yash.preeti.VideoCalling.utils.RtcAudioManager
 import com.healthcare.yash.preeti.databinding.ActivityCallBinding
 import com.healthcare.yash.preeti.other.Constants
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.webrtc.EglBase
 import org.webrtc.IceCandidate
 import org.webrtc.MediaStream
+import org.webrtc.RtpTransceiver
 import org.webrtc.SessionDescription
 
 class CallActivity : AppCompatActivity(),NewMessageInterface {
@@ -63,19 +69,21 @@ class CallActivity : AppCompatActivity(),NewMessageInterface {
 
             override fun onAddStream(p0: MediaStream?) {
                 super.onAddStream(p0)
-                p0?.videoTracks?.get(0)?.addSink(binding?.remoteView)
-                Log.d(Constants.VIDEOCALLINGWEBRTC, "onAddStream: $p0")
+                p0?.videoTracks?.get(0)?.addSink(binding.remoteView)
+                Log.d("ONADDSTREAM", "onAddStream: Remote video added successfully")
             }
+
         })
-        rtcClient?.initializeSurfaceView(binding.localView)
-        rtcClient?.startLocalVideo(binding.localView)
         rtcAudioManager.setDefaultAudioDevice(RtcAudioManager.AudioDevice.SPEAKER_PHONE)
 
-        socketRepository?.sendMessageToSocket(
-            MessageModel(
-                "start_call",uid,targetUid,null
+        lifecycleScope.launch {
+            delay(2000)
+            socketRepository?.sendMessageToSocket(
+                MessageModel(
+                    "start_call",uid,targetUid,null
+                )
             )
-        )
+        }
         binding?.switchCameraButton?.setOnClickListener {
             rtcClient?.switchCamera()
         }
@@ -122,26 +130,30 @@ class CallActivity : AppCompatActivity(),NewMessageInterface {
             rtcClient?.endCall()
         }
 
+
     }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+        binding?.localView?.release()
+        binding?.remoteView?.release()
     }
 
     override fun onNewMessage(message: MessageModel) {
+        Log.d(Constants.VIDEOCALLINGWEBRTC, "onNewMessage: $message")
         when(message.type){
             "call_response"->{
                 if (message.data == "user is not online"){
                     //user is not reachable
                     runOnUiThread {
-                        Toast.makeText(this,"user is not reachable", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this,"user is not reachable",Toast.LENGTH_LONG).show()
 
                     }
                 }else{
                     //we are ready for call, we started a call
                     runOnUiThread {
                         setCallLayoutVisible()
-                        binding?.apply {
+                        binding.apply {
                             rtcClient?.initializeSurfaceView(localView)
                             rtcClient?.initializeSurfaceView(remoteView)
                             rtcClient?.startLocalVideo(localView)
@@ -161,18 +173,19 @@ class CallActivity : AppCompatActivity(),NewMessageInterface {
                 )
                 rtcClient?.onRemoteSessionReceived(session)
                 runOnUiThread {
-                    binding?.remoteViewLoading?.visibility = View.GONE
+                    binding.remoteViewLoading.visibility = View.GONE
                 }
             }
             "offer_received" ->{
                 runOnUiThread {
                     setIncomingCallLayoutVisible()
-                    binding?.incomingNameTV?.text = "${message.uid.toString()} is calling you"
-                    binding?.acceptButton?.setOnClickListener {
+                    binding.incomingNameTV.text = "${message.name.toString()} is calling you"
+                    binding.acceptButton.setOnClickListener {
                         setIncomingCallLayoutGone()
                         setCallLayoutVisible()
 
-                        binding?.apply {
+                        binding.remoteView.visibility = View.VISIBLE
+                        binding.apply {
                             rtcClient?.initializeSurfaceView(localView)
                             rtcClient?.initializeSurfaceView(remoteView)
                             rtcClient?.startLocalVideo(localView)
@@ -182,12 +195,12 @@ class CallActivity : AppCompatActivity(),NewMessageInterface {
                             message.data.toString()
                         )
                         rtcClient?.onRemoteSessionReceived(session)
-                        rtcClient?.answer(message.uid!!)
-                        targetUid = message.uid!!
-                        binding!!.remoteViewLoading.visibility = View.GONE
+                        rtcClient?.answer(message.name!!)
+                        targetUid = message.name!!
+                        binding.remoteViewLoading.visibility = View.GONE
 
                     }
-                    binding?.rejectButton?.setOnClickListener {
+                    binding.rejectButton.setOnClickListener {
                         setIncomingCallLayoutGone()
                     }
 
@@ -200,10 +213,8 @@ class CallActivity : AppCompatActivity(),NewMessageInterface {
                 try {
                     val receivingCandidate = gson.fromJson(gson.toJson(message.data),
                         IceCandidateModel::class.java)
-                    rtcClient?.addIceCandidate(
-                        IceCandidate(receivingCandidate.sdpMid,
-                        Math.toIntExact(receivingCandidate.sdpMLineIndex.toLong()),receivingCandidate.sdpCandidate)
-                    )
+                    rtcClient?.addIceCandidate(IceCandidate(receivingCandidate.sdpMid,
+                        Math.toIntExact(receivingCandidate.sdpMLineIndex.toLong()),receivingCandidate.sdpCandidate))
                 }catch (e:Exception){
                     e.printStackTrace()
                 }
