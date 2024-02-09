@@ -357,6 +357,8 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
             setCallLayoutGone()
             setIncomingCallLayoutGone()
             rtcClient?.endCall()
+            val message = MessageModel("call_ended", uid, targetUID, null)
+            socketRepository?.sendMessageToSocket(message)
         }
 
     }
@@ -482,6 +484,17 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                     )
                 }catch (e:Exception){
                     e.printStackTrace()
+                }
+            }
+
+            "call_ended" -> {
+                lifecycleScope.launch {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(requireContext(), "The call has ended", Toast.LENGTH_LONG).show()
+                        bottomNavigationVisibilityListener?.setBottomNavigationVisibility(true)
+                        rtcClient?.endCall()
+                        binding.callLayout.visibility = View.GONE
+                    }
                 }
             }
         }
