@@ -3,6 +3,7 @@ package com.healthcare.yash.preeti.VideoCalling.repository
 import android.util.Log
 import com.google.gson.Gson
 import com.healthcare.yash.preeti.VideoCalling.models.MessageModel
+import com.healthcare.yash.preeti.VideoCalling.models.TYPE
 import com.healthcare.yash.preeti.VideoCalling.utils.NewMessageInterface
 import com.healthcare.yash.preeti.other.Constants.VIDEOCALLINGWEBRTC
 import org.java_websocket.client.WebSocketClient
@@ -22,7 +23,7 @@ class SocketRepository(private val messageInterface:NewMessageInterface) {
             override fun onOpen(handshakedata: ServerHandshake?) {
                 sendMessageToSocket(
                     MessageModel(
-                        "store_user",uid,null,null
+                        TYPE.STORE_USER,uid,null,null
                     )
                 )
                 Log.d(VIDEOCALLINGWEBRTC,"HANDSHAKEDATA:- ${handshakedata.toString()}")

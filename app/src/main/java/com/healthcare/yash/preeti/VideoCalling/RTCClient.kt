@@ -3,6 +3,7 @@ package com.healthcare.yash.preeti.VideoCalling
 import android.app.Application
 import android.util.Log
 import com.healthcare.yash.preeti.VideoCalling.models.MessageModel
+import com.healthcare.yash.preeti.VideoCalling.models.TYPE
 import com.healthcare.yash.preeti.VideoCalling.repository.SocketRepository
 import com.healthcare.yash.preeti.other.Constants
 import org.webrtc.AudioTrack
@@ -140,7 +141,7 @@ class RTCClient(
 
                         socketRepository.sendMessageToSocket(
                             MessageModel(
-                                "create_offer", username, target, offer
+                                TYPE.CREATE_OFFER, username, target, offer
                             )
                         )
                     }
@@ -203,7 +204,7 @@ class RTCClient(
                         )
                         socketRepository.sendMessageToSocket(
                             MessageModel(
-                                "create_answer", username, target, answer
+                                TYPE.CREATE_ANSWER, username, target, answer
                             )
                         )
                     }

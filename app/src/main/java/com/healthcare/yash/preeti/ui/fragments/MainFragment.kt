@@ -33,6 +33,7 @@ import com.healthcare.yash.preeti.R
 import com.healthcare.yash.preeti.VideoCalling.RTCClient
 import com.healthcare.yash.preeti.VideoCalling.models.IceCandidateModel
 import com.healthcare.yash.preeti.VideoCalling.models.MessageModel
+import com.healthcare.yash.preeti.VideoCalling.models.TYPE
 import com.healthcare.yash.preeti.VideoCalling.repository.SocketRepository
 import com.healthcare.yash.preeti.VideoCalling.utils.NewMessageInterface
 import com.healthcare.yash.preeti.VideoCalling.utils.PeerConnectionObserver
@@ -46,7 +47,6 @@ import com.healthcare.yash.preeti.other.Constants
 import com.healthcare.yash.preeti.other.Constants.FETCHAPPOINTMENTS
 import com.healthcare.yash.preeti.other.Constants.HEADERLAYOUTTAG
 import com.healthcare.yash.preeti.other.Constants.MAINFRAGMENTTAG
-import com.healthcare.yash.preeti.ui.CallActivity
 import com.healthcare.yash.preeti.ui.MainActivity
 import com.healthcare.yash.preeti.utils.BottomNavigationVisibilityListener
 import com.healthcare.yash.preeti.viewmodels.AppointmentViewModel
@@ -297,7 +297,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                 )
 
                 socketRepository?.sendMessageToSocket(
-                    MessageModel("ice_candidate",uid,targetUID,candidate)
+                    MessageModel(TYPE.ICE_CANDIDATE,uid,targetUID,candidate)
                 )
             }
 
@@ -358,7 +358,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
             setIncomingCallLayoutGone()
             rtcClient?.endCall()
             bottomNavigationVisibilityListener?.setBottomNavigationVisibility(true)
-            val message = MessageModel("call_ended", uid, targetUID, null)
+            val message = MessageModel(TYPE.CALL_ENDED, uid, targetUID, null)
             socketRepository?.sendMessageToSocket(message)
         }
 
@@ -388,7 +388,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                 if (allGranted){
                     targetUID = doctorUid
                     socketRepository?.sendMessageToSocket(MessageModel(
-                        "start_call",uid,targetUID,null
+                        TYPE.START_CALL,uid,targetUID,null
                     ))
                     bottomNavigationVisibilityListener?.setBottomNavigationVisibility(false)
                 } else {
@@ -399,7 +399,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
 
     override fun onNewMessage(message: MessageModel) {
         when(message.type){
-            "call_response"->{
+            TYPE.CALL_RESPONSE->{
                 if (message.data == "user is not online"){
                     //user is not reachable
                     lifecycleScope.launch {
@@ -424,7 +424,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                     }
                 }
             }
-            "answer_received" ->{
+            TYPE.ANSWER_RECIEVED ->{
 
                 val session = SessionDescription(
                     SessionDescription.Type.ANSWER,
@@ -437,7 +437,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                     }
                 }
             }
-            "offer_received" ->{
+            TYPE.OFFER_RECIEVED ->{
                 Log.d("OFEERWEBRTC","Recived")
 
                 lifecycleScope.launch {
@@ -467,7 +467,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                         binding?.rejectButton?.setOnClickListener {
                             setIncomingCallLayoutGone()
                             bottomNavigationVisibilityListener?.setBottomNavigationVisibility(false)
-                            val message = MessageModel("call_ended", uid, targetUID, null)
+                            val message = MessageModel(TYPE.CALL_ENDED, uid, targetUID, null)
                             socketRepository?.sendMessageToSocket(message)
                         }
 
@@ -477,7 +477,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
             }
 
 
-            "ice_candidate"->{
+            TYPE.ICE_CANDIDATE->{
                 try {
                     val receivingCandidate = gson.fromJson(gson.toJson(message.data),
                         IceCandidateModel::class.java)
@@ -490,7 +490,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                 }
             }
 
-            "call_ended" -> {
+            TYPE.CALL_ENDED-> {
                 lifecycleScope.launch {
                     withContext(Dispatchers.Main) {
                         Toast.makeText(requireContext(), "The call has ended", Toast.LENGTH_LONG).show()
@@ -501,6 +501,8 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                     }
                 }
             }
+
+            else -> {}
         }
     }
 
