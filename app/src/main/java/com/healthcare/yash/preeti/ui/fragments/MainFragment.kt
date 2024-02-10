@@ -357,6 +357,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
             setCallLayoutGone()
             setIncomingCallLayoutGone()
             rtcClient?.endCall()
+            bottomNavigationVisibilityListener?.setBottomNavigationVisibility(true)
             val message = MessageModel("call_ended", uid, targetUID, null)
             socketRepository?.sendMessageToSocket(message)
         }
@@ -395,7 +396,6 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                 }
             }
     }
-
 
     override fun onNewMessage(message: MessageModel) {
         when(message.type){
@@ -447,7 +447,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                         binding?.acceptButton?.setOnClickListener {
                             setIncomingCallLayoutGone()
                             setCallLayoutVisible()
-
+                            bottomNavigationVisibilityListener?.setBottomNavigationVisibility(false)
                             binding?.apply {
                                 rtcClient?.initializeSurfaceView(localView)
                                 rtcClient?.initializeSurfaceView(binding.remoteView)
@@ -466,6 +466,9 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                         }
                         binding?.rejectButton?.setOnClickListener {
                             setIncomingCallLayoutGone()
+                            bottomNavigationVisibilityListener?.setBottomNavigationVisibility(false)
+                            val message = MessageModel("call_ended", uid, targetUID, null)
+                            socketRepository?.sendMessageToSocket(message)
                         }
 
                     }
@@ -494,6 +497,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                         bottomNavigationVisibilityListener?.setBottomNavigationVisibility(true)
                         rtcClient?.endCall()
                         binding.callLayout.visibility = View.GONE
+                        setIncomingCallLayoutGone()
                     }
                 }
             }

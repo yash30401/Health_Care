@@ -24,6 +24,59 @@
             android:layout_height="match_parent"
             android:background="@color/screenBackgroundColor">
 
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:cardElevation="20dp"
+                android:layout_marginStart="20dp"
+                app:strokeWidth="0dp"
+                android:layout_marginEnd="20dp"
+                app:cardBackgroundColor="@color/specialistCardBackgroundColor"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/incomingCallLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_alignParentTop="true"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/incomingNameTV"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"
+                        android:gravity="center"
+                        android:text="someone is calling"
+                        android:textColor="@color/black"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:id="@+id/acceptButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5"
+                        android:padding="15dp"
+                        android:src="@drawable/ic_accept" />
+
+                    <ImageView
+                        android:id="@+id/rejectButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5"
+                        android:padding="15dp"
+                        android:src="@drawable/ic_reject" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
             <TextView
                 android:id="@+id/tvHello"
                 android:layout_width="wrap_content"
@@ -177,39 +230,6 @@
 
     </com.google.android.material.navigation.NavigationView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:id="@+id/incomingCallLayout"
-        android:visibility="gone"
-        android:orientation="horizontal"
-        android:layout_alignParentTop="true">
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_weight="6"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:text="someone is calling"
-            android:id="@+id/incomingNameTV"/>
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:src="@drawable/ic_accept"
-            android:padding="15dp"
-            android:id="@+id/acceptButton"/>
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.5"
-            android:src="@drawable/ic_reject"
-            android:padding="15dp"
-            android:id="@+id/rejectButton"/>
-
-    </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
         android:id="@+id/callLayout"
@@ -241,21 +261,29 @@
             app:layout_constraintEnd_toEndOf="@id/remote_view"
             app:layout_constraintStart_toStartOf="@id/remote_view"
             app:layout_constraintTop_toTopOf="@id/remote_view" />
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true">
+
+
         <LinearLayout
             android:gravity="center"
             android:background="@drawable/curve_background"
             android:backgroundTint="@android:color/secondary_text_light"
             android:id="@+id/controls"
             android:orientation="horizontal"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/mic_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="2dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="12dp"
@@ -266,7 +294,10 @@
                 android:id="@+id/video_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="2dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="12dp"
@@ -277,7 +308,10 @@
                 android:id="@+id/end_call_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="2dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="12dp"
@@ -288,7 +322,10 @@
                 android:id="@+id/switch_camera_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="2dp"
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="12dp"
@@ -301,13 +338,16 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
-                android:layout_margin="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="2dp"
                 android:padding="12dp"
                 android:background="@drawable/circle_background"
                 app:backgroundTint="@color/cardview_dark_background"
                 app:srcCompat="@drawable/ic_baseline_speaker_up_24" />
         </LinearLayout>
-
+        </HorizontalScrollView>
     </RelativeLayout>
 
 
