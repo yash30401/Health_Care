@@ -11,7 +11,7 @@ import org.java_websocket.handshake.ServerHandshake
 import java.lang.Exception
 import java.net.URI
 
-class SocketRepository(private val messageInterface:NewMessageInterface) {
+class WebSocketManager(private val messageInterface:NewMessageInterface) {
     private var webSocket:WebSocketClient?=null
     private var UID:String?=null
     private val gson = Gson()

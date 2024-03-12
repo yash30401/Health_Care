@@ -3,7 +3,6 @@ package com.healthcare.yash.preeti.ui.fragments
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -34,7 +33,7 @@ import com.healthcare.yash.preeti.VideoCalling.RTCClient
 import com.healthcare.yash.preeti.VideoCalling.models.IceCandidateModel
 import com.healthcare.yash.preeti.VideoCalling.models.MessageModel
 import com.healthcare.yash.preeti.VideoCalling.models.TYPE
-import com.healthcare.yash.preeti.VideoCalling.repository.SocketRepository
+import com.healthcare.yash.preeti.VideoCalling.repository.WebSocketManager
 import com.healthcare.yash.preeti.VideoCalling.utils.NewMessageInterface
 import com.healthcare.yash.preeti.VideoCalling.utils.PeerConnectionObserver
 import com.healthcare.yash.preeti.VideoCalling.utils.RtcAudioManager
@@ -47,7 +46,6 @@ import com.healthcare.yash.preeti.other.Constants
 import com.healthcare.yash.preeti.other.Constants.FETCHAPPOINTMENTS
 import com.healthcare.yash.preeti.other.Constants.HEADERLAYOUTTAG
 import com.healthcare.yash.preeti.other.Constants.MAINFRAGMENTTAG
-import com.healthcare.yash.preeti.ui.MainActivity
 import com.healthcare.yash.preeti.utils.BottomNavigationVisibilityListener
 import com.healthcare.yash.preeti.viewmodels.AppointmentViewModel
 import com.healthcare.yash.preeti.viewmodels.AuthViewModel
@@ -88,7 +86,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
     private val rtcAudioManager by lazy { RtcAudioManager.create(requireContext()) }
     private var isSpeakerMode = true
 
-    lateinit var socketRepository: SocketRepository
+    lateinit var webSocketManager: WebSocketManager
 
     private var bottomNavigationVisibilityListener: BottomNavigationVisibilityListener? = null
     override fun onCreateView(
@@ -284,9 +282,9 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
     }
 
     private fun init(){
-        socketRepository = SocketRepository(this)
-        uid?.let { socketRepository?.initSocket(it) }
-        rtcClient = RTCClient(activity?.application!!,uid!!,socketRepository!!, object : PeerConnectionObserver() {
+        webSocketManager = WebSocketManager(this)
+        uid?.let { webSocketManager?.initSocket(it) }
+        rtcClient = RTCClient(activity?.application!!,uid!!,webSocketManager!!, object : PeerConnectionObserver() {
             override fun onIceCandidate(p0: IceCandidate?) {
                 super.onIceCandidate(p0)
                 rtcClient?.addIceCandidate(p0)
@@ -296,7 +294,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                     "sdpCandidate" to p0?.sdp
                 )
 
-                socketRepository?.sendMessageToSocket(
+                webSocketManager?.sendMessageToSocket(
                     MessageModel(TYPE.ICE_CANDIDATE,uid,targetUID,candidate)
                 )
             }
@@ -359,7 +357,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
             rtcClient?.endCall()
             bottomNavigationVisibilityListener?.setBottomNavigationVisibility(true)
             val message = MessageModel(TYPE.CALL_ENDED, uid, targetUID, null)
-            socketRepository?.sendMessageToSocket(message)
+            webSocketManager?.sendMessageToSocket(message)
         }
 
     }
@@ -387,7 +385,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
             ).request{ allGranted, _ ,_ ->
                 if (allGranted){
                     targetUID = doctorUid
-                    socketRepository?.sendMessageToSocket(MessageModel(
+                    webSocketManager?.sendMessageToSocket(MessageModel(
                         TYPE.START_CALL,uid,targetUID,null
                     ))
                     bottomNavigationVisibilityListener?.setBottomNavigationVisibility(false)
@@ -468,7 +466,7 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
                             setIncomingCallLayoutGone()
                             bottomNavigationVisibilityListener?.setBottomNavigationVisibility(false)
                             val message = MessageModel(TYPE.CALL_ENDED, uid, targetUID, null)
-                            socketRepository?.sendMessageToSocket(message)
+                            webSocketManager?.sendMessageToSocket(message)
                         }
 
                     }
@@ -539,6 +537,6 @@ class MainFragment() : Fragment(),ChatClickListner,UpcomingAppointmentsAdapter.V
         _binding = null
         rtcClient?.endCall() // Close any existing WebRTC connections
         rtcClient = null
-        socketRepository.closeConnection()
+        webSocketManager.closeConnection()
     }
 }

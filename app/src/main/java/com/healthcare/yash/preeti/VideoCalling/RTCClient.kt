@@ -1,11 +1,10 @@
 package com.healthcare.yash.preeti.VideoCalling
 
 import android.app.Application
-import android.util.Log
+import android.os.Build
 import com.healthcare.yash.preeti.VideoCalling.models.MessageModel
 import com.healthcare.yash.preeti.VideoCalling.models.TYPE
-import com.healthcare.yash.preeti.VideoCalling.repository.SocketRepository
-import com.healthcare.yash.preeti.other.Constants
+import com.healthcare.yash.preeti.VideoCalling.repository.WebSocketManager
 import org.webrtc.AudioTrack
 import org.webrtc.Camera2Enumerator
 import org.webrtc.CameraVideoCapturer
@@ -21,12 +20,12 @@ import org.webrtc.SessionDescription
 import org.webrtc.SurfaceTextureHelper
 import org.webrtc.SurfaceViewRenderer
 import org.webrtc.VideoTrack
-import javax.inject.Inject
+import org.webrtc.audio.JavaAudioDeviceModule
 
 class RTCClient(
     private val application: Application,
     private val username: String,
-    private val socketRepository: SocketRepository,
+    private val webSocketManager: WebSocketManager,
     private val observer: PeerConnection.Observer
 ) {
 
@@ -37,11 +36,24 @@ class RTCClient(
     private val eglContext = EglBase.create()
     private val peerConnectionFactory by lazy { createPeerConnectionFactory() }
     private val iceServer = listOf(
-        PeerConnection.IceServer.builder("stun:iphone-stun.strato-iphone.de:3478").createIceServer(),
+        PeerConnection.IceServer.builder("stun:iphone-stun.strato-iphone.de:3478")
+            .createIceServer(),
         PeerConnection.IceServer("stun:openrelay.metered.ca:80"),
-        PeerConnection.IceServer("turn:openrelay.metered.ca:80","openrelayproject","openrelayproject"),
-        PeerConnection.IceServer("turn:openrelay.metered.ca:443","openrelayproject","openrelayproject"),
-        PeerConnection.IceServer("turn:openrelay.metered.ca:443?transport=tcp","openrelayproject","openrelayproject"),
+        PeerConnection.IceServer(
+            "turn:openrelay.metered.ca:80",
+            "openrelayproject",
+            "openrelayproject"
+        ),
+        PeerConnection.IceServer(
+            "turn:openrelay.metered.ca:443",
+            "openrelayproject",
+            "openrelayproject"
+        ),
+        PeerConnection.IceServer(
+            "turn:openrelay.metered.ca:443?transport=tcp",
+            "openrelayproject",
+            "openrelayproject"
+        ),
 
         )
     private val peerConnection by lazy { createPeerConnection(observer) }
@@ -74,7 +86,15 @@ class RTCClient(
             .setOptions(PeerConnectionFactory.Options().apply {
                 disableEncryption = true
                 disableNetworkMonitor = true
-            }).createPeerConnectionFactory()
+            }).setAudioDeviceModule(
+                JavaAudioDeviceModule.builder(application)
+                    .setUseHardwareAcousticEchoCanceler(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                    .setUseHardwareNoiseSuppressor(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                    .createAudioDeviceModule().also {
+                        it.setMicrophoneMute(false)
+                        it.setSpeakerMute(false)
+                    }
+            ).createPeerConnectionFactory()
     }
 
     private fun createPeerConnection(observer: PeerConnection.Observer): PeerConnection? {
@@ -116,8 +136,7 @@ class RTCClient(
                 isFrontFacing(it)
             }?.let {
                 createCapturer(it, null)
-            } ?: throw
-            IllegalStateException()
+            } ?: throw IllegalStateException()
         }
     }
 
@@ -139,7 +158,7 @@ class RTCClient(
                             "type" to desc?.type
                         )
 
-                        socketRepository.sendMessageToSocket(
+                        webSocketManager.sendMessageToSocket(
                             MessageModel(
                                 TYPE.CREATE_OFFER, username, target, offer
                             )
@@ -202,7 +221,7 @@ class RTCClient(
                             "sdp" to desc?.description,
                             "type" to desc?.type
                         )
-                        socketRepository.sendMessageToSocket(
+                        webSocketManager.sendMessageToSocket(
                             MessageModel(
                                 TYPE.CREATE_ANSWER, username, target, answer
                             )
